@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require_once __DIR__ . '/../data/keys.php';
             cms_register_missing_keys(cms_all_image_keys());
             cms_sync_registry_metadata();
+            cms_content_seed_if_empty();
             header('Location: ' . cms_admin_url('dashboard.php'));
             exit;
         }
@@ -30,7 +31,7 @@ $token = cms_csrf_token();
 $content = '<div class="login-page"><div class="card login-card">';
 $content .= '<div class="login-icon" aria-hidden="true">📷</div>';
 $content .= '<h1>Welcome back</h1>';
-$content .= '<p class="muted">Sign in to update photos on your website. No technical skills needed.</p>';
+$content .= '<p class="muted">Sign in to manage your website content.</p>';
 if ($error) {
     $content .= '<p class="error">' . htmlspecialchars($error) . '</p>';
 }

@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import { Analytics } from '@/components/Analytics'
+import { CmsContentProvider } from '@/components/CmsContent'
 import { CmsImagesProvider } from '@/components/CmsImages'
 import { SiteStructuredData } from '@/components/Seo'
 import { Navbar } from '@/components/Navbar'
@@ -12,17 +13,19 @@ export default function MainLayout() {
   return (
     <LightboxProvider>
       <CmsImagesProvider>
-        <SiteStructuredData />
-        <div className="flex min-h-svh flex-col">
-          <Analytics />
-          <ScrollToTop />
-          <Navbar />
-          <main className="flex-1">
-            <Outlet />
-          </main>
-          <Footer />
-          <FloatingActions />
-        </div>
+        <CmsContentProvider>
+          <SiteStructuredData />
+          <div className="flex min-h-svh flex-col">
+            <Analytics />
+            <ScrollToTop />
+            <Navbar />
+            <main className="flex-1">
+              <Outlet />
+            </main>
+            <Footer />
+            <FloatingActions />
+          </div>
+        </CmsContentProvider>
       </CmsImagesProvider>
     </LightboxProvider>
   )

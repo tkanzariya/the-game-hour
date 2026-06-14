@@ -33,5 +33,6 @@ return [
     ],
     'dev' => [
         'json_store' => __DIR__ . '/dev-data/images.json',
+        'content_store' => __DIR__ . '/dev-data/content.json',
     ],
 ];

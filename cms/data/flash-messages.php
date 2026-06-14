@@ -64,6 +64,10 @@ function cms_flash_messages(): array
         'no_file' => 'Please choose a photo to upload.',
         'session_expired' => 'Your session expired. Please sign in and try again.',
         'csrf_failed' => 'Your session expired. Please go back and try again.',
+        'testimonial_created' => 'Testimonial added successfully.',
+        'testimonial_updated' => 'Testimonial saved successfully.',
+        'testimonial_deleted' => 'Testimonial deleted.',
+        'statistics_saved' => 'Statistics saved successfully.',
         'delete_failed' => 'Could not remove the image. Please try again.',
         'not_found' => 'Image slot not found.',
     ];

@@ -608,3 +608,149 @@ form.inline { display: inline; }
   }
   .sidebar-overlay.is-visible { display: block; }
 }
+
+/* ── Phase 1 content manager ── */
+.topbar-title {
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--text);
+}
+
+.page-header-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.dashboard-sections {
+  margin-top: 0.5rem;
+}
+
+.section-card-media {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 120px;
+}
+
+.section-card-photos { background: linear-gradient(135deg, #dbeafe, #eff6ff); }
+.section-card-testimonials { background: linear-gradient(135deg, #ede9fe, #f5f3ff); }
+.section-card-stats { background: linear-gradient(135deg, #d1fae5, #ecfdf5); }
+
+.category-card-icon {
+  font-size: 2.5rem;
+  line-height: 1;
+}
+
+.form-panel {
+  max-width: 640px;
+}
+
+.form-panel .form label {
+  display: block;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+}
+
+.form-panel .form input[type="text"],
+.form-panel .form input[type="number"],
+.form-panel .form textarea,
+.form-panel .form select {
+  display: block;
+  width: 100%;
+  margin-top: 0.35rem;
+  padding: 0.65rem 0.85rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  font: inherit;
+  font-weight: 400;
+}
+
+.field-hint {
+  display: block;
+  margin-top: 0.35rem;
+  font-size: 0.82rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
+.fieldset {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.fieldset legend {
+  font-weight: 700;
+  padding: 0 0.35rem;
+}
+
+.radio-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.form-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92rem;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+.data-table th {
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--muted);
+  background: #f8fafc;
+}
+
+.data-table tr:last-child td {
+  border-bottom: none;
+}
+
+.table-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.badge-success { background: var(--success-bg); color: var(--success); }
+.badge-muted { background: #f1f5f9; color: var(--muted); }
+
+.stats-row-compact {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.88rem;
+  color: var(--muted);
+}

@@ -107,6 +107,11 @@ export type GameCategory = {
 export type Testimonial = {
   id: string
   quote: string
+  /** CMS review text (same as quote when loaded from CMS). */
+  review?: string
+  name?: string
+  role?: string
+  rating?: number
   /** Short outcome headline shown when case-study UI ships */
   outcome?: string
   attribution: string

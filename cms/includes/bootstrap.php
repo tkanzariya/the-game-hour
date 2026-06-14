@@ -2,6 +2,8 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/dev-json-store.php';
+require_once __DIR__ . '/dev-content-store.php';
+require_once __DIR__ . '/content-store.php';
 require_once __DIR__ . '/../data/flash-messages.php';
 
 function cms_config(): array
@@ -430,7 +432,7 @@ function cms_admin_layout(string $title, string $content, string $activeNav = ''
     if ($bare) {
         echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
         echo cms_admin_favicon_tags();
-        echo '<title>' . htmlspecialchars($title) . ' · Photo Manager</title>';
+        echo '<title>' . htmlspecialchars($title) . ' · Website Manager</title>';
         echo '<link rel="stylesheet" href="' . htmlspecialchars(cms_admin_url('assets/admin.css')) . '"></head><body class="admin-app admin-bare">';
         echo $content;
         echo '<script src="' . htmlspecialchars(cms_admin_url('assets/admin.js')) . '" defer></script>';
@@ -446,16 +448,13 @@ function cms_admin_layout(string $title, string $content, string $activeNav = ''
 
     echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
     echo cms_admin_favicon_tags();
-    echo '<title>' . htmlspecialchars($title) . ' · Photo Manager</title>';
+    echo '<title>' . htmlspecialchars($title) . ' · Website Manager</title>';
     echo '<link rel="stylesheet" href="' . htmlspecialchars(cms_admin_url('assets/admin.css')) . '"></head><body class="admin-app">';
     echo '<div class="admin-shell">';
     echo '<aside class="sidebar" id="sidebar">';
-    echo '<div class="sidebar-brand"><strong>The Game Hour</strong><span>Photo Manager</span></div>';
+    echo '<div class="sidebar-brand"><strong>The Game Hour</strong><span>Website Manager</span></div>';
     echo '<nav class="sidebar-nav">';
     echo $nav('dashboard', 'Dashboard', cms_admin_url('dashboard.php'));
-    echo $nav('photos', 'All Photos', cms_admin_url('photos.php'));
-    echo $nav('categories', 'Categories', cms_admin_url('dashboard.php#categories'));
-    echo $nav('settings', 'Settings', cms_admin_url('settings.php'));
     echo '</nav>';
     echo '<div class="sidebar-footer">';
     echo '<span class="sidebar-user">' . htmlspecialchars((string) $user) . '</span>';
@@ -464,10 +463,8 @@ function cms_admin_layout(string $title, string $content, string $activeNav = ''
     echo '<div class="admin-main">';
     echo '<header class="admin-topbar">';
     echo '<button type="button" class="sidebar-toggle" id="sidebar-toggle" aria-label="Open menu">☰</button>';
-    echo '<form class="global-search" method="get" action="' . htmlspecialchars(cms_admin_url('photos.php')) . '">';
-    echo '<label for="global-search" class="sr-only">Search photos</label>';
-    echo '<input id="global-search" type="search" name="q" value="' . htmlspecialchars($searchQuery) . '" placeholder="Search photos… e.g. Homepage Hero, Gallery">';
-    echo '</form></header>';
+    echo '<span class="topbar-title">' . htmlspecialchars($title) . '</span>';
+    echo '</header>';
     echo '<main class="admin-content">' . $content . '</main>';
     echo '</div></div>';
     echo '<script src="' . htmlspecialchars(cms_admin_url('assets/admin.js')) . '" defer></script>';

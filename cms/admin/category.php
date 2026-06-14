@@ -13,7 +13,7 @@ $message = isset($_GET['msg']) ? trim((string) $_GET['msg']) : '';
 
 $validCategories = cms_filter_categories();
 if ($category === '' || !in_array($category, $validCategories, true)) {
-    header('Location: ' . cms_admin_url('dashboard.php'));
+    header('Location: ' . cms_admin_url('photos/index.php'));
     exit;
 }
 
@@ -30,7 +30,7 @@ $rows = cms_category_rows($category, $rowsByKey);
 $stats = cms_category_stats($category, $rowsByKey);
 
 $content = '<div class="page-header">';
-$content .= '<a class="back-link" href="' . htmlspecialchars(cms_admin_url('dashboard.php#categories')) . '">← Back to categories</a>';
+$content .= '<a class="back-link" href="' . htmlspecialchars(cms_admin_url('photos/index.php')) . '">← Photos</a>';
 $content .= '<h1>' . htmlspecialchars($label) . '</h1>';
 $content .= '<p>' . htmlspecialchars(cms_category_hint($category)) . '</p>';
 $content .= '<p class="category-summary"><strong>' . $stats['uploaded'] . ' / ' . $stats['total'] . '</strong> images uploaded in this section</p>';
