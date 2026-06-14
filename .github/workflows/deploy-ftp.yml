@@ -22,7 +22,7 @@ jobs:
   deploy:
     name: Build and deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 45
     env:
       DEPLOY_URL: ${{ vars.DEPLOY_URL || 'https://thegamehour.com' }}
     steps:
@@ -100,7 +100,7 @@ jobs:
           # Vite hashes change each build; remove stale bundles so index.html cannot reference old JS
           rm -rf assets;
           lcd ${REPO_ROOT}/dist;
-          mirror -R --delete . . \
+          mirror -R --delete --parallel=4 . . \
             --exclude-glob 'cms/config.php' \
             --exclude-glob 'uploads/**' \
             --exclude-glob 'cms/uploads/**' \
