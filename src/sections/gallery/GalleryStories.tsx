@@ -4,7 +4,6 @@ import { Section } from '@/components/Section'
 import { Reveal } from '@/components/motion'
 import { servicePath } from '@/constants/routes'
 import { getGalleryStoryServiceLinkLabel } from '@/lib/content/gallery-stories'
-import { getGalleryItemById } from '@/lib/gallery'
 import { getGalleryStories } from '@/lib/gallery-page'
 import { getServiceBySlug } from '@/lib/services'
 import { toLightboxGallery } from '@/lib/lightbox'
@@ -12,17 +11,14 @@ import SectionIntro from '@/sections/home/SectionIntro'
 
 export default function GalleryStories() {
   const content = getGalleryStories()
-  const storyImages = content.items
-    .map((story) => getGalleryItemById(story.imageId))
-    .filter((image): image is NonNullable<typeof image> => image !== undefined)
-  const lightboxGallery = toLightboxGallery(storyImages)
+  const lightboxGallery = toLightboxGallery(content.storyImages)
 
   return (
     <Section tone="warm" id="stories" profile="marketing">
       <SectionIntro title={content.title} subtitle={content.subtitle} />
       <div className="flex flex-col gap-10 lg:gap-14">
         {content.items.map((story, index) => {
-          const image = getGalleryItemById(story.imageId)
+          const image = content.storyImages[index]
           const service = getServiceBySlug(story.serviceSlug)
           const imageFirst = index % 2 === 0
 
@@ -39,7 +35,7 @@ export default function GalleryStories() {
                       <LightboxImage
                         src={image.src}
                         alt={image.alt}
-                        caption={image.caption}
+                        caption={story.context}
                         gallery={lightboxGallery}
                         galleryIndex={index}
                         className="aspect-[16/10] w-full object-cover sm:aspect-[3/2]"
@@ -62,9 +58,6 @@ export default function GalleryStories() {
                   <p className="mt-4 font-body text-base leading-relaxed text-accent-muted-grey">
                     {story.context}
                   </p>
-                  {image?.caption && (
-                    <p className="mt-3 font-body text-sm italic text-dark-grey">{image.caption}</p>
-                  )}
                   {service && (
                     <Link
                       to={servicePath(story.serviceSlug)}

@@ -3,114 +3,152 @@
  * Image key registry (mirrors src/data/image-keys.ts).
  * `fallback` = path under cms/static/images/ for bundled preview thumbnails.
  */
+function cms_section_label(string $section, int $index): string
+{
+    return $section . ' — ' . $index;
+}
+
 $keys = [
     'homepage-hero' => [
-        'title' => 'Homepage Hero Banner',
+        'title' => cms_section_label('Hero', 1),
         'category' => 'Homepage',
         'fallback' => 'homepage/hero.webp',
-        'usage' => 'Home page (/) — main hero · About page (/about) — hero (same image)',
+        'usage' => 'Home page (/) — hero banner',
     ],
     'homepage-about-teaser' => [
-        'title' => 'Icebreakers Activity Card',
+        'title' => cms_section_label('Games & activities included', 1),
         'category' => 'Service Activity Cards',
         'fallback' => 'homepage/about-teaser.webp',
-        'usage' => 'All service pages — Icebreakers activity card image',
+        'usage' => 'All service pages — Icebreakers activity card',
     ],
     'about-hero' => [
-        'title' => 'About Page Hero',
+        'title' => cms_section_label('Hero', 1),
         'category' => 'About',
         'fallback' => 'homepage/hero.webp',
-        'usage' => 'About page (/about) — main hero banner',
+        'usage' => 'About page (/about) — hero banner',
     ],
     'about-story' => [
-        'title' => 'Our Story Section',
+        'title' => cms_section_label('Our story', 1),
         'category' => 'About',
         'fallback' => 'homepage/about-teaser.webp',
-        'usage' => 'About page — story section image and hero accent overlay',
+        'usage' => 'About page — story section and hero accent',
     ],
     'about-pillar-connection' => [
-        'title' => 'Connection Pillar Photo',
+        'title' => cms_section_label('Why we believe in play', 1),
         'category' => 'About',
         'fallback' => 'gallery/moments/moment-1.webp',
-        'usage' => 'About page — "Why we believe in play" — Connection card',
+        'usage' => 'About page — Connection pillar card',
     ],
     'about-pillar-screen-free' => [
-        'title' => 'Screen-free Pillar Photo',
+        'title' => cms_section_label('Why we believe in play', 2),
         'category' => 'About',
         'fallback' => 'gallery/moments/moment-2.webp',
-        'usage' => 'About page — "Why we believe in play" — Screen-free card',
+        'usage' => 'About page — Screen-free pillar card',
     ],
     'about-gallery-spotlight' => [
-        'title' => 'Gallery Invite Spotlight',
+        'title' => cms_section_label('See the joy in action', 1),
         'category' => 'About',
         'fallback' => 'gallery/event-gallery-2.webp',
-        'usage' => 'About page — "See the joy in action" section',
+        'usage' => 'About page — gallery invite spotlight',
     ],
     'homepage-team-building' => [
-        'title' => 'Team Building Activity Card',
+        'title' => cms_section_label('Games & activities included', 3),
         'category' => 'Service Activity Cards',
         'fallback' => 'homepage/team-building.webp',
-        'usage' => 'All service pages — Team Building activity card (not on home page)',
+        'usage' => 'All service pages — Team Building activity card',
     ],
     'homepage-strategy-games' => [
-        'title' => 'Strategy Games Activity Card',
+        'title' => cms_section_label('Games & activities included', 2),
         'category' => 'Service Activity Cards',
         'fallback' => 'homepage/strategy-games.webp',
-        'usage' => 'All service pages — Strategy Games activity card (not on home page)',
+        'usage' => 'All service pages — Strategy Games activity card',
     ],
     'gallery-hero' => [
-        'title' => 'Gallery Page Hero Banner',
+        'title' => cms_section_label('Hero', 1),
         'category' => 'Gallery',
         'fallback' => 'gallery/gallery-hero.webp',
         'usage' => 'Gallery page (/gallery) — hero banner',
     ],
-    'gallery-1' => ['title' => 'Gallery Event Photo 1', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-1.webp', 'usage' => 'Gallery page — event photo grid slot 1'],
-    'gallery-2' => ['title' => 'Gallery Event Photo 2', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-2.webp', 'usage' => 'Gallery page — event photo grid slot 2'],
-    'gallery-3' => ['title' => 'Gallery Event Photo 3', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-3.webp', 'usage' => 'Gallery page — event photo grid slot 3'],
-    'gallery-4' => ['title' => 'Gallery Event Photo 4', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-4.webp', 'usage' => 'Gallery page — event photo grid slot 4'],
-    'gallery-5' => ['title' => 'Gallery Event Photo 5', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-5.webp', 'usage' => 'Gallery page — event photo grid slot 5'],
-    'gallery-6' => ['title' => 'Gallery Event Photo 6', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-6.webp', 'usage' => 'Gallery page — event photo grid slot 6'],
-    'gallery-7' => ['title' => 'Gallery Event Photo 7', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-7.webp', 'usage' => 'Gallery page — event photo grid slot 7'],
-    'gallery-8' => ['title' => 'Gallery Event Photo 8', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-8.webp', 'usage' => 'Gallery page — event photo grid slot 8'],
-    'gallery-9' => ['title' => 'Gallery Event Photo 9', 'category' => 'Gallery', 'fallback' => 'gallery/event-gallery-9.webp', 'usage' => 'Gallery page — event photo grid slot 9'],
-    'gallery-moment-1' => ['title' => 'Gallery Featured Moment 1', 'category' => 'Gallery', 'fallback' => 'gallery/moments/moment-1.webp', 'usage' => 'Gallery page — featured moments · About page believe section'],
-    'gallery-moment-2' => ['title' => 'Gallery Featured Moment 2', 'category' => 'Gallery', 'fallback' => 'gallery/moments/moment-2.webp', 'usage' => 'Gallery page — featured moments · About page believe section'],
-    'gallery-moment-3' => ['title' => 'Gallery Featured Moment 3', 'category' => 'Gallery', 'fallback' => 'gallery/moments/moment-3.webp', 'usage' => 'Gallery page — featured moments · About page believe section'],
-    'gallery-moment-4' => ['title' => 'Gallery Featured Moment 4', 'category' => 'Gallery', 'fallback' => 'gallery/moments/moment-4.webp', 'usage' => 'Gallery page — featured moments · About page believe section'],
-    'gallery-moment-5' => ['title' => 'Gallery Featured Moment 5', 'category' => 'Gallery', 'fallback' => 'gallery/moments/moment-5.webp', 'usage' => 'Gallery page — featured moments'],
-    'gallery-moment-6' => ['title' => 'Gallery Featured Moment 6', 'category' => 'Gallery', 'fallback' => 'gallery/moments/moment-6.webp', 'usage' => 'Gallery page — featured moments'],
     'branding-logo-light' => [
-        'title' => 'Logo (light background)',
+        'title' => cms_section_label('Site logo', 1),
         'category' => 'Branding',
         'fallback' => 'branding/logo-light.webp',
-        'usage' => 'Site header & footer — logo on light backgrounds',
+        'usage' => 'Header and footer — light background',
     ],
     'branding-logo-dark' => [
-        'title' => 'Logo (dark background)',
+        'title' => cms_section_label('Site logo', 2),
         'category' => 'Branding',
         'fallback' => 'branding/logo-dark.webp',
-        'usage' => 'Site header & footer — logo on dark backgrounds',
+        'usage' => 'Header and footer — dark background',
     ],
     'seo-og-default' => [
-        'title' => 'Default Social Share Image',
+        'title' => cms_section_label('Social share preview', 1),
         'category' => 'SEO',
         'fallback' => 'seo/og-default.webp',
-        'usage' => 'Open Graph / link preview when no page-specific image is set',
+        'usage' => 'Default Open Graph / link preview image',
     ],
     'seo-social-preview' => [
-        'title' => 'Social Preview Image',
+        'title' => cms_section_label('Social share preview', 2),
         'category' => 'SEO',
         'fallback' => 'seo/social-preview.webp',
-        'usage' => 'Dedicated social preview OG image',
+        'usage' => 'Dedicated social preview image',
     ],
 ];
 
 for ($n = 1; $n <= 4; $n++) {
     $keys["homepage-moment-{$n}"] = [
-        'title' => "Homepage Gallery Teaser {$n}",
+        'title' => cms_section_label('A glimpse of the energy', $n),
         'category' => 'Homepage',
         'fallback' => "gallery/moments/moment-{$n}.webp",
-        'usage' => "Home page (/) — \"A glimpse of the energy\" section — photo {$n}",
+        'usage' => "Home page (/) — gallery teaser photo {$n}",
+    ];
+}
+
+$galleryFeaturedFallbacks = [
+    1 => 'gallery/moments/moment-1.webp',
+    2 => 'gallery/event-gallery-2.webp',
+    3 => 'gallery/moments/moment-3.webp',
+    4 => 'gallery/event-gallery-5.webp',
+];
+
+for ($n = 1; $n <= 4; $n++) {
+    $keys["gallery-featured-{$n}"] = [
+        'title' => cms_section_label('Featured moments', $n),
+        'category' => 'Gallery',
+        'fallback' => $galleryFeaturedFallbacks[$n],
+        'usage' => 'Gallery page — Featured moments section',
+    ];
+}
+
+$galleryEventFallbacks = [];
+for ($n = 1; $n <= 9; $n++) {
+    $galleryEventFallbacks[] = "gallery/event-gallery-{$n}.webp";
+}
+foreach ([4, 5, 6] as $n) {
+    $galleryEventFallbacks[] = "gallery/moments/moment-{$n}.webp";
+}
+
+for ($n = 1; $n <= 12; $n++) {
+    $keys["gallery-event-moment-{$n}"] = [
+        'title' => cms_section_label('Event moments', $n),
+        'category' => 'Gallery',
+        'fallback' => $galleryEventFallbacks[$n - 1],
+        'usage' => 'Gallery page — Event moments grid (Browse by experience)',
+    ];
+}
+
+$galleryStoryFallbacks = [
+    1 => 'gallery/event-gallery-2.webp',
+    2 => 'gallery/event-gallery-4.webp',
+    3 => 'gallery/event-gallery-6.webp',
+];
+
+for ($n = 1; $n <= 3; $n++) {
+    $keys["gallery-story-{$n}"] = [
+        'title' => cms_section_label('Stories behind the photos', $n),
+        'category' => 'Gallery',
+        'fallback' => $galleryStoryFallbacks[$n],
+        'usage' => 'Gallery page — Stories section',
     ];
 }
 

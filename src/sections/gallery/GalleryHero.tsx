@@ -1,13 +1,12 @@
 import { Container } from '@/components/Container'
 import { LightboxImage } from '@/components/ImageLightbox'
 import { Reveal } from '@/components/motion'
-import { ASSET_MAP } from '@/data/asset-map'
-import { getAssetUrl } from '@/lib/assets'
+import { getImageByKey } from '@/lib/assets'
 import { getGalleryHero } from '@/lib/gallery-page'
 
 export default function GalleryHero() {
   const hero = getGalleryHero()
-  const heroImage = getAssetUrl(ASSET_MAP.gallery.hero)
+  const heroImage = getImageByKey('gallery-hero')
 
   return (
     <header
@@ -49,7 +48,7 @@ export default function GalleryHero() {
             <div className="image-frame">
               <LightboxImage
                 src={heroImage}
-                alt={ASSET_MAP.gallery.hero.alt ?? 'Guests enjoying games at a vibrant event'}
+                alt="Guests enjoying games at a vibrant event"
                 className="aspect-4/3 w-full object-cover lg:aspect-[5/4]"
                 wrapperClassName="w-full"
                 width={800}

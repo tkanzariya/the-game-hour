@@ -50,29 +50,25 @@ function cms_all_image_keys(): array
         $base = "services/{$slug}";
 
         $keys["{$slug}-title-card"] = [
-            'title' => "{$label} Title Card",
+            'title' => cms_section_label('Experiences for every celebration', 1),
             'category' => $cat,
             'fallback' => "{$base}/title-card.webp",
-            'usage' => "{$page} — home event category card & service pages",
+            'usage' => "{$page} — home experience card",
         ];
         for ($n = 1; $n <= 3; $n++) {
-            $sliderTitle = $n === 1 ? "{$label} Hero Banner" : "{$label} Slider Image {$n}";
-            $sliderUsage = $n === 1
-                ? "{$page} — hero banner (ServiceDetailHero)"
-                : "{$page} — hero slider image {$n}";
             $keys["{$slug}-slider-{$n}"] = [
-                'title' => $sliderTitle,
+                'title' => cms_section_label('Hero', $n),
                 'category' => $cat,
                 'fallback' => "{$base}/slider-{$n}.webp",
-                'usage' => $sliderUsage,
+                'usage' => $n === 1 ? "{$page} — hero banner" : "{$page} — hero slider {$n}",
             ];
         }
         for ($n = 1; $n <= 4; $n++) {
             $keys["{$slug}-gallery-{$n}"] = [
-                'title' => "{$label} Gallery Photo {$n}",
+                'title' => cms_section_label('See the energy in action', $n),
                 'category' => $cat,
                 'fallback' => "{$base}/gallery-{$n}.webp",
-                'usage' => "{$page} — gallery photo {$n}",
+                'usage' => "{$page} — gallery grid photo {$n}",
             ];
         }
     }

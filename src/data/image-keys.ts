@@ -12,6 +12,29 @@ export type ImageKeyMeta = {
   usage?: string
 }
 
+/** Admin display label: section name + number (e.g. "Featured moments — 1"). */
+export function cmsSectionLabel(section: string, index: number): string {
+  return `${section} — ${index}`
+}
+
+export const GALLERY_FEATURED_CMS_KEYS = [
+  'gallery-featured-1',
+  'gallery-featured-2',
+  'gallery-featured-3',
+  'gallery-featured-4',
+] as const
+
+export const GALLERY_EVENT_MOMENT_CMS_KEYS = Array.from(
+  { length: 12 },
+  (_, i) => `gallery-event-moment-${i + 1}`,
+)
+
+export const GALLERY_STORY_CMS_KEYS = [
+  'gallery-story-1',
+  'gallery-story-2',
+  'gallery-story-3',
+] as const
+
 const SERVICE_SLUGS = [
   'birthday-games',
   'corporate-games',
@@ -54,29 +77,29 @@ function servicePageLabel(slug: (typeof SERVICE_SLUGS)[number]): string {
   return labels[slug] ?? serviceLabelBySlug[slug]
 }
 
-function serviceKeys(slug: (typeof SERVICE_SLUGS)[number], label: string): Record<string, ImageKeyMeta> {
+function serviceKeys(slug: (typeof SERVICE_SLUGS)[number]): Record<string, ImageKeyMeta> {
   const base = `services/${slug}`
   const cat = serviceCategoryBySlug[slug]
-  const page = `${servicePageLabel(slug)} experience page`
+  const page = `${servicePageLabel(slug)} page`
   const keys: Record<string, ImageKeyMeta> = {
     [`${slug}-title-card`]: {
-      title: `${label} Title Card`,
+      title: cmsSectionLabel('Experiences for every celebration', 1),
       category: cat,
       fallback: `${base}/title-card.webp`,
-      usage: `${page} — home event category card & service pages`,
+      usage: `${page} — home experience card`,
     },
   }
   for (let n = 1; n <= 3; n += 1) {
     keys[`${slug}-slider-${n}`] = {
-      title: n === 1 ? `${label} Hero Banner` : `${label} Slider Image ${n}`,
+      title: cmsSectionLabel('Hero', n),
       category: cat,
       fallback: `${base}/slider-${n}.webp`,
-      usage: n === 1 ? `${page} — hero banner (ServiceDetailHero)` : `${page} — hero slider image ${n}`,
+      usage: n === 1 ? `${page} — hero banner` : `${page} — hero slider ${n}`,
     }
   }
   for (let n = 1; n <= 4; n += 1) {
     keys[`${slug}-gallery-${n}`] = {
-      title: `${label} Gallery Photo ${n}`,
+      title: cmsSectionLabel('See the energy in action', n),
       category: cat,
       fallback: `${base}/gallery-${n}.webp`,
       usage: `${page} — gallery grid photo ${n}`,
@@ -87,139 +110,186 @@ function serviceKeys(slug: (typeof SERVICE_SLUGS)[number], label: string): Recor
 
 const homepageKeys: Record<string, ImageKeyMeta> = {
   'homepage-hero': {
-    title: 'Homepage Hero Banner',
+    title: cmsSectionLabel('Hero', 1),
     category: 'Homepage',
     fallback: 'homepage/hero.webp',
-    usage: 'Home page (/) — main hero · About page (/about) — hero (same image)',
+    usage: 'Home page (/) — hero banner',
   },
   'homepage-about-teaser': {
-    title: 'Icebreakers Activity Card',
+    title: cmsSectionLabel('Games & activities included', 1),
     category: 'Service Activity Cards',
     fallback: 'homepage/about-teaser.webp',
-    usage: 'All service pages — Icebreakers activity card image',
+    usage: 'All service pages — Icebreakers activity card',
   },
 }
 
 const aboutKeys: Record<string, ImageKeyMeta> = {
   'about-hero': {
-    title: 'About Page Hero',
+    title: cmsSectionLabel('Hero', 1),
     category: 'About',
     fallback: 'homepage/hero.webp',
-    usage: 'About page (/about) — main hero banner',
+    usage: 'About page (/about) — hero banner',
   },
   'about-story': {
-    title: 'Our Story Section',
+    title: cmsSectionLabel('Our story', 1),
     category: 'About',
     fallback: 'homepage/about-teaser.webp',
-    usage: 'About page — story section image and hero accent overlay',
+    usage: 'About page — story section and hero accent',
   },
   'about-pillar-connection': {
-    title: 'Connection Pillar Photo',
+    title: cmsSectionLabel('Why we believe in play', 1),
     category: 'About',
     fallback: 'gallery/moments/moment-1.webp',
-    usage: 'About page — "Why we believe in play" — Connection card',
+    usage: 'About page — Connection pillar card',
   },
   'about-pillar-screen-free': {
-    title: 'Screen-free Pillar Photo',
+    title: cmsSectionLabel('Why we believe in play', 2),
     category: 'About',
     fallback: 'gallery/moments/moment-2.webp',
-    usage: 'About page — "Why we believe in play" — Screen-free card',
+    usage: 'About page — Screen-free pillar card',
   },
   'about-gallery-spotlight': {
-    title: 'Gallery Invite Spotlight',
+    title: cmsSectionLabel('See the joy in action', 1),
     category: 'About',
     fallback: 'gallery/event-gallery-2.webp',
-    usage: 'About page — "See the joy in action" section',
+    usage: 'About page — gallery invite spotlight',
   },
 }
 
 for (let n = 1; n <= 4; n += 1) {
   homepageKeys[`homepage-moment-${n}`] = {
-    title: `Homepage Gallery Teaser ${n}`,
+    title: cmsSectionLabel('A glimpse of the energy', n),
     category: 'Homepage',
     fallback: `gallery/moments/moment-${n}.webp`,
-    usage: `Home page (/) — "A glimpse of the energy" section — photo ${n}`,
+    usage: `Home page (/) — gallery teaser photo ${n}`,
   }
 }
 
 const serviceActivityKeys: Record<string, ImageKeyMeta> = {
   'homepage-team-building': {
-    title: 'Team Building Activity Card',
+    title: cmsSectionLabel('Games & activities included', 3),
     category: 'Service Activity Cards',
     fallback: 'homepage/team-building.webp',
-    usage: 'All service pages (Birthday, Corporate, etc.) — Team Building activity card',
+    usage: 'All service pages — Team Building activity card',
   },
   'homepage-strategy-games': {
-    title: 'Strategy Games Activity Card',
+    title: cmsSectionLabel('Games & activities included', 2),
     category: 'Service Activity Cards',
     fallback: 'homepage/strategy-games.webp',
-    usage: 'All service pages (Birthday, Corporate, etc.) — Strategy Games activity card',
+    usage: 'All service pages — Strategy Games activity card',
   },
 }
 
+const galleryFeaturedFallbacks = [
+  'gallery/moments/moment-1.webp',
+  'gallery/event-gallery-2.webp',
+  'gallery/moments/moment-3.webp',
+  'gallery/event-gallery-5.webp',
+] as const
+
+const galleryEventMomentFallbacks = [
+  ...Array.from({ length: 9 }, (_, i) => `gallery/event-gallery-${i + 1}.webp`),
+  'gallery/moments/moment-4.webp',
+  'gallery/moments/moment-5.webp',
+  'gallery/moments/moment-6.webp',
+] as const
+
+const galleryStoryFallbacks = [
+  'gallery/event-gallery-2.webp',
+  'gallery/event-gallery-4.webp',
+  'gallery/event-gallery-6.webp',
+] as const
+
 const galleryKeys: Record<string, ImageKeyMeta> = {
   'gallery-hero': {
-    title: 'Gallery Page Hero Banner',
+    title: cmsSectionLabel('Hero', 1),
     category: 'Gallery',
     fallback: 'gallery/gallery-hero.webp',
     usage: 'Gallery page (/gallery) — hero banner',
   },
 }
 
-for (let n = 1; n <= 9; n += 1) {
-  galleryKeys[`gallery-${n}`] = {
-    title: `Gallery Event Photo ${n}`,
+for (let n = 1; n <= 4; n += 1) {
+  galleryKeys[`gallery-featured-${n}`] = {
+    title: cmsSectionLabel('Featured moments', n),
     category: 'Gallery',
-    fallback: `gallery/event-gallery-${n}.webp`,
-    usage: `Gallery page — event photo grid slot ${n}`,
+    fallback: galleryFeaturedFallbacks[n - 1],
+    usage: 'Gallery page — Featured moments section',
   }
 }
 
-for (let n = 1; n <= 6; n += 1) {
-  galleryKeys[`gallery-moment-${n}`] = {
-    title: `Gallery Featured Moment ${n}`,
+for (let n = 1; n <= 12; n += 1) {
+  galleryKeys[`gallery-event-moment-${n}`] = {
+    title: cmsSectionLabel('Event moments', n),
     category: 'Gallery',
-    fallback: `gallery/moments/moment-${n}.webp`,
-    usage:
-      n <= 4
-        ? `Gallery page (/gallery) — featured moments · About page believe section (not home teaser)`
-        : `Gallery page (/gallery) — featured moments`,
+    fallback: galleryEventMomentFallbacks[n - 1],
+    usage: 'Gallery page — Event moments grid (Browse by experience)',
+  }
+}
+
+for (let n = 1; n <= 3; n += 1) {
+  galleryKeys[`gallery-story-${n}`] = {
+    title: cmsSectionLabel('Stories behind the photos', n),
+    category: 'Gallery',
+    fallback: galleryStoryFallbacks[n - 1],
+    usage: 'Gallery page — Stories section',
   }
 }
 
 const brandingKeys: Record<string, ImageKeyMeta> = {
   'branding-logo-light': {
-    title: 'Logo (light background)',
+    title: cmsSectionLabel('Site logo', 1),
     category: 'Branding',
     fallback: 'branding/logo-light.webp',
-    usage: 'Site header & footer — logo on light backgrounds',
+    usage: 'Header and footer — light background',
   },
   'branding-logo-dark': {
-    title: 'Logo (dark background)',
+    title: cmsSectionLabel('Site logo', 2),
     category: 'Branding',
     fallback: 'branding/logo-dark.webp',
-    usage: 'Site header & footer — logo on dark backgrounds',
+    usage: 'Header and footer — dark background',
   },
 }
 
 const seoKeys: Record<string, ImageKeyMeta> = {
   'seo-og-default': {
-    title: 'Default Social Share Image',
+    title: cmsSectionLabel('Social share preview', 1),
     category: 'SEO',
     fallback: 'seo/og-default.webp',
-    usage: 'Open Graph / link preview when no page-specific image is set',
+    usage: 'Default Open Graph / link preview image',
   },
   'seo-social-preview': {
-    title: 'Social Preview Image',
+    title: cmsSectionLabel('Social share preview', 2),
     category: 'SEO',
     fallback: 'seo/social-preview.webp',
-    usage: 'Dedicated social preview OG image',
+    usage: 'Dedicated social preview image',
   },
 }
 
 /** Legacy DB keys → canonical keys used by the frontend */
 export const CMS_KEY_ALIASES: Record<string, string> = {
   'birthday-hero': 'birthday-games-slider-1',
+  'gallery-1': 'gallery-event-moment-1',
+  'gallery-2': 'gallery-event-moment-2',
+  'gallery-3': 'gallery-event-moment-3',
+  'gallery-4': 'gallery-event-moment-4',
+  'gallery-5': 'gallery-event-moment-5',
+  'gallery-6': 'gallery-event-moment-6',
+  'gallery-7': 'gallery-event-moment-7',
+  'gallery-8': 'gallery-event-moment-8',
+  'gallery-9': 'gallery-event-moment-9',
+  'gallery-moment-1': 'gallery-featured-1',
+  'gallery-moment-2': 'about-pillar-screen-free',
+  'gallery-moment-3': 'gallery-featured-3',
+  'gallery-moment-4': 'gallery-event-moment-10',
+  'gallery-moment-5': 'gallery-event-moment-11',
+  'gallery-moment-6': 'gallery-event-moment-12',
+  'home-moment-1': 'gallery-featured-1',
+  'home-moment-2': 'gallery-event-moment-10',
+  'home-moment-3': 'gallery-featured-3',
+  'home-moment-4': 'gallery-event-moment-10',
+  'home-moment-5': 'gallery-event-moment-11',
+  'home-moment-6': 'gallery-event-moment-12',
 }
 
 export const IMAGE_KEY_REGISTRY: Record<string, ImageKeyMeta> = {
@@ -230,7 +300,7 @@ export const IMAGE_KEY_REGISTRY: Record<string, ImageKeyMeta> = {
   ...brandingKeys,
   ...seoKeys,
   ...SERVICE_SLUGS.reduce(
-    (acc, slug) => ({ ...acc, ...serviceKeys(slug, serviceLabelBySlug[slug]) }),
+    (acc, slug) => ({ ...acc, ...serviceKeys(slug) }),
     {} as Record<string, ImageKeyMeta>,
   ),
 }
@@ -255,4 +325,16 @@ export const IMAGE_KEY_LIST = Object.keys(IMAGE_KEY_REGISTRY)
 /** Resolve legacy alias to canonical frontend key */
 export function resolveCanonicalCmsKey(key: string): string {
   return CMS_KEY_ALIASES[key] ?? key
+}
+
+/** Keys that share the same bundled fallback (including legacy aliases). */
+export function cmsKeysSharingFallback(key: string): string[] {
+  const canonical = resolveCanonicalCmsKey(key)
+  const meta = IMAGE_KEY_REGISTRY[canonical]
+  if (!meta?.fallback) return [canonical]
+  const siblings = new Set<string>([canonical])
+  for (const sibling of FALLBACK_PATH_TO_IMAGE_KEYS[meta.fallback] ?? []) {
+    siblings.add(resolveCanonicalCmsKey(sibling))
+  }
+  return [...siblings]
 }

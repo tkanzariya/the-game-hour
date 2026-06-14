@@ -6,6 +6,27 @@ function cms_key_aliases(): array
 {
     return [
         'birthday-hero' => 'birthday-games-slider-1',
+        'gallery-1' => 'gallery-event-moment-1',
+        'gallery-2' => 'gallery-event-moment-2',
+        'gallery-3' => 'gallery-event-moment-3',
+        'gallery-4' => 'gallery-event-moment-4',
+        'gallery-5' => 'gallery-event-moment-5',
+        'gallery-6' => 'gallery-event-moment-6',
+        'gallery-7' => 'gallery-event-moment-7',
+        'gallery-8' => 'gallery-event-moment-8',
+        'gallery-9' => 'gallery-event-moment-9',
+        'gallery-moment-1' => 'gallery-featured-1',
+        'gallery-moment-2' => 'about-pillar-screen-free',
+        'gallery-moment-3' => 'gallery-featured-3',
+        'gallery-moment-4' => 'gallery-event-moment-10',
+        'gallery-moment-5' => 'gallery-event-moment-11',
+        'gallery-moment-6' => 'gallery-event-moment-12',
+        'home-moment-1' => 'gallery-featured-1',
+        'home-moment-2' => 'gallery-event-moment-10',
+        'home-moment-3' => 'gallery-featured-3',
+        'home-moment-4' => 'gallery-event-moment-10',
+        'home-moment-5' => 'gallery-event-moment-11',
+        'home-moment-6' => 'gallery-event-moment-12',
     ];
 }
 

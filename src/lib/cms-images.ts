@@ -5,6 +5,7 @@
 import {
   FALLBACK_PATH_TO_IMAGE_KEYS,
   IMAGE_KEY_REGISTRY,
+  cmsKeysSharingFallback,
   resolveCanonicalCmsKey,
   type ImageKeyMeta,
 } from '@/data/image-keys'
@@ -77,16 +78,14 @@ function bundledFallbackForKey(key: string): string {
 }
 
 function manifestUrlForKey(key: string): string | undefined {
-  const direct = manifest[key]?.url
-  if (direct) return direct
-  const canonical = resolveCanonicalCmsKey(key)
-  if (canonical !== key && manifest[canonical]?.url) {
-    return manifest[canonical].url
-  }
-  for (const [manifestKey, entry] of Object.entries(manifest)) {
-    if (!entry?.url) continue
-    if (resolveCanonicalCmsKey(manifestKey) === canonical) {
-      return entry.url
+  for (const candidate of cmsKeysSharingFallback(key)) {
+    const direct = manifest[candidate]?.url
+    if (direct) return direct
+    for (const [manifestKey, entry] of Object.entries(manifest)) {
+      if (!entry?.url) continue
+      if (resolveCanonicalCmsKey(manifestKey) === candidate) {
+        return entry.url
+      }
     }
   }
   return undefined

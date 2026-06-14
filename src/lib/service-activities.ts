@@ -1,13 +1,11 @@
 import { servicesData } from '@/data'
-import { ASSET_MAP } from '@/data/asset-map'
-import type { AssetEntry } from '@/data/asset-map'
 import type { GameCategory } from '@/data/types'
-import { getAssetUrl } from '@/lib/assets'
+import { getImageByKey } from '@/lib/assets'
 
-const GAME_CATEGORY_IMAGES: Record<string, AssetEntry> = {
-  strategy: ASSET_MAP.homepage.strategyGames,
-  icebreakers: ASSET_MAP.homepage.aboutTeaser,
-  'team-building': ASSET_MAP.homepage.teamBuilding,
+const GAME_CATEGORY_IMAGE_KEYS: Record<string, string> = {
+  strategy: 'homepage-strategy-games',
+  icebreakers: 'homepage-about-teaser',
+  'team-building': 'homepage-team-building',
 }
 
 /** Per-service emphasis order (falls back to global list). */
@@ -37,6 +35,6 @@ export function getActivitiesForService(slug: string): ActivityCard[] {
     .filter((c): c is GameCategory => Boolean(c))
     .map((category) => ({
       ...category,
-      imageUrl: getAssetUrl(GAME_CATEGORY_IMAGES[category.id]),
+      imageUrl: getImageByKey(GAME_CATEGORY_IMAGE_KEYS[category.id]),
     }))
 }

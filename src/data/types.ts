@@ -189,7 +189,6 @@ export type GalleryStory = {
   id: string
   title: string
   context: string
-  imageId: string
   serviceSlug: string
 }
 
@@ -207,7 +206,6 @@ export type GalleryPageContent = {
   featuredMoments: {
     title: string
     subtitle: string
-    itemIds: string[]
   }
   browse: {
     title: string

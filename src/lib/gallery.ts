@@ -1,7 +1,8 @@
 import { galleryData } from '@/data'
+import { GALLERY_EVENT_MOMENT_CMS_KEYS } from '@/data/image-keys'
 import { ASSET_MAP, type ServiceSlug } from '@/data/asset-map'
 import type { GalleryItem, GalleryPageContent } from '@/data/types'
-import { getAssetUrl, getServiceAssetUrl } from '@/lib/assets'
+import { getAssetUrl, getImageByKey, getServiceAssetUrl } from '@/lib/assets'
 
 export type ResolvedGalleryImage = {
   id: string
@@ -30,7 +31,6 @@ const fallbackPage: GalleryPageContent = {
   featuredMoments: {
     title: 'Featured moments',
     subtitle: 'Energy, participation, and connection captured at events we hosted.',
-    itemIds: ['home-moment-1', 'gallery-2', 'home-moment-3', 'gallery-5'],
   },
   browse: {
     title: 'Browse by experience',
@@ -158,13 +158,14 @@ export function getFeaturedGalleryPreview(limit = 6): ServiceGalleryImage[] {
   })
 }
 
-/** Curated grid for gallery page filters. Quality over quantity. */
+/** Curated grid for gallery page "Event moments" section (all filter). */
 export function getFilteredGalleryImages(filter: GalleryFilterId): ResolvedGalleryImage[] {
   if (filter === GALLERY_FILTER_ALL) {
-    const curated = galleryData.items
-      .filter((item) => item.id.startsWith('gallery-') || item.id.startsWith('home-moment'))
-      .map(resolveGalleryItem)
-    return dedupeBySrc(curated).slice(0, 12)
+    return GALLERY_EVENT_MOMENT_CMS_KEYS.map((key, index) => ({
+      id: key,
+      src: getImageByKey(key),
+      alt: `Event moment ${index + 1}`,
+    }))
   }
 
   const curated = galleryData.items

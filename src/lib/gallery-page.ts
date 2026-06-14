@@ -1,8 +1,9 @@
 import {
-  getGalleryItemsByIds,
-  getGalleryPageContent,
-  type ResolvedGalleryImage,
-} from '@/lib/gallery'
+  GALLERY_FEATURED_CMS_KEYS,
+  GALLERY_STORY_CMS_KEYS,
+} from '@/data/image-keys'
+import { getImageByKey } from '@/lib/assets'
+import { getGalleryPageContent, type ResolvedGalleryImage } from '@/lib/gallery'
 import { getGalleryStoriesContent } from '@/lib/content/gallery-stories'
 
 export function getGalleryHero() {
@@ -11,7 +12,11 @@ export function getGalleryHero() {
 
 export function getGalleryFeaturedMoments() {
   const section = getGalleryPageContent().featuredMoments
-  const images = getGalleryItemsByIds(section.itemIds)
+  const images: ResolvedGalleryImage[] = GALLERY_FEATURED_CMS_KEYS.map((key, index) => ({
+    id: key,
+    src: getImageByKey(key),
+    alt: `Featured moment ${index + 1}`,
+  }))
   return { ...section, images }
 }
 
@@ -28,7 +33,13 @@ export function getGalleryFilters() {
 }
 
 export function getGalleryStories() {
-  return getGalleryStoriesContent()
+  const content = getGalleryStoriesContent()
+  const storyImages = GALLERY_STORY_CMS_KEYS.map((key, index) => ({
+    key,
+    src: getImageByKey(key),
+    alt: content.items[index]?.title ?? `Gallery story ${index + 1}`,
+  }))
+  return { ...content, storyImages }
 }
 
 export function getGalleryFinalCta() {

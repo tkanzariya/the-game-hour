@@ -137,13 +137,7 @@
     },
     "featuredMoments": {
       "title": "Featured moments",
-      "subtitle": "Energy, participation, and connection captured at events we hosted.",
-      "itemIds": [
-        "home-moment-1",
-        "gallery-2",
-        "home-moment-3",
-        "gallery-5"
-      ]
+      "subtitle": "Energy, participation, and connection captured at events we hosted."
     },
     "browse": {
       "title": "Browse by experience",

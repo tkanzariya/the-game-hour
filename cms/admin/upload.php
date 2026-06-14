@@ -85,10 +85,11 @@ if ($error) {
 $content .= '<div class="upload-panel card">';
 $content .= '<div class="upload-current">';
 $content .= '<p class="upload-current-label">Current image on website</p>';
+$content .= '<div class="upload-current-preview">';
 $content .= '<img src="' . htmlspecialchars($previewUrl) . '" alt="Current photo">';
 $content .= '<span class="photo-card-badge ' . ($hasCustom ? 'badge-live' : 'badge-default') . '">'
     . ($hasCustom ? 'Your upload' : 'Using website default') . '</span>';
-$content .= '</div>';
+$content .= '</div></div>';
 
 $content .= '<form method="post" enctype="multipart/form-data" class="upload-form">';
 $content .= '<input type="hidden" name="csrf" value="' . htmlspecialchars($token) . '">';
