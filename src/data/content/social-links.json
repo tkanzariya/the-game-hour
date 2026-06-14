@@ -1,0 +1,31 @@
+{
+  "meta": {
+    "source": "The Game Hour social profiles",
+    "generated": "2026-05-23",
+    "note": "Instagram and LinkedIn only — the two channels promoted for conversion and trust."
+  },
+  "items": [
+    {
+      "id": "instagram",
+      "url": "https://www.instagram.com/thegamehour",
+      "label": "Instagram",
+      "abbr": "IG",
+      "lines": [
+        "Real events.",
+        "Real photos.",
+        "Real experiences."
+      ]
+    },
+    {
+      "id": "linkedin",
+      "url": "https://www.linkedin.com/company/the-game-hour/",
+      "label": "LinkedIn",
+      "abbr": "IN",
+      "lines": [
+        "Corporate credibility.",
+        "Professional event expertise.",
+        "Business trust."
+      ]
+    }
+  ]
+}

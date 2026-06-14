@@ -1,0 +1,92 @@
+{
+  "meta": {
+    "source": "TheGameHour-legacy about-us.html + docs/content/content-map.md",
+    "generated": "2026-05-23"
+  },
+  "hero": {
+    "eyebrow": "Our story",
+    "headline": "We bring people back together, one game at a time.",
+    "subheadline": "The Game Hour exists because celebrations deserve more than food and small talk. We create facilitator-led, screen-free play that turns guests into teammates and events into stories worth retelling.",
+    "trustLine": "Born in Gujarat · Loved by families, HR teams, schools & societies"
+  },
+  "story": {
+    "title": "How The Game Hour started",
+    "lead": "It began at a family gathering when someone pulled out old-school games and phones went down. Laughter filled the room. That night stuck with us.",
+    "paragraphs": [
+      "In a world glued to screens, we saw how quickly people light up when play is intentional. Cousins who barely spoke were cheering together. Grandparents were winning rounds. That spark became our mission.",
+      "We started with small community events in Ahmedabad. Word spread. Birthdays called, then corporates, weddings, school fests, and society festivals. Today we host experiences across Gujarat with the same warmth we brought to that first living room."
+    ],
+    "milestones": [
+      {
+        "era": "2022",
+        "title": "The spark",
+        "summary": "A family game night reminded us what connection feels like without screens."
+      },
+      {
+        "era": "2023",
+        "title": "First events",
+        "summary": "Community gatherings and birthday parties built our reputation through word of mouth."
+      },
+      {
+        "era": "Today",
+        "title": "Growing impact",
+        "summary": "Corporates, weddings, schools, and festivals trust us to run the room."
+      }
+    ]
+  },
+  "believeInPlay": {
+    "title": "Why we believe in play",
+    "subtitle": "Play is not childish. It is how humans connect, compete kindly, and make memories that outlast the catering.",
+    "pillars": [
+      {
+        "id": "connection",
+        "title": "Connection",
+        "description": "Games give strangers a shared goal and something real to talk about.",
+        "icon": "handshake"
+      },
+      {
+        "id": "laughter",
+        "title": "Laughter",
+        "description": "The best events leave cheeks sore and cameras full of candid joy.",
+        "icon": "smile"
+      },
+      {
+        "id": "teamwork",
+        "title": "Teamwork",
+        "description": "Friendly competition builds trust faster than another slide deck.",
+        "icon": "trophy"
+      },
+      {
+        "id": "memories",
+        "title": "Memories",
+        "description": "Guests remember the round they almost won long after the party ends.",
+        "icon": "camera"
+      },
+      {
+        "id": "screen-free",
+        "title": "Screen-free",
+        "description": "We design for eye contact, movement, and presence in the room.",
+        "icon": "phone-off"
+      }
+    ]
+  },
+  "galleryInvite": {
+    "title": "See the joy in action",
+    "description": "Photos from real events across Gujarat live on our gallery: birthdays, corporates, weddings, school fests, and society festivals. That is where visual proof belongs.",
+    "primaryLabel": "Browse event gallery",
+    "featuredGalleryItemId": "gallery-2"
+  },
+  "experiencesInvite": {
+    "title": "Planning for a specific crowd?",
+    "description": "Our services page maps eight experience types to your audience, from HR offsites to birthday parties. Find the package that fits your venue and goals.",
+    "primaryLabel": "Explore experiences",
+    "secondaryLabel": "See our impact in numbers",
+    "secondaryHref": "/#trusted"
+  },
+  "finalCta": {
+    "headline": "Ready to plan your game hour?",
+    "description": "Tell us your date, venue, and crowd. We will map the perfect play and reply with options fast.",
+    "primaryLabel": "Discuss your event",
+    "secondaryLabel": "WhatsApp us"
+  }
+}

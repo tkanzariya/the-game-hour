@@ -1,0 +1,17 @@
+/**
+ * Archived Soft Coral accent — scoped to /theme-preview/coral only.
+ * Production site uses violet; this route restores coral for comparison.
+ */
+:root[data-preview-theme='coral'],
+html[data-preview-theme='coral'] {
+  --color-secondary: #ff6b6b;
+  --color-secondary-hover: #ff5252;
+  --color-secondary-light: #ff8a8a;
+  --color-secondary-dark: #ff5252;
+  --color-secondary-foreground: #ffffff;
+  --color-secondary-emphasis: #c24141;
+  --color-accent-light: #fff3f3;
+  --color-accent-soft: #ffe8e8;
+  --shadow-glow-accent: 0 10px 28px rgb(255 107 107 / 0.28);
+  --shadow-glow-orange: var(--shadow-glow-accent);
+}

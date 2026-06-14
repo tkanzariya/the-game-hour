@@ -1,0 +1,27 @@
+/**
+ * Layout grid utilities — aligned with tokens.css width scale.
+ * @see docs/operations/LAYOUT_SYSTEM_AUDIT.md
+ */
+
+/** Matches container-app-wide max-width (including ultra-wide cap) */
+.layout-shell-max {
+  width: 100%;
+  max-width: var(--width-container-wide);
+  margin-inline: auto;
+}
+
+@media (min-width: 1536px) {
+  .layout-shell-max {
+    max-width: var(--width-container-ultra);
+  }
+}
+
+/** Centered section heading + subtitle measure */
+.prose-intro {
+  max-width: var(--width-prose);
+}
+
+.prose-intro-center {
+  margin-inline: auto;
+  text-align: center;
+}

@@ -1,0 +1,58 @@
+{
+  "meta": {
+    "source": "The Game Hour event archive",
+    "generated": "2026-05-23",
+    "status": "architecture-only",
+    "note": "Future full event case studies. Not rendered on site yet. Gallery page continues to use gallery-stories.json for short story blocks. Add published items here when case-study UI ships."
+  },
+  "section": {
+    "title": "Event stories",
+    "subtitle": "Real events with context: who attended, what we ran, and what changed in the room."
+  },
+  "items": [
+    {
+      "id": "event-corporate-offsite-ahmedabad",
+      "status": "draft",
+      "title": "Cross-department offsite, Ahmedabad",
+      "location": {
+        "city": "Ahmedabad",
+        "venue": "Offsite resort",
+        "state": "Gujarat"
+      },
+      "audience": "corporate",
+      "participants": 120,
+      "serviceSlug": "corporate-games",
+      "date": "2025-11",
+      "story": "Three departments with little day-to-day overlap. Facilitator-led team rounds moved people across tables within the first 20 minutes. Participation stayed high through four structured challenges.",
+      "outcomes": [
+        "Cross-department participation",
+        "Team bonding",
+        "Sustained engagement without slides"
+      ],
+      "photoIds": ["gallery-2"],
+      "featured": true
+    },
+    {
+      "id": "event-society-festival-vadodara",
+      "status": "draft",
+      "title": "Annual society festival, Vadodara",
+      "location": {
+        "city": "Vadodara",
+        "venue": "Society lawn",
+        "state": "Gujarat"
+      },
+      "audience": "festival",
+      "participants": 350,
+      "serviceSlug": "game-festival",
+      "date": "2025-01",
+      "story": "Residents from toddlers to grandparents shared game queues instead of splitting by age. Rotating stations kept wait times short while the committee managed food and logistics.",
+      "outcomes": [
+        "Multi-generation community interaction",
+        "Crowd flow without chaos",
+        "Full-lawn participation"
+      ],
+      "photoIds": ["gallery-6"],
+      "featured": false
+    }
+  ]
+}

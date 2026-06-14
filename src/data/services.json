@@ -1,0 +1,736 @@
+{
+  "meta": {
+    "source": "TheGameHour-legacy (read-only audit)",
+    "generated": "2026-05-23",
+    "bookingUrl": "https://the-game-hour.bubbleapps.io/version-test/",
+    "corporateBookingUrl": "https://the-game-hour.bubbleapps.io/version-test/corporate_booking"
+  },
+  "servicesPage": {
+    "hero": {
+      "headline": "Every celebration deserves real laughter",
+      "subheadline": "Eight curated game experiences: birthdays, weddings, corporates, schools, festivals, and more. Facilitator-led, screen-free, and built for Gujarat."
+    },
+    "audiences": [
+      {
+        "id": "corporate",
+        "label": "Corporate",
+        "description": "Offsites, annual days, and team events that spark collaboration without awkward icebreakers.",
+        "icon": "building",
+        "relatedServiceSlug": "corporate-games"
+      },
+      {
+        "id": "kids",
+        "label": "Kids & families",
+        "description": "Birthday parties where every age group plays, not just the loudest cousin.",
+        "icon": "cake",
+        "relatedServiceSlug": "birthday-games"
+      },
+      {
+        "id": "schools",
+        "label": "Schools & colleges",
+        "description": "Fests, sports days, and campus events with energy that stays organized.",
+        "icon": "graduation-cap",
+        "relatedServiceSlug": "school-and-collage-event"
+      },
+      {
+        "id": "weddings",
+        "label": "Weddings",
+        "description": "Haldi, sangeet, and receptions where both families laugh together from round one.",
+        "icon": "ring",
+        "relatedServiceSlug": "wedding-or-haldi-games"
+      },
+      {
+        "id": "societies",
+        "label": "Societies & communities",
+        "description": "Festivals and gatherings that bring neighbours off their balconies and into the game.",
+        "icon": "community",
+        "relatedServiceSlug": "game-festival"
+      }
+    ],
+    "galleryInvite": {
+      "title": "Wondering what it looks like on the day?",
+      "description": "Full visual proof lives on our gallery page: real photos from birthdays, corporates, weddings, schools, and festivals across Gujarat.",
+      "primaryLabel": "View event gallery"
+    }
+  },
+  "services": [
+    {
+      "id": "birthday",
+      "slug": "birthday-games",
+      "legacyPath": "/birthday-games.html",
+      "name": "Birthday Games",
+      "shortDescription": "Make birthdays extra special with age-appropriate and exciting games that keep everyone entertained.",
+      "hero": {
+        "headline": "Birthday Games",
+        "subheadline": "Make every birthday unforgettable with our exciting and age-appropriate game experiences!",
+        "eyebrow": "Birthday celebrations · Gujarat",
+        "trustLine": "Screen-free fun · Professional facilitators · We come to your venue",
+        "accentTint": "warm"
+      },
+      "intro": {
+        "headline": "Celebrate with Unforgettable Fun!",
+        "paragraphs": [
+          "At The Game Hour, we believe birthdays should be filled with laughter, joy, and memorable moments. Our specially curated birthday game packages are designed to entertain kids and adults alike, ensuring everyone has a fantastic time without the stress of planning activities.",
+          "From high-energy challenges to creative group games, we tailor the experience to suit the age group and theme of your party, making it truly unique."
+        ]
+      },
+      "sellingPoints": [
+        {
+          "title": "Age-Appropriate Games",
+          "description": "Fun for toddlers, teens, and adults, ensuring everyone has a blast.",
+          "icon": "child"
+        },
+        {
+          "title": "Themed Party Integration",
+          "description": "Games designed to perfectly match your party's unique theme and vision.",
+          "icon": "palette"
+        },
+        {
+          "title": "Interactive Fun",
+          "description": "Engaging activities that get everyone involved, laughing, and connecting.",
+          "icon": "users"
+        },
+        {
+          "title": "Professional Game Facilitators",
+          "description": "Our expert team ensures smooth gameplay and maximum enjoyment for all.",
+          "icon": "user-tie"
+        },
+        {
+          "title": "Hassle-Free Setup & Pack-up",
+          "description": "We handle all the logistics, so you can relax and enjoy your celebration.",
+          "icon": "box-open"
+        },
+        {
+          "title": "Customizable Packages",
+          "description": "Tailored game selections and experiences to fit your specific needs and budget.",
+          "icon": "trophy"
+        }
+      ],
+      "images": {
+        "titleCard": "/images/Service Titles/birthday-games-title-card.png",
+        "slider": [
+          "/images/1. Birthday Photos/birtday_photo_1.jpg",
+          "/images/1. Birthday Photos/birtday_photo_2.jpg",
+          "/images/1. Birthday Photos/birtday_photo_3.jpg"
+        ],
+        "gallery": [
+          "/images/1. Birthday Photos/birtday_photo_1.jpg",
+          "/images/1. Birthday Photos/birtday_photo_2.jpg",
+          "/images/1. Birthday Photos/birtday_photo_3.jpg",
+          "/images/1. Birthday Photos/birtday_photo_4.jpg"
+        ]
+      },
+      "testimonial": {
+        "quote": "The Game Hour truly delivered! Our son's 10th birthday was the best one yet. The facilitators were amazing, and the games kept all the kids engaged and happy. Highly recommend for any birthday party!",
+        "attribution": "Mrs. Sharma, Happy Parent"
+      },
+      "cta": {
+        "headline": "Ready to plan a birthday bash they'll never forget?",
+        "label": "Book Your Birthday Games Now!",
+        "href": "https://the-game-hour.bubbleapps.io/version-test/"
+      },
+      "eventTypes": [
+        "Kids birthday",
+        "Teen birthday",
+        "Adult birthday",
+        "Themed parties"
+      ]
+    },
+    {
+      "id": "corporate",
+      "slug": "corporate-games",
+      "legacyPath": "/corporate-games.html",
+      "name": "Corporate Games",
+      "shortDescription": "Boost team morale and foster collaboration with fun, engaging, and unique corporate team-building games.",
+      "hero": {
+        "headline": "Corporate Games",
+        "subheadline": "Boost morale, foster collaboration, and ignite team spirit with our professional corporate game packages.",
+        "eyebrow": "Corporate team building · Gujarat",
+        "trustLine": "Screen-free fun · Professional facilitators · We come to your venue",
+        "accentTint": "cool"
+      },
+      "intro": {
+        "headline": "Build Stronger Teams with Play!",
+        "paragraphs": [
+          "In the modern workplace, team cohesion is critical. Our corporate games are designed not just for fun, but as strategic tools to enhance communication, problem-solving, and employee engagement in a relaxed environment.",
+          "We offer customizable activities perfect for conferences, employee parties, wellness programs, and team-specific development goals."
+        ]
+      },
+      "sellingPoints": [
+        {
+          "title": "Enhanced Collaboration",
+          "description": "Games designed to break down silos and strengthen team bonds through shared experiences.",
+          "icon": "handshake"
+        },
+        {
+          "title": "Strategic Problem Solving",
+          "description": "Challenges that require logical thinking and unified team strategy to overcome.",
+          "icon": "brain"
+        },
+        {
+          "title": "Improved Communication",
+          "description": "Activities that necessitate clear, concise, and effective communication among team members.",
+          "icon": "comments"
+        },
+        {
+          "title": "Expert Facilitation",
+          "description": "Our professional hosts manage all logistics and ensure every activity aligns with your corporate goals.",
+          "icon": "user-tie"
+        },
+        {
+          "title": "Boosted Morale & Recognition",
+          "description": "Inject energy and fun into your workplace, leading to reduced stress and higher employee satisfaction.",
+          "icon": "award"
+        },
+        {
+          "title": "Full Logistical Support",
+          "description": "From setup to wrap-up, we handle everything, allowing HR and management to fully participate.",
+          "icon": "cogs"
+        }
+      ],
+      "images": {
+        "titleCard": "/images/Service Titles/corporate-games-title-card.png",
+        "slider": [
+          "/images/2. Coporate Photos/corporate-activities-title-1.png",
+          "/images/2. Coporate Photos/corporate-activities-title-2.jpg",
+          "/images/2. Coporate Photos/corporate-activities-title-3.jpg"
+        ],
+        "gallery": [
+          "/images/2. Coporate Photos/corporate-activities-photo-1.JPG",
+          "/images/2. Coporate Photos/corporate-activities-photo-2.jpg",
+          "/images/2. Coporate Photos/corporate-activities-photo-3.png",
+          "/images/2. Coporate Photos/corporate-activities-photo-4.png"
+        ]
+      },
+      "testimonial": {
+        "quote": "The Game Hour delivered a fantastic team-building session for our annual summit. The blend of fun and subtle strategic challenge was exactly what we needed to re-energize the team. Highly professional and worth every rupee!",
+        "attribution": "Mr. Patel, HR Manager, TechSolutions Pvt. Ltd."
+      },
+      "cta": {
+        "headline": "Ready to invest in your team's success and happiness?",
+        "label": "Request a Corporate Games Proposal",
+        "href": "https://the-game-hour.bubbleapps.io/version-test/corporate_booking"
+      },
+      "eventTypes": [
+        "Team building",
+        "Annual summit",
+        "Employee parties",
+        "Wellness programs"
+      ]
+    },
+    {
+      "id": "social-gathering",
+      "slug": "social-gathering-games",
+      "legacyPath": "/social-gathering-games.html",
+      "name": "Social Gathering Games",
+      "shortDescription": "Transform any get-together into a memorable party with icebreakers and interactive group activities.",
+      "hero": {
+        "headline": "Social Gatherings Games",
+        "subheadline": "Turn any get-together into an instant party with interactive games designed for fun and connection!",
+        "eyebrow": "Social gatherings · Gujarat",
+        "trustLine": "Screen-free fun · Professional facilitators · We come to your venue",
+        "accentTint": "celebration"
+      },
+      "intro": {
+        "headline": "Make Your Event Social and Engaging!",
+        "paragraphs": [
+          "Whether it's a family reunion, a housewarming, a neighbourhood event, or just a group of friends, games are the perfect icebreaker and entertainment solution. We specialize in curating low-stress, high-fun activities that get guests off their phones and into the moment.",
+          "Forget the awkward lulls, our hosts bring a dynamic energy and a customized playlist of games that ensure continuous laughter and meaningful interactions for guests of all ages."
+        ]
+      },
+      "sellingPoints": [
+        {
+          "title": "Instant Icebreakers",
+          "description": "Fun, quick activities designed to make strangers feel comfortable and start conversations easily.",
+          "icon": "people-arrows"
+        },
+        {
+          "title": "Pure, Unadulterated Fun",
+          "description": "A mix of nostalgic, classic, and high-energy games guaranteed to bring out the laughter in everyone.",
+          "icon": "laugh"
+        },
+        {
+          "title": "Connecting Generations",
+          "description": "Games that bridge age gaps, allowing grandparents, parents, and children to play together.",
+          "icon": "heart"
+        },
+        {
+          "title": "Professional Hosts",
+          "description": "Our friendly facilitators manage the flow, energy, and scoring, so you can relax and enjoy your guests.",
+          "icon": "microphone"
+        },
+        {
+          "title": "Flexible Venues",
+          "description": "We adapt our setups to any space, from private residences and small halls to outdoor community areas.",
+          "icon": "home"
+        },
+        {
+          "title": "Zero Host Stress",
+          "description": "We handle all planning, setup, and cleanup, letting you focus on hosting and mingling.",
+          "icon": "list-check"
+        }
+      ],
+      "images": {
+        "titleCard": "/images/Service Titles/social-gathering-title-card.jpg",
+        "slider": [
+          "/images/3. Social Gathering Photos/social-gathering-activities-title-1.jpg",
+          "/images/3. Social Gathering Photos/social-gathering-activities-title-2.jpg",
+          "/images/3. Social Gathering Photos/social-gathering-activities-title-3.jpg"
+        ],
+        "gallery": [
+          "/images/3. Social Gathering Photos/social-gathering-activities-photo-1.jpg",
+          "/images/3. Social Gathering Photos/social-gathering-activities-photo-2.jpg",
+          "/images/3. Social Gathering Photos/social-gathering-activities-photo-3.jpg",
+          "/images/3. Social Gathering Photos/social-gathering-activities-photo-4.png"
+        ]
+      },
+      "testimonial": {
+        "quote": "We hired The Game Hour for our family reunion, and it was a huge success! The facilitators were fantastic at including all ages, and the games kept everyone entertained for hours. It was so much easier than trying to plan activities ourselves.",
+        "attribution": "The Shah Family, Reunion Host"
+      },
+      "cta": {
+        "headline": "Ready to upgrade your next party from awkward to awesome?",
+        "label": "Plan Your Social Event Games!",
+        "href": "https://the-game-hour.bubbleapps.io/version-test/"
+      },
+      "eventTypes": [
+        "Family reunion",
+        "Housewarming",
+        "Neighbourhood events",
+        "Friends get-together"
+      ]
+    },
+    {
+      "id": "game-festival",
+      "slug": "game-festival",
+      "legacyPath": "/game-festival.html",
+      "name": "Game Festivals",
+      "shortDescription": "Bring the ultimate gaming experience to your community or society festival with our diverse setups.",
+      "hero": {
+        "headline": "Society & Community Game Festivals",
+        "subheadline": "Transform your society gathering, complex party, or community event into an epic, all-ages Game Festival!",
+        "eyebrow": "Community festivals · Gujarat",
+        "trustLine": "Screen-free fun · Professional facilitators · We come to your venue",
+        "accentTint": "community"
+      },
+      "intro": {
+        "headline": "The Ultimate Community Bonding Experience!",
+        "paragraphs": [
+          "Hosting a large event for an entire apartment complex, a residential society, or a massive group? You need entertainment that is high-capacity, inclusive, and fun for everyone from toddlers to seniors. Our Game Festivals are custom-designed to utilize large open spaces and cater to hundreds of attendees simultaneously.",
+          "We provide multiple game zones, continuous engagement, professional festival coordination, and a massive selection of high-energy, classic, and collaborative games to ensure your event is the talk of the town."
+        ]
+      },
+      "sellingPoints": [
+        {
+          "title": "Massive Capacity Management",
+          "description": "Our infrastructure and game selection can engage hundreds of people concurrently, eliminating long queues and boredom.",
+          "icon": "users-cog"
+        },
+        {
+          "title": "Multi-Zone Game Planning",
+          "description": "Dedicated zones (Kids' Corner, Nostalgia Hub, Team Challenge Area) to suit all demographics and interests.",
+          "icon": "sitemap"
+        },
+        {
+          "title": "Safety & Supervision",
+          "description": "Trained facilitators ensure safe play, manage crowds, and maintain the flow of every activity across all zones.",
+          "icon": "shield"
+        },
+        {
+          "title": "High-Energy Hosting",
+          "description": "Energetic emcees keep the crowd excited and run live activities, announcements, and prize distributions.",
+          "icon": "bullhorn"
+        },
+        {
+          "title": "Complete Event Logistics",
+          "description": "We manage all equipment, setup, breakdown, and game material organization, stress-free for the organizing committee.",
+          "icon": "people-carry"
+        },
+        {
+          "title": "Tournament Structures",
+          "description": "Optional structured competitions, leaderboards, and grand prize ceremonies to drive participation and excitement.",
+          "icon": "trophy"
+        }
+      ],
+      "images": {
+        "titleCard": "/images/Service Titles/game-festival-title-card.jpg",
+        "slider": [
+          "/images/4. Game Festival Photos/game-festival-activities-title-1.jpg",
+          "/images/4. Game Festival Photos/game-festival-activities-title-2.jpg",
+          "/images/4. Game Festival Photos/game-festival-activities-title-3.jpg"
+        ],
+        "gallery": [
+          "/images/4. Game Festival Photos/game-festival-activities-photo-1.jpg",
+          "/images/4. Game Festival Photos/game-festival-activities-photo-2.jpg",
+          "/images/4. Game Festival Photos/game-festival-activities-photo-3.jpg",
+          "/images/4. Game Festival Photos/game-festival-activities-photo-4.png"
+        ]
+      },
+      "testimonial": {
+        "quote": "For our annual complex day, The Game Hour was a game-changer! Their festival setup handled over 400 residents effortlessly. The variety meant every age group was catered to, and the energy of the hosts was phenomenal. We're booking them again next year!",
+        "attribution": "Mr. Dave, Secretary, Green Acres Society"
+      },
+      "cta": {
+        "headline": "Ready to host a legendary Game Festival for your community?",
+        "label": "Plan Your Society Festival Now!",
+        "href": "https://the-game-hour.bubbleapps.io/version-test/"
+      },
+      "eventTypes": [
+        "Society annual day",
+        "Apartment complex events",
+        "Community festivals",
+        "Large outdoor gatherings"
+      ]
+    },
+    {
+      "id": "school-college",
+      "slug": "school-and-collage-event",
+      "legacyPath": "/school-and-collage-event.html",
+      "name": "School/College Events",
+      "shortDescription": "Energetic and fun games perfect for school and college fests, freshers' parties, and farewells.",
+      "hero": {
+        "headline": "School & College Sports Events",
+        "subheadline": "Professional, high-volume event management and facilitation for your next successful Sports Day or competitive College Fest.",
+        "eyebrow": "School & college events · Gujarat",
+        "trustLine": "Screen-free fun · Professional facilitators · We come to your venue",
+        "accentTint": "cool"
+      },
+      "intro": {
+        "headline": "Seamlessly Organized Sports Competitions",
+        "paragraphs": [
+          "Organizing large-scale sports events for schools and colleges requires precise planning, safety management, and efficient scheduling. We partner with educational institutions to handle the complexity, allowing faculty to focus on mentorship while we ensure a memorable, disciplined, and fair competition.",
+          "From track-and-field coordination to engaging inter-class game tournaments, our team provides certified referees, state-of-the-art equipment, and meticulous oversight to deliver a flawless event experience."
+        ]
+      },
+      "sellingPoints": [
+        {
+          "title": "Detailed Scheduling & Flow",
+          "description": "Meticulous planning to ensure all events run on time, managing student participation and field rotation efficiently.",
+          "icon": "calendar-check"
+        },
+        {
+          "title": "Fair Play & Officiating",
+          "description": "Experienced referees and judges to ensure unbiased scoring and adherence to competition rules and regulations.",
+          "icon": "flag-checkered"
+        },
+        {
+          "title": "Safety & Risk Management",
+          "description": "Prioritizing student safety with designated first-aid protocols, clear boundaries, and secure equipment usage.",
+          "icon": "medkit"
+        },
+        {
+          "title": "Scoring & Reporting",
+          "description": "Real-time score tracking, leaderboard management, and quick tabulation for accurate results and award ceremonies.",
+          "icon": "chart-bar"
+        },
+        {
+          "title": "Customizable Ceremonies",
+          "description": "Professional coordination of opening and closing ceremonies, including awards, announcements, and guest integration.",
+          "icon": "trophy"
+        },
+        {
+          "title": "Inclusive Participation Games",
+          "description": "Fun, non-competitive games ensuring every student, regardless of skill level, gets a chance to participate and enjoy the day.",
+          "icon": "running"
+        }
+      ],
+      "images": {
+        "titleCard": "/images/Service Titles/school-event-title-card.jpg",
+        "slider": [
+          "/images/5. SchoolCollege Event Photos/game-festival-activities-title-1.jpg",
+          "/images/5. SchoolCollege Event Photos/game-festival-activities-title-2.jpg",
+          "/images/5. SchoolCollege Event Photos/game-festival-activities-title-3.jpg"
+        ],
+        "gallery": [
+          "/images/5. SchoolCollege Event Photos/game-festival-activities-photo-1.jpg",
+          "/images/5. SchoolCollege Event Photos/game-festival-activities-photo-2.png",
+          "/images/5. SchoolCollege Event Photos/game-festival-activities-photo-3.jpg",
+          "/images/5. SchoolCollege Event Photos/game-festival-activities-title-4.jpg"
+        ]
+      },
+      "testimonial": {
+        "quote": "The organization for our annual sports day was impeccable this year. The Game Hour team handled everything from the race organization to the prize distribution with military precision. It made the entire event smooth, professional, and highly enjoyable for our students and faculty.",
+        "attribution": "Professor Kulkarni, Dean of Student Affairs, GEC College"
+      },
+      "cta": {
+        "headline": "Ready to host a flawless Sports Day or College Event?",
+        "label": "Organize Your Sports Event Today!",
+        "href": "https://the-game-hour.bubbleapps.io/version-test/"
+      },
+      "eventTypes": [
+        "Sports day",
+        "College fest",
+        "Freshers party",
+        "Farewell"
+      ]
+    },
+    {
+      "id": "wedding-haldi",
+      "slug": "wedding-or-haldi-games",
+      "legacyPath": "/wedding-or-haldi-games.html",
+      "name": "Wedding/Haldi Activities",
+      "shortDescription": "Add a playful touch to your wedding or Haldi ceremony with custom games for family and friends.",
+      "hero": {
+        "headline": "Wedding & Haldi Event Games",
+        "subheadline": "Inject laughter, high energy, and unforgettable moments into your pre-wedding and wedding celebrations!",
+        "eyebrow": "Wedding entertainment · Gujarat",
+        "trustLine": "Screen-free fun · Professional facilitators · We come to your venue",
+        "accentTint": "warm"
+      },
+      "intro": {
+        "headline": "Making Memories Beyond the Mandap",
+        "paragraphs": [
+          "Weddings are all about bonding two families, and there's no better way to do that than through friendly competition and shared laughter! We specialize in designing games and activities for pre-wedding functions like Haldi and Sangeet that perfectly blend tradition with high-spirited modern fun.",
+          "From testing the couple's chemistry with the hilarious Shoe Game to organizing a competitive Tug-of-War between the Ladkiwale and Ladkewale, our professional hosts ensure every guest feels included, entertained, and ready to celebrate."
+        ]
+      },
+      "sellingPoints": [
+        {
+          "title": "Couple-Centric Fun",
+          "description": "Special games like the Shoe Game and Find the Ring focusing on the couple, generating laughs and 'awws'.",
+          "icon": "ring"
+        },
+        {
+          "title": "Family Team Battles",
+          "description": "Organized competition (Tug-of-War, Antakshari) between the Bride's Side and Groom's Side.",
+          "icon": "people-arrows"
+        },
+        {
+          "title": "Sangeet & Haldi Dance-Offs",
+          "description": "Lively, managed dance battles and musical games to keep the energy high during ritual breaks.",
+          "icon": "music"
+        },
+        {
+          "title": "Dedicated Wedding Host",
+          "description": "A high-energy anchor who manages the timeline, cues, announcements, and crowd engagement seamlessly.",
+          "icon": "user-tie"
+        },
+        {
+          "title": "Outdoor & Day Events",
+          "description": "Setup for large-scale lawn games (Giant Jenga, Croquet) perfect for Haldi and Mehendi daytime functions.",
+          "icon": "sun"
+        },
+        {
+          "title": "Prize & Prop Management",
+          "description": "We handle all necessary game props, customized signage, and prize distribution for a polished event.",
+          "icon": "gifts"
+        }
+      ],
+      "images": {
+        "titleCard": "/images/wedding-games-title.jpg",
+        "slider": [
+          "/images/6. Wedding-Haldi Event Photos/wedding-games-title-1.jpg",
+          "/images/6. Wedding-Haldi Event Photos/wedding-games-title-2.jpg",
+          "/images/6. Wedding-Haldi Event Photos/wedding-games-title-3.jpg"
+        ],
+        "gallery": [
+          "/images/6. Wedding-Haldi Event Photos/wedding-games-photo-1.jpg",
+          "/images/6. Wedding-Haldi Event Photos/wedding-games-photo-2.jpg",
+          "/images/6. Wedding-Haldi Event Photos/wedding-games-photo-3.jpg",
+          "/images/6. Wedding-Haldi Event Photos/wedding-games-photo-4.JPG"
+        ]
+      },
+      "testimonial": {
+        "quote": "Hiring The Game Hour was the best decision for our Haldi and Sangeet. The host's energy was contagious! The Tug-of-War was fierce, and the 'Who Knows the Couple Best' quiz was hilarious. It brought both families together instantly. Five stars!",
+        "attribution": "Mr. & Mrs. Kapoor, Newlyweds"
+      },
+      "cta": {
+        "headline": "Ready to add a spark of fun to your wedding celebrations?",
+        "label": "Book Your Wedding Games Host!",
+        "href": "https://the-game-hour.bubbleapps.io/version-test/"
+      },
+      "eventTypes": [
+        "Haldi",
+        "Sangeet",
+        "Wedding reception",
+        "Mehendi",
+        "Cocktail"
+      ]
+    },
+    {
+      "id": "traditional",
+      "slug": "traditional-games",
+      "legacyPath": "/traditional-games.html",
+      "name": "Traditional Games",
+      "shortDescription": "Relive the simple joy of classics! We bring back nostalgic, old-school games like Sack Races and Musical Chairs for pure, clean fun.",
+      "hero": {
+        "headline": "The Classic Traditional Games Festival",
+        "subheadline": "Relive your childhood and introduce the next generation to the joy of simple, nostalgic, old-school fun!",
+        "eyebrow": "Traditional games · Gujarat",
+        "trustLine": "Screen-free fun · Professional facilitators · We come to your venue",
+        "accentTint": "heritage"
+      },
+      "intro": {
+        "headline": "A Blast from the Past: Simple Fun, Big Laughter",
+        "paragraphs": [
+          "In a world of screens and complicated setups, our Traditional Games service brings things back to basics. We curate and facilitate a collection of beloved, classic games that require minimal equipment but generate maximum joy.",
+          "We feature classic competitive races, large-scale strategy boards, and engaging group activities designed to be familiar to the older generation and exciting for the new one."
+        ]
+      },
+      "sellingPoints": [
+        {
+          "title": "Pure Nostalgia",
+          "description": "Instantly connect elders and adults with fond memories of their own childhood fun and games.",
+          "icon": "hand-holding-heart"
+        },
+        {
+          "title": "Zero Learning Curve",
+          "description": "Games are simple and intuitive, meaning anyone can jump in and play instantly, regardless of age or skill.",
+          "icon": "puzzle-piece"
+        },
+        {
+          "title": "Mass Participation",
+          "description": "Many traditional games are perfect for large, casual groups, keeping engagement high across the entire venue.",
+          "icon": "users"
+        },
+        {
+          "title": "Cross-Generational Bonding",
+          "description": "A fun way for families to play together, with kids learning the simple, physical joy of classic games.",
+          "icon": "child"
+        },
+        {
+          "title": "All Equipment Included",
+          "description": "We supply oversized props and materials for all games, ensuring a vibrant and photogenic setup.",
+          "icon": "box-open"
+        },
+        {
+          "title": "Flexible Setup",
+          "description": "Perfect for outdoor lawns, indoor halls, or community center spaces, requiring minimal technical requirements.",
+          "icon": "home"
+        }
+      ],
+      "images": {
+        "titleCard": "/images/Service Titles/traditional-games-title-card.jpg",
+        "slider": [
+          "/images/7. Traditional Game Photos/traditional-games-title-1.jpg",
+          "/images/7. Traditional Game Photos/traditional-games-title-2.jpg",
+          "/images/7. Traditional Game Photos/traditional-games-title-3.jpg"
+        ],
+        "gallery": [
+          "/images/7. Traditional Game Photos/traditional-games-photo-1.jpg",
+          "/images/7. Traditional Game Photos/traditional-games-photo-2.jpg",
+          "/images/7. Traditional Game Photos/traditional-games-photo-3.jpg",
+          "/images/7. Traditional Game Photos/traditional-games-photo-4.jpg"
+        ]
+      },
+      "testimonial": {
+        "quote": "For our annual gathering, we wanted something different. The traditional games were an absolute hit! My parents were laughing just as hard as the kids during the competitive races. The facilitators were fantastic at keeping the energy flowing and explaining the old rules perfectly.",
+        "attribution": "Ms. Chopra, Community Event Organizer"
+      },
+      "cta": {
+        "headline": "Ready to take a trip down memory lane?",
+        "label": "Book Your Nostalgia Event!",
+        "href": "https://the-game-hour.bubbleapps.io/version-test/"
+      },
+      "eventTypes": [
+        "Community day",
+        "Themed parties",
+        "Family gatherings",
+        "Festival stalls"
+      ]
+    },
+    {
+      "id": "bollywood",
+      "slug": "bollywood-games",
+      "legacyPath": "/bollywood-games.html",
+      "name": "Bollywood Games",
+      "shortDescription": "Lights, Camera, Action! Transform your party into a Bollywood extravaganza with cinematic trivia, music challenges, and dramatic fun.",
+      "hero": {
+        "headline": "The Ultimate Bollywood Game Event",
+        "subheadline": "Bring the cinematic magic, drama, and energy of Bollywood to your next party or celebration!",
+        "eyebrow": "Bollywood-themed events · Gujarat",
+        "trustLine": "Screen-free fun · Professional facilitators · We come to your venue",
+        "accentTint": "cinema"
+      },
+      "intro": {
+        "headline": "Your Personal Bollywood Blockbuster Event",
+        "paragraphs": [
+          "Every Indian event needs a touch of filmi glamour and high-octane fun! Our Bollywood Game Events are fully customized, multimedia game shows designed to get everyone involved, from the casual viewer to the die-hard fan.",
+          "Our expertly crafted PowerPoint-based rounds, musical challenges, dramatic visual quizzes, and performance-based games are all seamlessly run by an engaging host."
+        ]
+      },
+      "sellingPoints": [
+        {
+          "title": "Custom Cinematic Trivia",
+          "description": "Tailored quizzes covering classic dialogues, iconic scenes, celebrity gossip, and hidden movie details.",
+          "icon": "film"
+        },
+        {
+          "title": "Filmi Music Challenges",
+          "description": "Fast-paced rounds dedicated to Bollywood songs, artists, and background scores that get feet tapping.",
+          "icon": "headphones"
+        },
+        {
+          "title": "Performance-Based Fun",
+          "description": "Team challenges involving acting, mimicry, and impromptu performances to bring out the inner actor in your guests.",
+          "icon": "mask"
+        },
+        {
+          "title": "Multimedia Presentation Design",
+          "description": "Custom PPTs and visual aids compatible with your venue's existing A/V equipment.",
+          "icon": "tv"
+        },
+        {
+          "title": "High-Glamour Hosting",
+          "description": "Our anchor maintains a dramatic, humorous, and engaging atmosphere, treating every participant like a star.",
+          "icon": "star"
+        },
+        {
+          "title": "Structured Scoring & Recognition",
+          "description": "Real-time score tracking and a fun final recognition segment to celebrate the ultimate Bollywood expert.",
+          "icon": "trophy"
+        }
+      ],
+      "images": {
+        "titleCard": "/images/bollywood-games-title.jpg",
+        "slider": [
+          "/images/8. Bollywood Game Photos/bollywood-games-title-1.jpg",
+          "/images/8. Bollywood Game Photos/bollywood-games-title-2.jpg",
+          "/images/8. Bollywood Game Photos/bollywood-games-title-3.jpg"
+        ],
+        "gallery": [
+          "/images/8. Bollywood Game Photos/bollywood-games-photo-1.jpg",
+          "/images/8. Bollywood Game Photos/bollywood-games-photo-2.jpg",
+          "/images/8. Bollywood Game Photos/bollywood-games-photo-3.jpg",
+          "/images/8. Bollywood Game Photos/bollywood-games-photo-4.jpg"
+        ]
+      },
+      "testimonial": {
+        "quote": "Hiring The Game Hour was the absolute highlight of our reception! The rounds were challenging and hilarious, and the host was spectacular, like a true game show master. It was way more engaging than just having a DJ. Highly recommend for any celebration!",
+        "attribution": "Mr. Sharma, Anniversary Party Host"
+      },
+      "cta": {
+        "headline": "Ready to host an event worthy of a standing ovation?",
+        "label": "Plan Your Bollywood Game Night!",
+        "href": "https://the-game-hour.bubbleapps.io/version-test/"
+      },
+      "eventTypes": [
+        "Anniversary party",
+        "Sangeet",
+        "Corporate Bollywood night",
+        "Private celebrations"
+      ]
+    }
+  ],
+  "gameCategories": [
+    {
+      "id": "strategy",
+      "name": "Strategy Games",
+      "description": "Engage minds with classic and modern strategy challenges that test wit and planning.",
+      "image": "/images/Game Types/Strategy Games.jpg"
+    },
+    {
+      "id": "icebreakers",
+      "name": "Icebreakers & Fun Starters",
+      "description": "Break the ice and get everyone laughing and interacting from the moment they arrive.",
+      "image": "/images/wedding-games-title.jpg",
+      "note": "Legacy reuses wedding title image, replace with dedicated asset in v2"
+    },
+    {
+      "id": "team-building",
+      "name": "Collaborative Team Building",
+      "description": "Foster teamwork and communication with activities designed to unite and inspire groups.",
+      "image": "/images/team-building-games.jpg"
+    }
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "meta": {
+    "source": "The Game Hour FAQ set",
+    "generated": "2026-05-23",
+    "note": "Edit questions and answers here. The booking FAQ auto-includes contact details from company-info.json and booking-links.json."
+  },
+  "sections": {
+    "service": {
+      "title": "Frequently asked questions",
+      "subtitle": "Quick answers before you book. Reach out anytime if you need something specific."
+    }
+  },
+  "bookingFaq": {
+    "question": "How do I book The Game Hour?",
+    "responseTime": "We typically respond within 24 hours."
+  },
+  "items": [
+    {
+      "id": "faq-areas",
+      "question": "Which areas do you serve?",
+      "answer": "We organize events across Gujarat including Ahmedabad, Gandhinagar, Rajkot, Vadodara, Surat, and Anand. We travel to your venue.",
+      "category": "general"
+    },
+    {
+      "id": "faq-ages",
+      "question": "What age groups can participate?",
+      "answer": "Our games are designed for all ages, from toddlers to seniors, with age-appropriate activities tailored to your event.",
+      "category": "general"
+    },
+    {
+      "id": "faq-booking",
+      "question": "How do I book The Game Hour?",
+      "dynamic": true,
+      "category": "booking"
+    },
+    {
+      "id": "faq-corporate",
+      "question": "Do you offer corporate team-building programs?",
+      "answer": "Yes. Our corporate packages focus on collaboration, communication, and morale through facilitated games suited for offsites, annual days, and team events.",
+      "category": "corporate"
+    },
+    {
+      "id": "faq-custom",
+      "question": "Can games be customized for our event theme?",
+      "answer": "Absolutely. We tailor game selection, hosting style, and props to match birthdays, weddings, festivals, Bollywood nights, and corporate goals.",
+      "category": "services"
+    }
+  ]
+}

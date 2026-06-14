@@ -1,0 +1,30 @@
+{
+  "meta": {
+    "source": "The Game Hour business details",
+    "generated": "2026-05-23",
+    "note": "Site name, contact details, and footer copy. Used across SEO, footer, and contact CTAs."
+  },
+  "site": {
+    "name": "The Game Hour",
+    "tagline": "Unleash the Fun. Reconnect with Joy.",
+    "description": "Screen-free games and interactive activities for birthdays, weddings, corporate events, festivals, and gatherings across Gujarat.",
+    "url": "https://thegamehour.com",
+    "locale": "en_IN"
+  },
+  "contact": {
+    "email": "info@thegamehour.com",
+    "phone": "+919924007700",
+    "phoneDisplay": "+91 99240 07700",
+    "whatsappUrl": "https://wa.me/919924007700",
+    "location": "Ahmedabad, Gujarat, India"
+  },
+  "footer": {
+    "columnHeadings": {
+      "quickLinks": "Quick Links",
+      "services": "Services",
+      "contact": "Contact",
+      "planYourEvent": "Plan Your Event"
+    },
+    "taglineSuffix": "Bringing joy across Gujarat"
+  }
+}

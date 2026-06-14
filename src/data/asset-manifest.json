@@ -1,0 +1,181 @@
+{
+  "meta": {
+    "generated": "2026-05-23",
+    "note": "Maps legacy /images/ paths to src/assets/images/. Binaries must be copied from production server, not present in legacy git repo."
+  },
+  "entries": [
+    {
+      "legacyPath": "/images/tgh-logo.png",
+      "v2Path": "branding/tgh-logo.png",
+      "status": "keep",
+      "category": "branding"
+    },
+    {
+      "legacyPath": "/images/Hero Section.jpg",
+      "v2Path": "marketing/hero-section.jpg",
+      "status": "optimize",
+      "category": "marketing"
+    },
+    {
+      "legacyPath": "/images/About Us1.jpg",
+      "v2Path": "marketing/about-teaser.jpg",
+      "status": "optimize",
+      "category": "marketing"
+    },
+    {
+      "legacyPath": "/images/gallery-hero-image.jpg",
+      "v2Path": "gallery/gallery-hero.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-1.jpg",
+      "v2Path": "gallery/event-gallery-1.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-2.jpg",
+      "v2Path": "gallery/event-gallery-2.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-3.jpg",
+      "v2Path": "gallery/event-gallery-3.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-4.jpg",
+      "v2Path": "gallery/event-gallery-4.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-5.jpg",
+      "v2Path": "gallery/event-gallery-5.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-6.jpg",
+      "v2Path": "gallery/event-gallery-6.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-7.jpg",
+      "v2Path": "gallery/event-gallery-7.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-8.jpg",
+      "v2Path": "gallery/event-gallery-8.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/event-gallery-9.jpg",
+      "v2Path": "gallery/event-gallery-9.jpg",
+      "status": "keep",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "images/Moments of Pure Joy - 6/Moments of Pure Joy - 1.png",
+      "v2Path": "gallery/moments/moment-1.png",
+      "status": "optimize",
+      "category": "gallery"
+    },
+    {
+      "legacyPath": "/images/Service Titles/birthday-games-title-card.png",
+      "v2Path": "services/birthday-games/title-card.png",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "birthday-games"
+    },
+    {
+      "legacyPath": "/images/1. Birthday Photos/birtday_photo_1.jpg",
+      "v2Path": "services/birthday-games/slider-1.jpg",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "birthday-games"
+    },
+    {
+      "legacyPath": "/images/Service Titles/corporate-games-title-card.png",
+      "v2Path": "services/corporate-games/title-card.png",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "corporate-games"
+    },
+    {
+      "legacyPath": "/images/2. Coporate Photos/corporate-activities-photo-1.JPG",
+      "v2Path": "services/corporate-games/gallery-1.jpg",
+      "status": "optimize",
+      "category": "services",
+      "serviceSlug": "corporate-games"
+    },
+    {
+      "legacyPath": "/images/Service Titles/social-gathering-title-card.jpg",
+      "v2Path": "services/social-gathering-games/title-card.jpg",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "social-gathering-games"
+    },
+    {
+      "legacyPath": "/images/Service Titles/game-festival-title-card.jpg",
+      "v2Path": "services/game-festival/title-card.jpg",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "game-festival"
+    },
+    {
+      "legacyPath": "/images/Service Titles/school-event-title-card.jpg",
+      "v2Path": "services/school-and-collage-event/title-card.jpg",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "school-and-collage-event"
+    },
+    {
+      "legacyPath": "/images/wedding-games-title.jpg",
+      "v2Path": "services/wedding-or-haldi-games/title-card.jpg",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "wedding-or-haldi-games"
+    },
+    {
+      "legacyPath": "/images/Service Titles/traditional-games-title-card.jpg",
+      "v2Path": "services/traditional-games/title-card.jpg",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "traditional-games"
+    },
+    {
+      "legacyPath": "/images/bollywood-games-title.jpg",
+      "v2Path": "services/bollywood-games/title-card.jpg",
+      "status": "keep",
+      "category": "services",
+      "serviceSlug": "bollywood-games"
+    },
+    {
+      "legacyPath": "/images/wedding-games-title.jpg",
+      "v2Path": "marketing/icebreakers-placeholder.jpg",
+      "status": "remove",
+      "category": "marketing",
+      "note": "Duplicate misuse on home icebreakers card, replace with dedicated asset"
+    },
+    {
+      "legacyPath": "/images/team-building-games.jpg",
+      "v2Path": "marketing/team-building.jpg",
+      "status": "keep",
+      "category": "marketing"
+    },
+    {
+      "legacyPath": "/images/Game Types/Strategy Games.jpg",
+      "v2Path": "marketing/strategy-games.jpg",
+      "status": "keep",
+      "category": "marketing"
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "source": "client-verified",
+    "generated": "2026-05-23",
+    "note": "Stats section appears on the homepage only. Edit metrics here; hero badge updates automatically."
+  },
+  "metrics": [
+    { "id": "events-hosted", "value": "50+", "label": "Events Hosted" },
+    { "id": "participants", "value": "3,000+", "label": "Participants Engaged" },
+    { "id": "games-conducted", "value": "100+", "label": "Games Conducted" },
+    { "id": "cities-served", "value": "6", "label": "Cities Served" }
+  ],
+  "sections": {
+    "home": {
+      "title": "Trusted experiences at scale",
+      "subtitle": "From intimate birthday parties to society festivals, we bring energy, structure, and joy to every crowd size."
+    }
+  },
+  "homeGalleryTeaser": {
+    "title": "A glimpse of the energy",
+    "subtitle": "Four moments from real events. The full gallery has the rest.",
+    "primaryLabel": "View full gallery",
+    "linkLabel": "More photos from weddings, corporates and festivals",
+    "maxItems": 4
+  }
+}

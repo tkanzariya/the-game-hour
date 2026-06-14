@@ -1,0 +1,174 @@
+{
+  "meta": {
+    "source": "TheGameHour-legacy gallery.html + index.html#gallery",
+    "generated": "2026-05-23",
+    "note": "event-gallery-1..9 and Moments PNGs were missing on disk; v2 uses curated placeholders from service photos"
+  },
+  "hero": {
+    "headline": "Our Event Gallery",
+    "subheadline": "Relive the laughter, excitement, and unforgettable moments from events powered by The Game Hour!"
+  },
+  "items": [
+    {
+      "id": "gallery-1",
+      "legacySrc": "images/event-gallery-1.jpg",
+      "v2Src": "gallery/event-gallery-1.webp",
+      "alt": "Kids enjoying a giant Jenga game at a birthday party",
+      "caption": "Kids enjoying a giant Jenga game at a lively birthday party.",
+      "featured": true,
+      "serviceSlug": "birthday-games"
+    },
+    {
+      "id": "gallery-2",
+      "legacySrc": "images/event-gallery-2.jpg",
+      "v2Src": "gallery/event-gallery-2.webp",
+      "alt": "Team members collaborating during a corporate challenge",
+      "caption": "Team members collaborating during a corporate team-building challenge.",
+      "featured": true,
+      "serviceSlug": "corporate-games"
+    },
+    {
+      "id": "gallery-3",
+      "legacySrc": "images/event-gallery-3.jpg",
+      "v2Src": "gallery/event-gallery-3.webp",
+      "alt": "Family playing a board game together at a reunion",
+      "caption": "Family members laughing and playing a classic board game at a reunion.",
+      "featured": true,
+      "serviceSlug": "social-gathering-games"
+    },
+    {
+      "id": "gallery-4",
+      "legacySrc": "images/event-gallery-4.jpg",
+      "v2Src": "gallery/event-gallery-4.webp",
+      "alt": "Students participating in a fun activity at a college fest",
+      "caption": "Students participating in a high-energy activity at a college fest.",
+      "featured": true,
+      "serviceSlug": "school-and-collage-event"
+    },
+    {
+      "id": "gallery-5",
+      "legacySrc": "images/event-gallery-5.jpg",
+      "v2Src": "gallery/event-gallery-5.webp",
+      "alt": "Guests enjoying interactive games at a wedding reception",
+      "caption": "Guests enjoying interactive games during a vibrant wedding reception.",
+      "featured": true,
+      "serviceSlug": "wedding-or-haldi-games"
+    },
+    {
+      "id": "gallery-6",
+      "legacySrc": "images/event-gallery-6.jpg",
+      "v2Src": "gallery/event-gallery-6.webp",
+      "alt": "Community members engaged in a traditional game at a festival",
+      "caption": "Community members engaged in a traditional game at a local festival.",
+      "featured": true,
+      "serviceSlug": "traditional-games"
+    },
+    {
+      "id": "gallery-7",
+      "legacySrc": "images/event-gallery-7.jpg",
+      "v2Src": "gallery/event-gallery-7.webp",
+      "alt": "A group celebrating a win in a team challenge",
+      "caption": "A group celebrating a triumphant win in a collaborative team challenge.",
+      "serviceSlug": "game-festival"
+    },
+    {
+      "id": "gallery-8",
+      "legacySrc": "images/event-gallery-8.jpg",
+      "v2Src": "gallery/event-gallery-8.webp",
+      "alt": "Close-up of hands playing a card game",
+      "caption": "Close-up of hands engaged in a fast-paced card game.",
+      "serviceSlug": "bollywood-games"
+    },
+    {
+      "id": "gallery-9",
+      "legacySrc": "images/event-gallery-9.jpg",
+      "v2Src": "gallery/event-gallery-9.webp",
+      "alt": "Kids lined up for a fun race activity",
+      "caption": "Kids lined up with excitement for a fun race activity."
+    },
+    {
+      "id": "home-moment-1",
+      "legacySrc": "images/Moments of Pure Joy - 6/Moments of Pure Joy - 1.png",
+      "v2Src": "gallery/moments/moment-1.webp",
+      "alt": "Event photo 1",
+      "featured": true
+    },
+    {
+      "id": "home-moment-2",
+      "legacySrc": "images/Moments of Pure Joy - 6/Moments of Pure Joy - 2.png",
+      "v2Src": "gallery/moments/moment-2.webp",
+      "alt": "Event photo 2",
+      "featured": true
+    },
+    {
+      "id": "home-moment-3",
+      "legacySrc": "images/Moments of Pure Joy - 6/Moments of Pure Joy - 3.png",
+      "v2Src": "gallery/moments/moment-3.webp",
+      "alt": "Event photo 3",
+      "featured": true
+    },
+    {
+      "id": "home-moment-4",
+      "legacySrc": "images/Moments of Pure Joy - 6/Moments of Pure Joy - 4.png",
+      "v2Src": "gallery/moments/moment-4.webp",
+      "alt": "Event photo 4",
+      "featured": true
+    },
+    {
+      "id": "home-moment-5",
+      "legacySrc": "images/Moments of Pure Joy - 6/Moments of Pure Joy - 5.png",
+      "v2Src": "gallery/moments/moment-5.webp",
+      "alt": "Event photo 5",
+      "featured": true
+    },
+    {
+      "id": "home-moment-6",
+      "legacySrc": "images/Moments of Pure Joy - 6/Moments of Pure Joy - 6.png",
+      "v2Src": "gallery/moments/moment-6.webp",
+      "alt": "Event photo 6",
+      "featured": true
+    }
+  ],
+  "page": {
+    "hero": {
+      "eyebrow": "Real events · Real joy",
+      "headline": "Moments of laughter you can almost hear.",
+      "subheadline": "These are not stock photos. They are real guests, real games, and real memories from birthdays, weddings, corporates, schools, and festivals across Gujarat."
+    },
+    "featuredMoments": {
+      "title": "Featured moments",
+      "subtitle": "Energy, participation, and connection captured at events we hosted.",
+      "itemIds": [
+        "home-moment-1",
+        "gallery-2",
+        "home-moment-3",
+        "gallery-5"
+      ]
+    },
+    "browse": {
+      "title": "Browse by experience",
+      "subtitle": "Find the vibe closest to your event. Filter by experience type, no page reload needed."
+    },
+    "grid": {
+      "title": "Event moments",
+      "subtitle": "A curated look at the play we bring to venues across Gujarat."
+    },
+    "filters": [
+      { "id": "all", "label": "All moments" },
+      { "id": "birthday-games", "label": "Birthday Games" },
+      { "id": "corporate-games", "label": "Corporate Games" },
+      { "id": "school-and-collage-event", "label": "School Events" },
+      { "id": "wedding-or-haldi-games", "label": "Wedding Activities" },
+      { "id": "social-gathering-games", "label": "Social Gatherings" },
+      { "id": "traditional-games", "label": "Traditional Games" },
+      { "id": "game-festival", "label": "Game Festivals" },
+      { "id": "bollywood-games", "label": "Bollywood Games" }
+    ],
+    "finalCta": {
+      "headline": "Ready to create your own memories?",
+      "description": "Tell us your date, venue, and crowd. We will design a game experience your guests will photograph on their own.",
+      "primaryLabel": "Book event",
+      "secondaryLabel": "WhatsApp us"
+    }
+  }
+}

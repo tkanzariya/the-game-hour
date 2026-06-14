@@ -1,0 +1,22 @@
+{
+  "meta": {
+    "source": "The Game Hour booking forms",
+    "generated": "2026-05-23",
+    "note": "Single source for all booking URLs and CTA button labels. Swap version-test URLs to production before launch."
+  },
+  "urls": {
+    "default": "https://the-game-hour.bubbleapps.io/version-test/",
+    "corporate": "https://the-game-hour.bubbleapps.io/version-test/corporate_booking"
+  },
+  "corporateServiceSlug": "corporate-games",
+  "labels": {
+    "bookNow": "Book Now",
+    "book": "Book",
+    "bookEvent": "Book event",
+    "bookYourEvent": "Book your event",
+    "bookYourEventNow": "Book your event now",
+    "whatsapp": "WhatsApp",
+    "whatsappUs": "WhatsApp us",
+    "exploreExperiences": "Explore experiences"
+  }
+}

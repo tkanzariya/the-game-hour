@@ -1,0 +1,75 @@
+/**
+ * Scoped pre-revamp styles for /new-ui-preview comparison only.
+ */
+
+.ui-legacy .legacy-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.75rem;
+  padding: 0.75rem 1.75rem;
+  border-radius: 9999px;
+  border: 2px solid #032a5d;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+
+.ui-legacy .legacy-btn-primary {
+  background: #032a5d;
+  color: #fff;
+  box-shadow: 0 8px 24px rgb(3 42 93 / 0.08);
+}
+
+.ui-legacy .legacy-service-card {
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(3 42 93 / 0.08);
+}
+
+.ui-legacy .legacy-service-card img {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  object-fit: cover;
+}
+
+.ui-legacy .legacy-service-card .body {
+  padding: 1.5rem;
+  text-align: center;
+}
+
+.ui-legacy .legacy-gallery-card {
+  overflow: hidden;
+  border-radius: 1rem;
+  background: #fff;
+  box-shadow: 0 8px 24px rgb(3 42 93 / 0.08);
+}
+
+.ui-legacy .legacy-gallery-card img {
+  aspect-ratio: 4 / 3;
+  width: 100%;
+  object-fit: cover;
+}
+
+.ui-legacy .legacy-stat-card {
+  border-radius: 1rem;
+  background: linear-gradient(165deg, #fff 0%, #f0f4fa 100%);
+  box-shadow: 0 10px 28px rgb(3 42 93 / 0.1);
+  padding: 2rem 1.5rem;
+  text-align: center;
+}
+
+.ui-legacy .legacy-cta {
+  border-radius: 1rem;
+  background: #032a5d;
+  color: #fff;
+  padding: 2.5rem 1.5rem;
+  box-shadow: 0 12px 32px rgb(3 42 93 / 0.18);
+}
+
+.ui-legacy .legacy-section-flat {
+  background: #eef2f7;
+  padding: 4rem 1.25rem;
+}

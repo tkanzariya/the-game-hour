@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "source": "The Game Hour homepage",
+    "generated": "2026-05-23",
+    "note": "Hero, Why Us, and How It Works copy for the homepage."
+  },
+  "hero": {
+    "headlinePrimary": "Real laughter.",
+    "headlineAccent": "Zero screen time.",
+    "subheadline": "The Game Hour brings nostalgic, facilitator-led games to birthdays, weddings, corporate offsites, school fests, and community celebrations across Gujarat, so your guests connect, compete, and remember.",
+    "trustLine": "Trusted by families, HR teams, schools & societies",
+    "trustLinkLabel": "Ahmedabad & across Gujarat"
+  },
+  "whyUs": {
+    "title": "Why The Game Hour?",
+    "subtitle": "Ordinary events rely on food and small talk. We bring a curated game experience that turns strangers into teammates and events into stories.",
+    "reasons": [
+      {
+        "title": "Screen-free by design",
+        "description": "We pull guests into the room, not their phones. Nostalgic games spark real conversation and shared laughter.",
+        "icon": "target"
+      },
+      {
+        "title": "Facilitators who lead the room",
+        "description": "Professional hosts run every round, so you relax while energy stays high from start to finish.",
+        "icon": "microphone"
+      },
+      {
+        "title": "Built for every age",
+        "description": "Toddlers, teens, parents, and grandparents, activities adapt so everyone feels included, not sidelined.",
+        "icon": "users"
+      },
+      {
+        "title": "Corporate-ready, family-warm",
+        "description": "HR teams trust our structure; families love our playfulness. Same team, tuned to your audience.",
+        "icon": "handshake"
+      },
+      {
+        "title": "Custom packages, clear pricing",
+        "description": "Tell us your headcount, venue, and vibe, we shape a package that fits your budget without surprise chaos.",
+        "icon": "clipboard-list"
+      },
+      {
+        "title": "We come to you",
+        "description": "Ahmedabad, Gandhinagar, Vadodara, Surat, Rajkot, Anand, and beyond. Setup and pack-down included.",
+        "icon": "map-pin"
+      }
+    ]
+  },
+  "howItWorks": {
+    "title": "How it works",
+    "subtitle": "Four simple steps from enquiry to unforgettable, no stress, no screens, all play.",
+    "steps": [
+      {
+        "step": "01",
+        "title": "Book",
+        "description": "Share your date, venue, guest count, and event type, we respond with options fast."
+      },
+      {
+        "step": "02",
+        "title": "Plan",
+        "description": "We design a game lineup matched to your audience, corporate icebreakers or birthday chaos."
+      },
+      {
+        "step": "03",
+        "title": "Play",
+        "description": "Our facilitators arrive, set up, and run the experience. You host; we handle the energy."
+      },
+      {
+        "step": "04",
+        "title": "Memories",
+        "description": "Guests leave buzzing with stories. You get credit for the most talked-about event of the year."
+      }
+    ]
+  }
+}

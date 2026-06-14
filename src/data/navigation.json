@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "source": "TheGameHour-legacy reusables/header.html, footer.html, docs/content/content-map.md",
+    "generated": "2026-05-23"
+  },
+  "main": [
+    { "label": "Home", "to": "/" },
+    { "label": "About", "to": "/about" },
+    { "label": "Gallery", "to": "/gallery" },
+    { "label": "Contact", "to": "/contact" }
+  ],
+  "footer": {
+    "tagline": "Bringing people together through fun, nostalgic games and interactive activities for all events.",
+    "quickLinks": [
+      { "label": "About Us", "to": "/about" },
+      { "label": "Gallery", "to": "/gallery" },
+      { "label": "Contact", "to": "/contact" }
+    ],
+    "serviceLinks": [
+      { "label": "Birthday Games", "to": "/services/birthday-games" },
+      { "label": "Corporate Games", "to": "/services/corporate-games" },
+      { "label": "Social Gatherings", "to": "/services/social-gathering-games" },
+      { "label": "Game Festivals", "to": "/services/game-festival" },
+      { "label": "School & College", "to": "/services/school-and-collage-event" },
+      { "label": "Wedding & Haldi", "to": "/services/wedding-or-haldi-games" },
+      { "label": "Traditional Games", "to": "/services/traditional-games" },
+      { "label": "Bollywood Games", "to": "/services/bollywood-games" }
+    ],
+    "cta": {
+      "headline": "Ready to plan your next unforgettable event?",
+      "description": "Let's create moments of pure joy and connection, away from the screens."
+    }
+  }
+}

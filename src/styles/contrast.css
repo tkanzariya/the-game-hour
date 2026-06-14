@@ -1,0 +1,129 @@
+/**
+ * Semantic contrast system — Rules A / B / C
+ *
+ * Rule A: Dark surfaces (navy, accent fill, dark) → white text
+ * Rule B: Light surfaces (white, light accent, gray) → navy text
+ * Rule C: Disabled → muted accessible contrast
+ *
+ * Use surface-* utilities on components; cascade rules catch bg-* pairings.
+ */
+@layer utilities {
+  .text-on-primary {
+    color: var(--color-text-on-primary);
+  }
+
+  .text-on-accent {
+    color: var(--color-text-on-accent);
+  }
+
+  .text-on-light {
+    color: var(--color-text-on-light);
+  }
+
+  .text-on-dark {
+    color: var(--color-text-on-dark);
+  }
+
+  .text-on-disabled {
+    color: var(--color-text-on-disabled);
+  }
+
+  .text-on-accent-subtle {
+    color: var(--color-text-on-accent-subtle);
+  }
+
+  /** Rule A — dominant accent fill */
+  .surface-accent {
+    background-color: var(--color-secondary);
+    color: var(--color-text-on-accent);
+  }
+
+  .surface-accent:hover {
+    background-color: var(--color-secondary-hover);
+  }
+
+  /** Rule A — navy / dark fill */
+  .surface-primary {
+    background-color: var(--color-primary);
+    color: var(--color-text-on-primary);
+  }
+
+  .surface-dark {
+    background-color: var(--color-dark);
+    color: var(--color-text-on-dark);
+  }
+
+  /** Rule B — light accent tints */
+  .surface-accent-light {
+    background-color: var(--color-accent-light);
+    color: var(--color-text-on-light);
+  }
+
+  .surface-accent-soft {
+    background-color: var(--color-accent-soft);
+    color: var(--color-text-on-light);
+  }
+
+  /** Rule B — default elevated / clay light panel */
+  .surface-light {
+    background-color: var(--color-surface-elevated);
+    color: var(--color-text-on-light);
+  }
+
+  /** Rule B — interactive chip on light accent (service cards, labels) */
+  .surface-accent-chip {
+    background-color: var(--color-accent-light);
+    color: var(--color-text-on-accent-subtle);
+  }
+
+  .surface-accent-chip:hover,
+  .group:hover .surface-accent-chip {
+    background-color: var(--color-accent-soft);
+    color: var(--color-text-on-accent-subtle);
+  }
+}
+
+@layer base {
+  /**
+   * Global cascade — correct text when bg-* utilities omit paired foreground.
+   * Prefer surface-* in component variants; these rules cover remaining pairings.
+   */
+
+  /* Rule A: accent fills */
+  :is(.bg-secondary, .bg-secondary-hover, .surface-accent) {
+    color: var(--color-text-on-accent);
+  }
+
+  :is(.bg-secondary, .bg-secondary-hover, .surface-accent)
+    :is(.text-primary, [class*='text-primary/']) {
+    color: var(--color-text-on-accent);
+  }
+
+  /* Rule A: navy / dark fills */
+  :is(.bg-primary, .bg-dark, .surface-primary, .surface-dark) {
+    color: var(--color-text-on-primary);
+  }
+
+  /* Rule B: light accent surfaces */
+  :is(.bg-accent-light, .bg-accent-soft, .surface-accent-light, .surface-accent-soft) {
+    color: var(--color-text-on-light);
+  }
+
+  :is(.bg-accent-light, .bg-accent-soft, .surface-accent-light, .surface-accent-soft)
+    :is(.text-primary, [class*='text-primary/']) {
+    color: var(--color-text-on-light);
+  }
+
+  /* Rule B: emphasis / links on light accent (chips, dropdown hovers) */
+  :is(.bg-accent-light, .bg-accent-soft, .surface-accent-chip)
+    :is(.text-secondary-emphasis, .text-on-accent-subtle),
+  .text-on-accent-subtle {
+    color: var(--color-text-on-accent-subtle);
+  }
+
+  /* Rule C: disabled controls */
+  :is(button, a, input, select, textarea):disabled,
+  :is(button, a)[aria-disabled='true'] {
+    color: var(--color-text-on-disabled);
+  }
+}

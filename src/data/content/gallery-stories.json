@@ -1,0 +1,34 @@
+{
+  "meta": {
+    "source": "The Game Hour event highlights",
+    "generated": "2026-05-23",
+    "note": "Gallery page story blocks. imageId must match an id in src/data/gallery.json items."
+  },
+  "title": "Stories behind the photos",
+  "subtitle": "Every frame has context. Here are a few events guests still talk about.",
+  "itemEyebrow": "Real event",
+  "serviceLinkTemplate": "View {{serviceName}} package →",
+  "items": [
+    {
+      "id": "story-corporate",
+      "title": "Corporate offsite in Ahmedabad",
+      "context": "120 team members, mixed departments, one afternoon of facilitator-led challenges that turned quiet colleagues into cheering teammates.",
+      "imageId": "gallery-2",
+      "serviceSlug": "corporate-games"
+    },
+    {
+      "id": "story-school",
+      "title": "School annual fest",
+      "context": "A campus-wide celebration where students rotated through high-energy rounds while teachers kept the schedule on track.",
+      "imageId": "gallery-4",
+      "serviceSlug": "school-and-collage-event"
+    },
+    {
+      "id": "story-festival",
+      "title": "Community festival",
+      "context": "Neighbours of every age lined up for traditional games and Bollywood rounds until the society lawn was full of laughter.",
+      "imageId": "gallery-6",
+      "serviceSlug": "game-festival"
+    }
+  ]
+}

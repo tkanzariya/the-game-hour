@@ -1,0 +1,16 @@
+# SPA fallback for Apache/cPanel (React Router client-side routes)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Image CMS — PHP routes (must come before SPA fallback)
+  RewriteRule ^cms/ - [L]
+  RewriteRule ^uploads/ - [L]
+  RewriteRule ^admin/?$ /admin/login.php [R=301,L]
+  RewriteRule ^admin/(.*)$ cms/admin/$1 [L]
+
+  RewriteRule ^index\.html$ - [L]
+  RewriteCond %{REQUEST_FILENAME} !-f
+  RewriteCond %{REQUEST_FILENAME} !-d
+  RewriteRule . /index.html [L]
+</IfModule>

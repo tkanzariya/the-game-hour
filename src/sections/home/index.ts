@@ -1,0 +1,8 @@
+export { default as HomeHero } from './HomeHero'
+export { default as HomeTrustedStats } from './HomeTrustedStats'
+export { default as HomeEventCategories } from './HomeEventCategories'
+export { default as HomeWhyUs } from './HomeWhyUs'
+export { default as HomeGalleryMoments } from './HomeGalleryMoments'
+export { default as HomeTestimonials } from './HomeTestimonials'
+export { default as HomeHowItWorks } from './HomeHowItWorks'
+export { default as HomeFinalCta } from './HomeFinalCta'

@@ -1,0 +1,68 @@
+{
+  "meta": {
+    "source": "client-provided logos",
+    "generated": "2026-05-23",
+    "status": "architecture-ready",
+    "note": "Add logo PNG or WebP files under src/assets/images/trust-logos/. Items stay hidden until a trust logo section is enabled in placements and assets exist."
+  },
+  "categories": {
+    "corporate": {
+      "label": "Corporate clients",
+      "section": {
+        "title": "Trusted by teams across Gujarat",
+        "subtitle": "Companies that chose facilitator-led games for offsites, annual days, and team events."
+      }
+    },
+    "school": {
+      "label": "Schools and colleges",
+      "section": {
+        "title": "Campus events we have hosted",
+        "subtitle": "School fests, sports days, and student celebrations with structured, high-energy play."
+      }
+    },
+    "community": {
+      "label": "Communities and societies",
+      "section": {
+        "title": "Societies and community gatherings",
+        "subtitle": "Residential complexes, clubs, and festivals where neighbours play together."
+      }
+    },
+    "partner": {
+      "label": "Partners",
+      "section": {
+        "title": "Our partners",
+        "subtitle": "Venues, event planners, and collaborators we work with across Gujarat."
+      }
+    },
+    "client": {
+      "label": "Clients",
+      "section": {
+        "title": "Trusted by hosts who chose play over another ordinary agenda",
+        "subtitle": "A selection of families, organisers, and teams we have hosted."
+      }
+    }
+  },
+  "placements": {
+    "home": {
+      "enabled": false,
+      "categories": ["corporate", "school", "community"]
+    },
+    "about": {
+      "enabled": false,
+      "categories": ["corporate", "community", "school"]
+    },
+    "services": {
+      "enabled": false,
+      "categories": ["corporate", "school", "community"]
+    },
+    "gallery": {
+      "enabled": false,
+      "categories": ["community", "client"]
+    },
+    "corporateService": {
+      "enabled": false,
+      "categories": ["corporate"]
+    }
+  },
+  "items": []
+}

@@ -1,0 +1,151 @@
+{
+  "meta": {
+    "source": "placeholder-content",
+    "generated": "2026-05-23",
+    "status": "draft"
+  },
+  "sections": {
+    "home": {
+      "title": "What hosts say after the games",
+      "subtitle": "Outcome-focused feedback from families, HR teams, schools, and communities across Gujarat."
+    },
+    "service": {
+      "title": "What hosts say",
+      "subtitleTemplate": "Organisers who chose The Game Hour for their {{serviceName}} events."
+    }
+  },
+  "items": [
+    {
+      "id": "home-corporate-engagement",
+      "quote": "Our annual summit had 95 people from three departments that rarely share projects. Within 20 minutes of the opening challenge, colleagues who had never been introduced were on the same team cheering. By the third round, participation was effectively full-room.",
+      "outcome": "Cross-department engagement in under 30 minutes",
+      "attribution": "Rahul M., HR Lead, IT Services Firm, Ahmedabad",
+      "context": "home",
+      "serviceSlug": "corporate-games",
+      "theme": "team-bonding",
+      "eventType": "annual summit",
+      "participantCount": 95
+    },
+    {
+      "id": "home-birthday-participation",
+      "quote": "We hosted 28 kids from ages 6 to 14. Every child stayed in active games for the full two hours with no phone drift. Parents said it was the first birthday in our family where adults could sit together and talk while the room stayed loud with play.",
+      "outcome": "Full-session kids participation, screen-free",
+      "attribution": "Priya P., Birthday Host, Gandhinagar",
+      "context": "home",
+      "serviceSlug": "birthday-games",
+      "theme": "kids-involvement",
+      "eventType": "10th birthday party",
+      "participantCount": 28
+    },
+    {
+      "id": "home-festival-community",
+      "quote": "Our society festival usually splits into age groups that stick to themselves. The Game Hour rounds put grandparents, teenagers, and toddlers in the same game queue. The lawn stayed full until the last round, with neighbours who normally only wave at each other playing on the same side.",
+      "outcome": "Multi-generation community interaction on one lawn",
+      "attribution": "Anand S., Society Event Coordinator, Vadodara",
+      "context": "home",
+      "serviceSlug": "game-festival",
+      "theme": "community-interaction",
+      "eventType": "annual society day",
+      "participantCount": 220
+    },
+    {
+      "id": "service-birthday-kids",
+      "quote": "The facilitators read the room within the first round. When younger kids tired, they switched to shorter team games so nobody dropped out. By the closing round, even the shy cousins were volunteering to lead the next activity.",
+      "outcome": "Shy kids included through adaptive facilitation",
+      "attribution": "Mrs. Sharma, Parent, Rajkot",
+      "context": "service",
+      "serviceSlug": "birthday-games",
+      "theme": "kids-involvement",
+      "eventType": "birthday party",
+      "participantCount": 22
+    },
+    {
+      "id": "service-corporate-participation",
+      "quote": "We needed something beyond a slide deck for our offsite. 85 team members joined the opening challenge, and participation stayed high through four facilitator-led rounds. Two department heads told us it was the most cross-team energy they had seen since the last annual day.",
+      "outcome": "Sustained employee participation across four rounds",
+      "attribution": "Mr. Patel, People Ops, TechSolutions Pvt. Ltd., Ahmedabad",
+      "context": "service",
+      "serviceSlug": "corporate-games",
+      "theme": "participation",
+      "eventType": "team offsite",
+      "participantCount": 85
+    },
+    {
+      "id": "service-corporate-bonding",
+      "quote": "Quiet analysts and loud sales reps ended up on mixed teams by design. The structure forced collaboration without feeling forced. People who usually eat lunch at their desks were still talking about the final round in the parking lot.",
+      "outcome": "Team bonding across personality and department lines",
+      "attribution": "Neha K., Culture Lead, Manufacturing Firm, Gandhinagar",
+      "context": "service",
+      "serviceSlug": "corporate-games",
+      "theme": "team-bonding",
+      "eventType": "team-building afternoon",
+      "participantCount": 60
+    },
+    {
+      "id": "service-social-gathering",
+      "quote": "Our family reunion had four generations and no shared activity plan. The hosts grouped people by table teams, not age, so cousins, uncles, and grandparents ended up on the same side. The group chat filled with photos from that afternoon within an hour of pack-down.",
+      "outcome": "Four generations playing on mixed-age teams",
+      "attribution": "The Shah Family, Reunion Hosts, Surat",
+      "context": "service",
+      "serviceSlug": "social-gathering-games",
+      "theme": "community-interaction",
+      "eventType": "family reunion",
+      "participantCount": 45
+    },
+    {
+      "id": "service-festival-scale",
+      "quote": "We expected 200 residents and closer to 350 arrived. The crew kept queues moving with rotating stations so nobody waited more than a few minutes. Committee members could focus on food and safety instead of trying to entertain the crowd themselves.",
+      "outcome": "350-person crowd managed with steady participation",
+      "attribution": "Mr. Dave, Secretary, Green Acres Society, Anand",
+      "context": "service",
+      "serviceSlug": "game-festival",
+      "theme": "engagement",
+      "eventType": "society festival",
+      "participantCount": 350
+    },
+    {
+      "id": "service-school-events",
+      "quote": "Sports day needed structure without feeling like a drill. Students moved through stations on schedule, teachers had clear roles at each post, and the energy stayed positive from the opening relay to the closing round. Even the parent spectators joined two audience challenges.",
+      "outcome": "Structured campus event with parent participation",
+      "attribution": "Prof. Kulkarni, Dean of Student Affairs, GEC College, Vadodara",
+      "context": "service",
+      "serviceSlug": "school-and-collage-event",
+      "theme": "kids-involvement",
+      "eventType": "annual sports day",
+      "participantCount": 400
+    },
+    {
+      "id": "service-wedding-families",
+      "quote": "Haldi morning can feel awkward when two families meet for the first time. The Bollywood and team rounds gave everyone a shared reason to cheer within the first half hour. Both sides were on the floor for the finale, including relatives who said they do not usually dance at functions.",
+      "outcome": "Two families engaged together on day one",
+      "attribution": "Mr. and Mrs. Kapoor, Wedding Hosts, Ahmedabad",
+      "context": "service",
+      "serviceSlug": "wedding-or-haldi-games",
+      "theme": "community-interaction",
+      "eventType": "haldi and sangeet",
+      "participantCount": 80
+    },
+    {
+      "id": "service-traditional-games",
+      "quote": "We wanted something rooted in culture but still fun for teenagers. Traditional game stations had parents teaching rules to kids who then beat them in the next round. That back-and-forth kept every age group at the stations instead of drifting to the food area.",
+      "outcome": "Intergenerational play at cultural game stations",
+      "attribution": "Ms. Chopra, Community Event Organizer, Gandhinagar",
+      "context": "service",
+      "serviceSlug": "traditional-games",
+      "theme": "community-interaction",
+      "eventType": "community gathering",
+      "participantCount": 70
+    },
+    {
+      "id": "service-bollywood-energy",
+      "quote": "Our anniversary reception needed a host who could pull people off their chairs. Music rounds escalated from table teams to a full-room finale. Guests who arrived saying they would watch from the side were standing in the front row by the last challenge.",
+      "outcome": "Full-room participation at a seated reception",
+      "attribution": "Mr. Sharma, Anniversary Host, Vadodara",
+      "context": "service",
+      "serviceSlug": "bollywood-games",
+      "theme": "engagement",
+      "eventType": "anniversary reception",
+      "participantCount": 65
+    }
+  ]
+}
