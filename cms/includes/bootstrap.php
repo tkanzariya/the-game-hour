@@ -325,16 +325,20 @@ function cms_register_missing_keys(array $keys): int
     return $inserted;
 }
 
-function cms_admin_layout(string $title, string $content): void
+function cms_admin_layout(string $title, string $content, string $activeNav = ''): void
 {
     $user = $_SESSION['cms_admin'] ?? 'admin';
+    $libraryActive = $activeNav === 'library' ? ' is-active' : '';
+    $uploadActive = $activeNav === 'upload' ? ' is-active' : '';
     echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
-    echo '<title>' . htmlspecialchars($title) . ' · The Game Hour CMS</title>';
+    echo '<title>' . htmlspecialchars($title) . ' · Photo Manager</title>';
     echo '<link rel="stylesheet" href="' . htmlspecialchars(cms_admin_url('assets/admin.css')) . '"></head><body>';
-    echo '<header class="topbar"><div class="brand">The Game Hour · Image CMS</div>';
-    echo '<nav><a href="' . htmlspecialchars(cms_admin_url('library.php')) . '">Library</a>';
-    echo '<a href="' . htmlspecialchars(cms_admin_url('upload.php')) . '">Upload</a>';
-    echo '<span class="user">' . htmlspecialchars((string) $user) . '</span>';
+    echo '<header class="topbar"><div class="topbar-brand"><strong>The Game Hour</strong><span>Photo Manager</span></div>';
+    echo '<nav class="topbar-nav">';
+    echo '<a href="' . htmlspecialchars(cms_admin_url('library.php')) . '" class="' . trim($libraryActive) . '">All photos</a>';
+    echo '<span class="topbar-user">' . htmlspecialchars((string) $user) . '</span>';
     echo '<a href="' . htmlspecialchars(cms_admin_url('logout.php')) . '">Log out</a></nav></header>';
-    echo '<main class="container">' . $content . '</main></body></html>';
+    echo '<main class="container">' . $content . '</main>';
+    echo '<script src="' . htmlspecialchars(cms_admin_url('assets/admin.js')) . '" defer></script>';
+    echo '</body></html>';
 }
