@@ -31,6 +31,10 @@ function cms_content_default_metrics(): array
 
 function cms_content_defaults_json_path(string $filename): string
 {
+    $cmsData = __DIR__ . '/' . $filename;
+    if (is_file($cmsData)) {
+        return $cmsData;
+    }
     return dirname(__DIR__, 2) . '/src/data/content/' . $filename;
 }
 

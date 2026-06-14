@@ -2,9 +2,19 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/dev-json-store.php';
-require_once __DIR__ . '/dev-content-store.php';
-require_once __DIR__ . '/content-store.php';
 require_once __DIR__ . '/../data/flash-messages.php';
+
+/** Load Phase 1 content module (testimonials + statistics) on demand. */
+function cms_load_content_store(): void
+{
+    static $loaded = false;
+    if ($loaded) {
+        return;
+    }
+    require_once __DIR__ . '/dev-content-store.php';
+    require_once __DIR__ . '/content-store.php';
+    $loaded = true;
+}
 
 function cms_config(): array
 {

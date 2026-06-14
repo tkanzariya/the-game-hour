@@ -54,11 +54,11 @@ function cms_content_split_sql_statements(string $sql): array
 
     foreach ($lines as $line) {
         $trimmed = trim($line);
-        if ($trimmed === '' || str_starts_with($trimmed, '--')) {
+        if ($trimmed === '' || strpos($trimmed, '--') === 0) {
             continue;
         }
         $buffer .= $line . "\n";
-        if (str_ends_with(rtrim($line), ';')) {
+        if (substr(rtrim($line), -1) === ';') {
             $statement = trim($buffer);
             $buffer = '';
             if ($statement !== '') {

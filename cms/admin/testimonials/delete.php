@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../includes/bootstrap.php';
 
 cms_require_admin();
+cms_load_content_store();
 
 $id = (int) ($_POST['id'] ?? 0);
 if (!cms_verify_csrf($_POST['csrf'] ?? null)) {

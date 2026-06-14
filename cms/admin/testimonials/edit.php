@@ -4,6 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../../includes/bootstrap.php';
 
 cms_require_admin();
+cms_load_content_store();
 cms_content_seed_if_empty();
 
 $id = isset($_GET['id']) ? (int) $_GET['id'] : 0;

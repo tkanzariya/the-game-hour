@@ -7,6 +7,7 @@ require_once __DIR__ . '/../data/admin-ui.php';
 
 cms_require_admin();
 cms_admin_bootstrap();
+cms_load_content_store();
 cms_content_seed_if_empty();
 
 $rowsByKey = cms_index_rows_by_key(cms_get_all_images());
