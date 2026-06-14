@@ -19,11 +19,14 @@ const CmsImagesContext = createContext<CmsImagesContextValue | null>(null)
 export function CmsImagesProvider({ children }: { children: ReactNode }) {
   const [loaded, setLoaded] = useState(isCmsManifestLoaded())
   const [manifest, setManifest] = useState<CmsManifest>(getCmsManifest())
+  /** Bump when manifest loads so getAssetUrl() picks up CMS URLs after async fetch */
+  const [manifestEpoch, setManifestEpoch] = useState(0)
 
   const refresh = async (): Promise<void> => {
-    const next = await loadCmsManifest()
+    const next = await loadCmsManifest(true)
     setManifest({ ...next })
     setLoaded(true)
+    setManifestEpoch((n) => n + 1)
   }
 
   useEffect(() => {
@@ -39,7 +42,7 @@ export function CmsImagesProvider({ children }: { children: ReactNode }) {
         refresh,
       }}
     >
-      {children}
+      <div key={manifestEpoch}>{children}</div>
     </CmsImagesContext.Provider>
   )
 }
@@ -52,7 +55,7 @@ export function useCmsImages(): CmsImagesContextValue {
       manifest: getCmsManifest(),
       getImageByKey,
       refresh: async () => {
-        await loadCmsManifest()
+        await loadCmsManifest(true)
       },
     }
   }

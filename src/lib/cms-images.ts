@@ -3,8 +3,9 @@
  * Bundled assets remain as fallback when CMS is unavailable or slot is empty.
  */
 import {
-  FALLBACK_PATH_TO_IMAGE_KEY,
+  FALLBACK_PATH_TO_IMAGE_KEYS,
   IMAGE_KEY_REGISTRY,
+  resolveCanonicalCmsKey,
   type ImageKeyMeta,
 } from '@/data/image-keys'
 import { getBundledImageUrl, PLACEHOLDER_SVG } from '@/lib/assets-internal'
@@ -40,9 +41,13 @@ export function setCmsManifest(next: CmsManifest): void {
 }
 
 /** Fetch all uploaded images from PHP CMS. Safe to call multiple times. */
-export function loadCmsManifest(): Promise<CmsManifest> {
-  if (loaded) return Promise.resolve(manifest)
-  if (loadPromise) return loadPromise
+export function loadCmsManifest(force = false): Promise<CmsManifest> {
+  if (loaded && !force) return Promise.resolve(manifest)
+  if (loadPromise && !force) return loadPromise
+  if (force) {
+    loaded = false
+    loadPromise = null
+  }
 
   loadPromise = fetch(CMS_API_URL, {
     method: 'GET',
@@ -65,18 +70,35 @@ export function loadCmsManifest(): Promise<CmsManifest> {
 }
 
 function bundledFallbackForKey(key: string): string {
-  const meta: ImageKeyMeta | undefined = IMAGE_KEY_REGISTRY[key]
+  const canonical = resolveCanonicalCmsKey(key)
+  const meta: ImageKeyMeta | undefined = IMAGE_KEY_REGISTRY[canonical]
   if (!meta?.fallback) return PLACEHOLDER_SVG
   return getBundledImageUrl(meta.fallback)
 }
 
+function manifestUrlForKey(key: string): string | undefined {
+  const direct = manifest[key]?.url
+  if (direct) return direct
+  const canonical = resolveCanonicalCmsKey(key)
+  if (canonical !== key && manifest[canonical]?.url) {
+    return manifest[canonical].url
+  }
+  for (const [manifestKey, entry] of Object.entries(manifest)) {
+    if (!entry?.url) continue
+    if (resolveCanonicalCmsKey(manifestKey) === canonical) {
+      return entry.url
+    }
+  }
+  return undefined
+}
+
 /**
- * Resolve image URL by CMS key (e.g. homepage-hero, gallery-1, birthday-hero).
+ * Resolve image URL by CMS key (e.g. homepage-hero, gallery-1, birthday-games-slider-1).
  * Falls back to bundled Vite asset when CMS slot is empty or offline.
  */
 export function getImageByKey(key: string): string {
-  const cms = manifest[key]
-  if (cms?.url) return cms.url
+  const cmsUrl = manifestUrlForKey(key)
+  if (cmsUrl) return cmsUrl
   return bundledFallbackForKey(key)
 }
 
@@ -86,9 +108,10 @@ export function getImageByKey(key: string): string {
 export function getImageUrlForAssetPath(relativePath: string | undefined): string | undefined {
   if (!relativePath) return undefined
   const normalized = relativePath.replace(/^\/+/, '').replace(/\\/g, '/')
-  const cmsKey = FALLBACK_PATH_TO_IMAGE_KEY[normalized]
-  if (cmsKey && manifest[cmsKey]?.url) {
-    return manifest[cmsKey].url
+  const keys = FALLBACK_PATH_TO_IMAGE_KEYS[normalized] ?? []
+  for (const cmsKey of keys) {
+    const url = manifestUrlForKey(cmsKey)
+    if (url) return url
   }
   return undefined
 }

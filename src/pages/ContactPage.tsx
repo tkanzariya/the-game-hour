@@ -4,7 +4,7 @@ import { PageHero } from '@/components/PageHero'
 import { Section } from '@/components/Section'
 import { SocialChannels } from '@/components/SocialChannels'
 import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
-import { getContactInfo, getSiteInfo } from '@/lib/content/company'
+import { getContactInfo, getContactLocationDisplay, getSiteInfo } from '@/lib/content/company'
 import { SITE } from '@/utils/constants'
 import { buildSeo } from '@/utils/seo'
 
@@ -15,7 +15,7 @@ export default function ContactPage() {
 
   const seo = buildSeo({
     title: 'Contact',
-    description: `Reach ${site.name} in Ahmedabad, Gujarat. Call, email, or WhatsApp to plan facilitator-led games for your next event.`,
+    description: `Reach ${site.name} at our Bodakdev, Ahmedabad office. Call, email, or WhatsApp to plan facilitator-led games for your next event.`,
     canonical: `${SITE.url}/contact`,
   })
 
@@ -71,7 +71,9 @@ export default function ContactPage() {
             <p className="mt-2 font-body text-sm leading-relaxed text-accent-muted-grey">
               We travel across Gujarat for birthdays, weddings, corporates, schools, and community events.
             </p>
-            <p className="mt-4 font-heading text-base font-semibold text-primary">{contact.location}</p>
+            <p className="mt-4 font-heading text-base font-semibold whitespace-pre-line text-primary">
+              {getContactLocationDisplay()}
+            </p>
           </article>
 
           <article className="surface-clay rounded-2xl p-6 sm:col-span-2">

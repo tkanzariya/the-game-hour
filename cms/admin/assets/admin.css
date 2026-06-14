@@ -540,6 +540,24 @@ form.inline { display: inline; }
 }
 
 .toast.is-error { background: var(--danger-bg); border-color: #fecaca; color: var(--danger); }
+.toast.is-success { background: var(--success-bg); border-color: #a7f3d0; color: var(--success); }
+
+.notice {
+  padding: 0.85rem 1rem;
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+.notice-error, .error {
+  background: var(--danger-bg);
+  border: 1px solid #fecaca;
+  color: var(--danger);
+}
+.notice-success {
+  background: var(--success-bg);
+  border: 1px solid #a7f3d0;
+  color: var(--success);
+}
 
 @keyframes toast-in {
   from { opacity: 0; transform: translateY(10px); }

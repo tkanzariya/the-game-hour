@@ -21,8 +21,22 @@ if ($resolved === null) {
 }
 
 $path = $resolved['path'];
-$finfo = new finfo(FILEINFO_MIME_TYPE);
-$mime = $finfo->file($path) ?: 'application/octet-stream';
+$ext = strtolower(pathinfo($path, PATHINFO_EXTENSION));
+$mimeByExt = [
+    'jpg' => 'image/jpeg',
+    'jpeg' => 'image/jpeg',
+    'png' => 'image/png',
+    'webp' => 'image/webp',
+    'gif' => 'image/gif',
+    'svg' => 'image/svg+xml',
+];
+$mime = $mimeByExt[$ext] ?? null;
+if ($mime === null && class_exists('finfo')) {
+    $finfo = new finfo(FILEINFO_MIME_TYPE);
+    $mime = $finfo->file($path) ?: 'application/octet-stream';
+}
+$mime ??= 'application/octet-stream';
+
 header('Content-Type: ' . $mime);
 header('Content-Length: ' . (string) filesize($path));
 header('Cache-Control: private, max-age=3600');

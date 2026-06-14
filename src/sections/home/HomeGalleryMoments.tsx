@@ -5,9 +5,8 @@ import { Section } from '@/components/Section'
 import { Reveal, RevealItem } from '@/components/motion'
 import { ROUTES } from '@/constants/routes'
 import { galleryData } from '@/data'
-import { ASSET_MAP } from '@/data/asset-map'
 import { getHomeGalleryTeaser } from '@/lib/content/stats'
-import { getAssetUrl } from '@/lib/assets'
+import { getImageByKey } from '@/lib/assets'
 import { toLightboxGallery } from '@/lib/lightbox'
 import SectionIntro from './SectionIntro'
 
@@ -19,7 +18,7 @@ export default function HomeGalleryMoments() {
     .slice(0, maxItems)
   const lightboxGallery = toLightboxGallery(
     moments.map((item, index) => ({
-      src: getAssetUrl(ASSET_MAP.gallery.moments[index]),
+      src: getImageByKey(`homepage-moment-${index + 1}`),
       alt: item.alt,
       caption: item.caption,
     })),
@@ -35,7 +34,7 @@ export default function HomeGalleryMoments() {
         {moments.map((item, index) => (
           <RevealItem key={item.id}>
             <GalleryCard
-              src={getAssetUrl(ASSET_MAP.gallery.moments[index])}
+              src={getImageByKey(`homepage-moment-${index + 1}`)}
               alt={item.alt}
               caption={item.caption}
               gallery={lightboxGallery}

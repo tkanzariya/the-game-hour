@@ -1,13 +1,17 @@
 <?php
 declare(strict_types=1);
 
+require_once __DIR__ . '/dev-json-store.php';
+require_once __DIR__ . '/../data/flash-messages.php';
+
 function cms_config(): array
 {
     static $config = null;
     if ($config !== null) {
         return $config;
     }
-    $path = __DIR__ . '/../config.php';
+    $local = __DIR__ . '/../config.local.php';
+    $path = is_file($local) ? $local : __DIR__ . '/../config.php';
     if (!is_file($path)) {
         http_response_code(503);
         header('Content-Type: application/json');
@@ -20,6 +24,9 @@ function cms_config(): array
 
 function cms_db(): PDO
 {
+    if (cms_dev_json_enabled()) {
+        throw new RuntimeException('MySQL is disabled in JSON dev mode.');
+    }
     static $pdo = null;
     if ($pdo instanceof PDO) {
         return $pdo;
@@ -170,30 +177,50 @@ function cms_logout(): void
 function cms_validate_image_upload(array $file): array
 {
     $cfg = cms_config()['uploads'];
-    if (($file['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_OK) {
-        return ['ok' => false, 'error' => 'Upload failed. Please try again.'];
+    $err = (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE);
+
+    if ($err === UPLOAD_ERR_INI_SIZE || $err === UPLOAD_ERR_FORM_SIZE) {
+        return ['ok' => false, 'error' => 'File too large. Maximum size is 5 MB.', 'code' => 'file_too_large'];
+    }
+    if ($err === UPLOAD_ERR_NO_FILE) {
+        return ['ok' => false, 'error' => 'Please choose a photo to upload.', 'code' => 'no_file'];
+    }
+    if ($err !== UPLOAD_ERR_OK) {
+        return ['ok' => false, 'error' => 'Upload failed. Please try again.', 'code' => 'upload_failed'];
     }
     if (($file['size'] ?? 0) > ($cfg['max_bytes'] ?? 5242880)) {
-        return ['ok' => false, 'error' => 'File too large. Maximum size is 5 MB.'];
+        return ['ok' => false, 'error' => 'File too large. Maximum size is 5 MB.', 'code' => 'file_too_large'];
     }
     $original = $file['name'] ?? '';
     $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
     if (!in_array($ext, $cfg['allowed_extensions'], true)) {
-        return ['ok' => false, 'error' => 'Invalid file type. Allowed: JPG, PNG, WEBP.'];
+        return ['ok' => false, 'error' => 'Invalid file type. Allowed: JPG, PNG, WEBP.', 'code' => 'invalid_type'];
     }
-    $finfo = new finfo(FILEINFO_MIME_TYPE);
-    $mime = $finfo->file($file['tmp_name']);
+    $finfo = class_exists('finfo') ? new finfo(FILEINFO_MIME_TYPE) : null;
+    $mime = $finfo ? $finfo->file($file['tmp_name']) : null;
+    if ($mime === null || $mime === 'application/octet-stream') {
+        $mimeByExt = [
+            'jpg' => 'image/jpeg',
+            'jpeg' => 'image/jpeg',
+            'png' => 'image/png',
+            'webp' => 'image/webp',
+        ];
+        $mime = $mimeByExt[$ext] ?? '';
+    }
     if (!in_array($mime, $cfg['allowed_mimes'], true)) {
-        return ['ok' => false, 'error' => 'Invalid image format detected.'];
+        return ['ok' => false, 'error' => 'Invalid file type. Allowed: JPG, PNG, WEBP.', 'code' => 'invalid_type'];
     }
     if (@getimagesize($file['tmp_name']) === false) {
-        return ['ok' => false, 'error' => 'File is not a valid image.'];
+        return ['ok' => false, 'error' => 'That file is not a valid image. Please choose a photo.', 'code' => 'invalid_image'];
     }
     return ['ok' => true, 'ext' => $ext, 'mime' => $mime];
 }
 
 function cms_get_all_images(?string $category = null): array
 {
+    if (cms_dev_json_enabled()) {
+        return cms_dev_json_get_all_images($category);
+    }
     $sql = 'SELECT id, image_key, title, category, file_path, updated_at FROM images';
     $params = [];
     if ($category) {
@@ -208,6 +235,9 @@ function cms_get_all_images(?string $category = null): array
 
 function cms_get_image_by_key(string $key): ?array
 {
+    if (cms_dev_json_enabled()) {
+        return cms_dev_json_get_image_by_key($key);
+    }
     $stmt = cms_db()->prepare(
         'SELECT id, image_key, title, category, file_path, updated_at FROM images WHERE image_key = :key LIMIT 1',
     );
@@ -235,7 +265,10 @@ function cms_save_upload(string $imageKey, array $file, ?string $title = null, ?
 {
     $imageKey = cms_sanitize_key($imageKey);
     if ($imageKey === '') {
-        return ['ok' => false, 'error' => 'Invalid image key.'];
+        return ['ok' => false, 'error' => 'Invalid image key.', 'code' => 'not_found'];
+    }
+    if (cms_dev_json_enabled()) {
+        return cms_dev_json_save_upload($imageKey, $file, $title, $category);
     }
     $validation = cms_validate_image_upload($file);
     if (!$validation['ok']) {
@@ -253,8 +286,13 @@ function cms_save_upload(string $imageKey, array $file, ?string $title = null, ?
         }
     }
 
-    if (!move_uploaded_file($file['tmp_name'], $dest)) {
-        return ['ok' => false, 'error' => 'Could not save file on server.'];
+    if (is_uploaded_file($file['tmp_name'])) {
+        $saved = move_uploaded_file($file['tmp_name'], $dest);
+    } else {
+        $saved = copy($file['tmp_name'], $dest);
+    }
+    if (!$saved) {
+        return ['ok' => false, 'error' => 'Upload failed. Please try again.', 'code' => 'upload_failed'];
     }
 
     $title = $title ?: ($existing['title'] ?? $imageKey);
@@ -289,6 +327,9 @@ function cms_save_upload(string $imageKey, array $file, ?string $title = null, ?
 function cms_delete_image(string $imageKey): array
 {
     $imageKey = cms_sanitize_key($imageKey);
+    if (cms_dev_json_enabled()) {
+        return cms_dev_json_delete_image($imageKey);
+    }
     $row = cms_get_image_by_key($imageKey);
     if (!$row) {
         return ['ok' => false, 'error' => 'Image not found.'];
@@ -308,6 +349,9 @@ function cms_delete_image(string $imageKey): array
 
 function cms_register_missing_keys(array $keys): int
 {
+    if (cms_dev_json_enabled()) {
+        return cms_dev_json_register_missing_keys($keys);
+    }
     $inserted = 0;
     $stmt = cms_db()->prepare(
         'INSERT IGNORE INTO images (image_key, title, category, file_path) VALUES (:key, :title, :category, NULL)',
@@ -370,10 +414,22 @@ function cms_resolve_preview_file(string $key): ?array
     return null;
 }
 
+function cms_admin_favicon_tags(): string
+{
+    return '<link rel="icon" href="/favicon.ico" sizes="any">'
+        . '<link rel="icon" type="image/svg+xml" href="/favicon.svg">'
+        . '<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">'
+        . '<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">'
+        . '<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">'
+        . '<link rel="manifest" href="/site.webmanifest">'
+        . '<meta name="theme-color" content="#032a5d">';
+}
+
 function cms_admin_layout(string $title, string $content, string $activeNav = '', string $searchQuery = '', bool $bare = false): void
 {
     if ($bare) {
         echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
+        echo cms_admin_favicon_tags();
         echo '<title>' . htmlspecialchars($title) . ' · Photo Manager</title>';
         echo '<link rel="stylesheet" href="' . htmlspecialchars(cms_admin_url('assets/admin.css')) . '"></head><body class="admin-app admin-bare">';
         echo $content;
@@ -389,6 +445,7 @@ function cms_admin_layout(string $title, string $content, string $activeNav = ''
     };
 
     echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
+    echo cms_admin_favicon_tags();
     echo '<title>' . htmlspecialchars($title) . ' · Photo Manager</title>';
     echo '<link rel="stylesheet" href="' . htmlspecialchars(cms_admin_url('assets/admin.css')) . '"></head><body class="admin-app">';
     echo '<div class="admin-shell">';

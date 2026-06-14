@@ -1,20 +1,19 @@
 import type { FaqItem } from '@/data/types'
-import { getContactInfo, getSiteInfo } from '@/lib/content/company'
+import { getContactInfo, getContactPostalAddress, getSiteInfo } from '@/lib/content/company'
 import { getSocialUrlsRecord } from '@/lib/content/social'
 import { getDefaultOgImageUrl } from '@/lib/seo/og-images'
 
 type JsonLd = Record<string, unknown>
 
-function parseLocation(location: string): {
-  locality: string
-  region: string
-  country: string
-} {
-  const parts = location.split(',').map((p) => p.trim())
+function postalAddressSchema() {
+  const address = getContactPostalAddress()
   return {
-    locality: parts[0] ?? 'Ahmedabad',
-    region: parts[1] ?? 'Gujarat',
-    country: parts[2] === 'India' ? 'IN' : (parts[2] ?? 'IN'),
+    '@type': 'PostalAddress',
+    streetAddress: address.streetAddress,
+    addressLocality: address.addressLocality,
+    addressRegion: address.addressRegion,
+    postalCode: address.postalCode,
+    addressCountry: address.addressCountry,
   }
 }
 
@@ -22,7 +21,6 @@ export function buildOrganizationSchema(): JsonLd {
   const site = getSiteInfo()
   const contact = getContactInfo()
   const social = getSocialUrlsRecord()
-  const { locality, region, country } = parseLocation(contact.location)
 
   return {
     '@context': 'https://schema.org',
@@ -33,12 +31,7 @@ export function buildOrganizationSchema(): JsonLd {
     description: site.description,
     email: contact.email,
     telephone: contact.phone,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: locality,
-      addressRegion: region,
-      addressCountry: country,
-    },
+    address: postalAddressSchema(),
     sameAs: [social.instagram, social.linkedin].filter(Boolean),
   }
 }
@@ -47,7 +40,6 @@ export function buildLocalBusinessSchema(): JsonLd {
   const site = getSiteInfo()
   const contact = getContactInfo()
   const social = getSocialUrlsRecord()
-  const { locality, region, country } = parseLocation(contact.location)
 
   return {
     '@context': 'https://schema.org',
@@ -58,12 +50,7 @@ export function buildLocalBusinessSchema(): JsonLd {
     telephone: contact.phone,
     email: contact.email,
     description: site.description,
-    address: {
-      '@type': 'PostalAddress',
-      addressLocality: locality,
-      addressRegion: region,
-      addressCountry: country,
-    },
+    address: postalAddressSchema(),
     areaServed: {
       '@type': 'AdministrativeArea',
       name: 'Gujarat, India',

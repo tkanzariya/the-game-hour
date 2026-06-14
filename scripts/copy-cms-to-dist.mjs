@@ -15,18 +15,24 @@ function copyDir(from, to) {
   for (const entry of fs.readdirSync(from, { withFileTypes: true })) {
     const s = path.join(from, entry.name)
     const d = path.join(to, entry.name)
-    if (entry.name === 'config.php') continue
+    if (entry.name === 'config.php' || entry.name === 'config.local.php') continue
     if (entry.isDirectory()) copyDir(s, d)
     else fs.copyFileSync(s, d)
   }
 }
 
 if (!fs.existsSync(path.join(root, 'dist'))) {
-  console.log('copy-cms: dist/ not found, skipping')
-  process.exit(0)
+  fs.mkdirSync(path.join(root, 'dist'), { recursive: true })
+  console.log('copy-cms: created dist/ for local CMS dev')
 }
 
 copyDir(src, dest)
+
+const localConfig = path.join(src, 'config.local.php')
+if (fs.existsSync(localConfig)) {
+  fs.copyFileSync(localConfig, path.join(dest, 'config.local.php'))
+  console.log('copy-cms: config.local.php → dist/cms/ (local dev)')
+}
 
 const imagesSrc = path.join(root, 'src', 'assets', 'images')
 const staticDest = path.join(src, 'static', 'images')

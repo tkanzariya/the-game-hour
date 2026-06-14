@@ -10,18 +10,22 @@ cms_require_admin();
 $registry = cms_all_image_keys();
 $prefillKey = isset($_GET['key']) ? cms_sanitize_key((string) $_GET['key']) : '';
 $error = '';
+$errorCode = '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!cms_verify_csrf($_POST['csrf'] ?? null)) {
-        $error = 'Your session expired. Please go back and try again.';
+        $errorCode = 'csrf_failed';
+        $error = cms_flash_message($errorCode);
     } elseif (!isset($_FILES['image'])) {
-        $error = 'Please choose a photo to upload.';
+        $errorCode = 'no_file';
+        $error = cms_flash_message($errorCode);
     } else {
         $imageKey = cms_sanitize_key((string) ($_POST['image_key'] ?? ''));
         $title = trim((string) ($_POST['title'] ?? ''));
         $category = trim((string) ($_POST['category'] ?? ''));
         if ($imageKey === '') {
-            $error = 'Something went wrong — please go back and try again.';
+            $errorCode = 'not_found';
+            $error = cms_flash_message($errorCode);
         } else {
             $meta = $registry[$imageKey] ?? null;
             if (!$title && $meta) {
@@ -30,19 +34,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$category && $meta) {
                 $category = $meta['category'];
             }
+            $hadCustom = cms_has_custom_upload(cms_get_image_by_key($imageKey));
             $result = cms_save_upload($imageKey, $_FILES['image'], $title ?: null, $category ?: null);
             if ($result['ok']) {
                 $returnCategory = trim((string) ($_POST['return_category'] ?? ''));
-                $returnSearch = trim((string) ($_POST['return_q'] ?? ''));
-                $msg = 'Photo saved! It\'s now live on your website.';
+                $msgCode = $hadCustom ? 'replace_success' : 'upload_success';
                 if ($returnCategory !== '') {
-                    header('Location: ' . cms_category_url($returnCategory) . cms_library_query_string('', '', $msg));
-                } else {
-                    header('Location: ' . cms_admin_url('photos.php') . cms_library_query_string('', $returnSearch, $msg));
+                    cms_redirect_with_msg(cms_category_url($returnCategory), $msgCode);
                 }
-                exit;
+                cms_redirect_with_msg(cms_admin_url('photos.php') . cms_library_query_string('', trim((string) ($_POST['return_q'] ?? ''))), $msgCode);
             }
-            $error = $result['error'] ?? 'Upload failed. Please try again.';
+            $errorCode = (string) ($result['code'] ?? 'upload_failed');
+            $error = (string) ($result['error'] ?? cms_flash_message('upload_failed'));
         }
     }
 }
@@ -76,7 +79,7 @@ if ($usage !== '') {
 $content .= '</div>';
 
 if ($error) {
-    $content .= '<p class="error">' . htmlspecialchars($error) . '</p>';
+    $content .= '<div class="notice notice-error" role="alert">' . htmlspecialchars($error) . '</div>';
 }
 
 $content .= '<div class="upload-panel card">';

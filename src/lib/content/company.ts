@@ -18,3 +18,13 @@ export function getContactInfo() {
 export function getFooterContent() {
   return companyData.footer
 }
+
+/** Multi-line address for footer and contact page display. */
+export function getContactLocationDisplay(): string {
+  return companyData.contact.location
+}
+
+/** Structured address for schema.org JSON-LD. */
+export function getContactPostalAddress() {
+  return companyData.contact.address
+}

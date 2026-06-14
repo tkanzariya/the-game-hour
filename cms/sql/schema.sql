@@ -37,8 +37,8 @@ INSERT INTO images (image_key, title, category, file_path, updated_at) VALUES
 ('gallery-moment-3', 'Gallery moment 3', 'Gallery', NULL, NULL),
 ('gallery-moment-4', 'Gallery moment 4', 'Gallery', NULL, NULL),
 ('gallery-moment-5', 'Gallery moment 5', 'Gallery', NULL, NULL),
-('gallery-moment-6', 'Gallery moment 6', 'Gallery', NULL, NULL),
-('birthday-hero', 'Birthday hero (slider 1)', 'Service · Birthday Games', NULL, NULL)
+('gallery-moment-6', 'Gallery moment 6', 'Gallery', NULL, NULL)
 ON DUPLICATE KEY UPDATE title = VALUES(title), category = VALUES(category);
 
--- Service keys: run cms/sql/seed-services.sql after schema, or use admin "Register missing keys" on first login.
+-- Legacy key birthday-hero (if present) is aliased to birthday-games-slider-1 at runtime.
+-- Service + branding + SEO keys: registered automatically on admin login via cms_register_missing_keys().

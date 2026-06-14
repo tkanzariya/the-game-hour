@@ -299,6 +299,13 @@ export type CompanyInfoData = {
     phoneDisplay: string
     whatsappUrl: string
     location: string
+    address: {
+      streetAddress: string
+      addressLocality: string
+      addressRegion: string
+      postalCode: string
+      addressCountry: string
+    }
   }
   footer: {
     columnHeadings: {

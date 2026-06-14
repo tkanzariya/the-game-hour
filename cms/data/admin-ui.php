@@ -4,9 +4,10 @@
 function cms_category_hint(string $category): string
 {
     $hints = [
-        'Homepage' => 'Photos visitors see on your home page.',
+        'Homepage' => 'Home page hero + "A glimpse of the energy" gallery teaser (4 photos). Event cards are under each experience type.',
         'About' => 'Images on the About page.',
         'Gallery' => 'Gallery page hero and event photos.',
+        'Service Activity Cards' => 'Shared activity cards shown on Birthday, Corporate, Wedding, and other service pages.',
         'Birthday Games' => 'Birthday party experience page.',
         'Corporate Games' => 'Corporate team-building experience page.',
         'Wedding Games' => 'Wedding and haldi celebration page.',

@@ -35,6 +35,8 @@ try {
         $manifest[$row['image_key']] = cms_image_public_payload($row);
     }
 
+    $manifest = cms_expand_manifest_aliases($manifest);
+
     cms_json_response([
         'generated_at' => gmdate('c'),
         'count' => count($manifest),

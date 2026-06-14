@@ -16,7 +16,14 @@
     "phone": "+919924007700",
     "phoneDisplay": "+91 99240 07700",
     "whatsappUrl": "https://wa.me/919924007700",
-    "location": "Ahmedabad, Gujarat, India"
+    "location": "4THF-406, Shilp Satved,\nBeside Sindhu Bhavan Hall,\nSindhu Bhavan Road,\nBodakdev,\nAhmedabad, Gujarat 380059,\nIndia",
+    "address": {
+      "streetAddress": "4THF-406, Shilp Satved, Beside Sindhu Bhavan Hall, Sindhu Bhavan Road",
+      "addressLocality": "Bodakdev, Ahmedabad",
+      "addressRegion": "Gujarat",
+      "postalCode": "380059",
+      "addressCountry": "IN"
+    }
   },
   "footer": {
     "columnHeadings": {

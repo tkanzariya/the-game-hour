@@ -30,6 +30,7 @@ dist-ssr/
 
 # Image CMS (never commit credentials or user uploads)
 cms/config.php
+cms/config.local.php
 uploads/*
 !uploads/.gitkeep
 !uploads/.htaccess
@@ -38,3 +39,5 @@ cms/uploads/*
 !cms/uploads/.htaccess
 cms/static/images/*
 !cms/static/images/.gitkeep
+cms/dev-data/*
+!cms/dev-data/.gitkeep

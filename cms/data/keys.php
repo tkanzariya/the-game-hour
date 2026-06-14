@@ -7,6 +7,7 @@ function cms_dashboard_categories(): array
         ['id' => 'Homepage', 'label' => 'Homepage', 'icon' => '🏠'],
         ['id' => 'About', 'label' => 'About', 'icon' => 'ℹ️'],
         ['id' => 'Gallery', 'label' => 'Gallery', 'icon' => '📸'],
+        ['id' => 'Service Activity Cards', 'label' => 'Service Activity Cards', 'icon' => '🎯'],
         ['id' => 'Birthday Games', 'label' => 'Birthday Games', 'icon' => '🎂'],
         ['id' => 'Corporate Games', 'label' => 'Corporate Games', 'icon' => '💼'],
         ['id' => 'Wedding Games', 'label' => 'Wedding / Haldi', 'icon' => '💒'],
@@ -52,14 +53,18 @@ function cms_all_image_keys(): array
             'title' => "{$label} Title Card",
             'category' => $cat,
             'fallback' => "{$base}/title-card.webp",
-            'usage' => "{$page} — title card",
+            'usage' => "{$page} — home event category card & service pages",
         ];
         for ($n = 1; $n <= 3; $n++) {
+            $sliderTitle = $n === 1 ? "{$label} Hero Banner" : "{$label} Slider Image {$n}";
+            $sliderUsage = $n === 1
+                ? "{$page} — hero banner (ServiceDetailHero)"
+                : "{$page} — hero slider image {$n}";
             $keys["{$slug}-slider-{$n}"] = [
-                'title' => "{$label} Gallery Image {$n}",
+                'title' => $sliderTitle,
                 'category' => $cat,
                 'fallback' => "{$base}/slider-{$n}.webp",
-                'usage' => "{$page} — hero slider image {$n}",
+                'usage' => $sliderUsage,
             ];
         }
         for ($n = 1; $n <= 4; $n++) {
@@ -100,6 +105,10 @@ function cms_display_label(string $key, ?array $row = null): string
 function cms_sync_registry_metadata(): void
 {
     $registry = cms_all_image_keys();
+    if (cms_dev_json_enabled()) {
+        cms_dev_json_sync_registry_metadata($registry);
+        return;
+    }
     $stmt = cms_db()->prepare(
         'UPDATE images SET title = :title, category = :category WHERE image_key = :key',
     );

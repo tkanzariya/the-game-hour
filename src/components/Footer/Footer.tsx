@@ -4,7 +4,7 @@ import { Container } from '@/components/Container'
 import { SocialChannels } from '@/components/SocialChannels'
 import { ROUTES } from '@/constants/routes'
 import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
-import { getContactInfo, getFooterContent, getSiteInfo } from '@/lib/content/company'
+import { getContactInfo, getContactLocationDisplay, getFooterContent, getSiteInfo } from '@/lib/content/company'
 import {
   getFooterCta,
   getFooterQuickLinks,
@@ -75,7 +75,7 @@ export default function Footer() {
             {footer.columnHeadings.contact}
           </h3>
           <ul className="mt-4 space-y-2.5 text-sm text-white/80">
-            <li>{contact.location}</li>
+            <li className="whitespace-pre-line">{getContactLocationDisplay()}</li>
             <li>
               <a href={`tel:${contact.phone}`} className="transition-brand hover:text-secondary">
                 {contact.phoneDisplay}

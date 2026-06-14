@@ -17,16 +17,15 @@ $search = trim((string) ($_POST['q'] ?? ''));
 $return = trim((string) ($_POST['return'] ?? ''));
 
 if (!cms_verify_csrf($_POST['csrf'] ?? null)) {
-    $msg = 'Session expired.';
+    $msgCode = 'session_expired';
 } else {
     $key = cms_sanitize_key((string) ($_POST['image_key'] ?? ''));
     $result = cms_delete_image($key);
-    $msg = $result['ok'] ? 'Photo removed. The website default is showing again.' : ($result['error'] ?? 'Delete failed.');
+    $msgCode = $result['ok'] ? 'remove_success' : (string) ($result['code'] ?? 'delete_failed');
 }
 
 if ($return === 'category' && $category !== '') {
-    header('Location: ' . cms_category_url($category) . cms_library_query_string('', '', $msg));
-    exit;
+    cms_redirect_with_msg(cms_category_url($category), $msgCode);
 }
 
-header('Location: ' . cms_admin_url('photos.php') . cms_library_query_string('', $search, $msg));
+cms_redirect_with_msg(cms_admin_url('photos.php') . cms_library_query_string('', $search), $msgCode);
