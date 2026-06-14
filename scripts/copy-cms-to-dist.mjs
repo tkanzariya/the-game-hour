@@ -28,6 +28,15 @@ if (!fs.existsSync(path.join(root, 'dist'))) {
 
 copyDir(src, dest)
 
+const imagesSrc = path.join(root, 'src', 'assets', 'images')
+const staticDest = path.join(src, 'static', 'images')
+const staticDist = path.join(dest, 'static', 'images')
+if (fs.existsSync(imagesSrc)) {
+  copyDir(imagesSrc, staticDest)
+  copyDir(imagesSrc, staticDist)
+  console.log('copy-cms: src/assets/images → cms/static/images (admin previews)')
+}
+
 const uploadsHtaccess = path.join(src, 'uploads', '.htaccess')
 const publicUploads = path.join(root, 'dist', 'uploads')
 fs.mkdirSync(publicUploads, { recursive: true })

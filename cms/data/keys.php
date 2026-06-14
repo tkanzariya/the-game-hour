@@ -1,58 +1,73 @@
 <?php
 
-/** @return list<string> Filter categories shown in admin library */
-function cms_filter_categories(): array
+/** Dashboard category cards (display order). */
+function cms_dashboard_categories(): array
 {
     return [
-        'Homepage',
-        'About',
-        'Gallery',
-        'Branding',
-        'SEO',
-        'Birthday Games',
-        'Corporate Games',
-        'Wedding Games',
-        'School & College',
-        'Social Gatherings',
-        'Game Festival',
-        'Bollywood Theme',
-        'Community Events',
+        ['id' => 'Homepage', 'label' => 'Homepage', 'icon' => '🏠'],
+        ['id' => 'About', 'label' => 'About', 'icon' => 'ℹ️'],
+        ['id' => 'Gallery', 'label' => 'Gallery', 'icon' => '📸'],
+        ['id' => 'Birthday Games', 'label' => 'Birthday Games', 'icon' => '🎂'],
+        ['id' => 'Corporate Games', 'label' => 'Corporate Games', 'icon' => '💼'],
+        ['id' => 'Wedding Games', 'label' => 'Wedding / Haldi', 'icon' => '💒'],
+        ['id' => 'School & College', 'label' => 'School & College', 'icon' => '🎓'],
+        ['id' => 'Social Gatherings', 'label' => 'Social Gathering', 'icon' => '🎉'],
+        ['id' => 'Game Festival', 'label' => 'Game Festival', 'icon' => '🎪'],
+        ['id' => 'Bollywood Theme', 'label' => 'Bollywood Games', 'icon' => '🎬'],
+        ['id' => 'Community Events', 'label' => 'Community Events', 'icon' => '🪔'],
+        ['id' => 'Branding', 'label' => 'Branding', 'icon' => '✨'],
+        ['id' => 'SEO', 'label' => 'SEO', 'icon' => '🔍'],
     ];
 }
 
-/** @return array<string, array{title: string, category: string}> */
+/** @return list<string> All filter categories */
+function cms_filter_categories(): array
+{
+    return array_column(cms_dashboard_categories(), 'id');
+}
+
+/** @return array<string, array{title: string, category: string, fallback?: string, usage?: string}> */
 function cms_all_image_keys(): array
 {
     $keys = require __DIR__ . '/keys-base.php';
 
     $services = [
-        'birthday-games' => ['label' => 'Birthday Games', 'category' => 'Birthday Games'],
-        'corporate-games' => ['label' => 'Corporate Games', 'category' => 'Corporate Games'],
-        'social-gathering-games' => ['label' => 'Social Gatherings', 'category' => 'Social Gatherings'],
-        'game-festival' => ['label' => 'Game Festival', 'category' => 'Game Festival'],
-        'school-and-collage-event' => ['label' => 'School & College', 'category' => 'School & College'],
-        'wedding-or-haldi-games' => ['label' => 'Wedding Games', 'category' => 'Wedding Games'],
-        'traditional-games' => ['label' => 'Community Events', 'category' => 'Community Events'],
-        'bollywood-games' => ['label' => 'Bollywood Theme', 'category' => 'Bollywood Theme'],
+        'birthday-games' => ['label' => 'Birthday Games', 'category' => 'Birthday Games', 'page' => 'Birthday Games experience page'],
+        'corporate-games' => ['label' => 'Corporate Games', 'category' => 'Corporate Games', 'page' => 'Corporate Games experience page'],
+        'social-gathering-games' => ['label' => 'Social Gatherings', 'category' => 'Social Gatherings', 'page' => 'Social Gathering experience page'],
+        'game-festival' => ['label' => 'Game Festival', 'category' => 'Game Festival', 'page' => 'Game Festival experience page'],
+        'school-and-collage-event' => ['label' => 'School & College', 'category' => 'School & College', 'page' => 'School & College experience page'],
+        'wedding-or-haldi-games' => ['label' => 'Wedding Games', 'category' => 'Wedding Games', 'page' => 'Wedding / Haldi experience page'],
+        'traditional-games' => ['label' => 'Community Events', 'category' => 'Community Events', 'page' => 'Traditional Games experience page'],
+        'bollywood-games' => ['label' => 'Bollywood Theme', 'category' => 'Bollywood Theme', 'page' => 'Bollywood Games experience page'],
     ];
 
     foreach ($services as $slug => $info) {
         $label = $info['label'];
         $cat = $info['category'];
+        $page = $info['page'];
+        $base = "services/{$slug}";
+
         $keys["{$slug}-title-card"] = [
             'title' => "{$label} Title Card",
             'category' => $cat,
+            'fallback' => "{$base}/title-card.webp",
+            'usage' => "{$page} — title card",
         ];
         for ($n = 1; $n <= 3; $n++) {
             $keys["{$slug}-slider-{$n}"] = [
                 'title' => "{$label} Gallery Image {$n}",
                 'category' => $cat,
+                'fallback' => "{$base}/slider-{$n}.webp",
+                'usage' => "{$page} — hero slider image {$n}",
             ];
         }
         for ($n = 1; $n <= 4; $n++) {
             $keys["{$slug}-gallery-{$n}"] = [
                 'title' => "{$label} Gallery Photo {$n}",
                 'category' => $cat,
+                'fallback' => "{$base}/gallery-{$n}.webp",
+                'usage' => "{$page} — gallery photo {$n}",
             ];
         }
     }
@@ -60,14 +75,14 @@ function cms_all_image_keys(): array
     return $keys;
 }
 
-/** @return array{title: string, category: string} */
+/** @return array{title: string, category: string, fallback?: string, usage?: string} */
 function cms_key_meta(string $key): array
 {
     static $registry = null;
     if ($registry === null) {
         $registry = cms_all_image_keys();
     }
-    return $registry[$key] ?? ['title' => $key, 'category' => 'General'];
+    return $registry[$key] ?? ['title' => $key, 'category' => 'General', 'fallback' => '', 'usage' => 'Website'];
 }
 
 function cms_display_label(string $key, ?array $row = null): string
@@ -82,7 +97,6 @@ function cms_display_label(string $key, ?array $row = null): string
     return $key;
 }
 
-/** Sync friendly labels and categories from registry into the database. */
 function cms_sync_registry_metadata(): void
 {
     $registry = cms_all_image_keys();
@@ -111,6 +125,7 @@ function cms_filter_library_rows(array $rows, string $category, string $search):
         $meta = cms_key_meta($key);
         $label = cms_display_label($key, $row);
         $rowCategory = (string) ($row['category'] ?? $meta['category']);
+        $usage = (string) ($meta['usage'] ?? '');
 
         if ($category !== '' && $rowCategory !== $category) {
             return false;
@@ -120,7 +135,7 @@ function cms_filter_library_rows(array $rows, string $category, string $search):
             return true;
         }
 
-        $haystack = strtolower($key . ' ' . $label . ' ' . $rowCategory);
+        $haystack = strtolower($key . ' ' . $label . ' ' . $rowCategory . ' ' . $usage);
         return str_contains($haystack, $search);
     }));
 }

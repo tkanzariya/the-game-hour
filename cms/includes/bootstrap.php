@@ -325,20 +325,94 @@ function cms_register_missing_keys(array $keys): int
     return $inserted;
 }
 
-function cms_admin_layout(string $title, string $content, string $activeNav = ''): void
+function cms_static_images_dir(): string
 {
+    return dirname(__DIR__) . '/static/images';
+}
+
+/**
+ * Resolve filesystem path for admin preview (custom upload or bundled default).
+ *
+ * @return array{path: string, source: 'upload'|'default'}|null
+ */
+function cms_resolve_preview_file(string $key): ?array
+{
+    $row = cms_get_image_by_key($key);
+    if ($row && !empty($row['file_path'])) {
+        $path = cms_uploads_dir() . DIRECTORY_SEPARATOR . $row['file_path'];
+        if (is_file($path)) {
+            return ['path' => $path, 'source' => 'upload'];
+        }
+    }
+
+    require_once __DIR__ . '/../data/keys.php';
+    $meta = cms_key_meta($key);
+    $fallback = (string) ($meta['fallback'] ?? '');
+    if ($fallback === '') {
+        return null;
+    }
+
+    $base = cms_static_images_dir() . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $fallback);
+    $candidates = [$base];
+    $ext = pathinfo($base, PATHINFO_EXTENSION);
+    if ($ext === 'webp') {
+        $root = substr($base, 0, -5);
+        $candidates[] = $root . '.jpg';
+        $candidates[] = $root . '.png';
+    }
+
+    foreach ($candidates as $path) {
+        if (is_file($path)) {
+            return ['path' => $path, 'source' => 'default'];
+        }
+    }
+
+    return null;
+}
+
+function cms_admin_layout(string $title, string $content, string $activeNav = '', string $searchQuery = '', bool $bare = false): void
+{
+    if ($bare) {
+        echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
+        echo '<title>' . htmlspecialchars($title) . ' · Photo Manager</title>';
+        echo '<link rel="stylesheet" href="' . htmlspecialchars(cms_admin_url('assets/admin.css')) . '"></head><body class="admin-app admin-bare">';
+        echo $content;
+        echo '<script src="' . htmlspecialchars(cms_admin_url('assets/admin.js')) . '" defer></script>';
+        echo '</body></html>';
+        return;
+    }
+
     $user = $_SESSION['cms_admin'] ?? 'admin';
-    $libraryActive = $activeNav === 'library' ? ' is-active' : '';
-    $uploadActive = $activeNav === 'upload' ? ' is-active' : '';
+    $nav = static function (string $id, string $label, string $href) use ($activeNav): string {
+        $active = $activeNav === $id ? ' is-active' : '';
+        return '<a class="sidebar-link' . $active . '" href="' . htmlspecialchars($href) . '">' . $label . '</a>';
+    };
+
     echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">';
     echo '<title>' . htmlspecialchars($title) . ' · Photo Manager</title>';
-    echo '<link rel="stylesheet" href="' . htmlspecialchars(cms_admin_url('assets/admin.css')) . '"></head><body>';
-    echo '<header class="topbar"><div class="topbar-brand"><strong>The Game Hour</strong><span>Photo Manager</span></div>';
-    echo '<nav class="topbar-nav">';
-    echo '<a href="' . htmlspecialchars(cms_admin_url('library.php')) . '" class="' . trim($libraryActive) . '">All photos</a>';
-    echo '<span class="topbar-user">' . htmlspecialchars((string) $user) . '</span>';
-    echo '<a href="' . htmlspecialchars(cms_admin_url('logout.php')) . '">Log out</a></nav></header>';
-    echo '<main class="container">' . $content . '</main>';
+    echo '<link rel="stylesheet" href="' . htmlspecialchars(cms_admin_url('assets/admin.css')) . '"></head><body class="admin-app">';
+    echo '<div class="admin-shell">';
+    echo '<aside class="sidebar" id="sidebar">';
+    echo '<div class="sidebar-brand"><strong>The Game Hour</strong><span>Photo Manager</span></div>';
+    echo '<nav class="sidebar-nav">';
+    echo $nav('dashboard', 'Dashboard', cms_admin_url('dashboard.php'));
+    echo $nav('photos', 'All Photos', cms_admin_url('photos.php'));
+    echo $nav('categories', 'Categories', cms_admin_url('dashboard.php#categories'));
+    echo $nav('settings', 'Settings', cms_admin_url('settings.php'));
+    echo '</nav>';
+    echo '<div class="sidebar-footer">';
+    echo '<span class="sidebar-user">' . htmlspecialchars((string) $user) . '</span>';
+    echo '<a class="sidebar-link sidebar-logout" href="' . htmlspecialchars(cms_admin_url('logout.php')) . '">Log out</a>';
+    echo '</div></aside>';
+    echo '<div class="admin-main">';
+    echo '<header class="admin-topbar">';
+    echo '<button type="button" class="sidebar-toggle" id="sidebar-toggle" aria-label="Open menu">☰</button>';
+    echo '<form class="global-search" method="get" action="' . htmlspecialchars(cms_admin_url('photos.php')) . '">';
+    echo '<label for="global-search" class="sr-only">Search photos</label>';
+    echo '<input id="global-search" type="search" name="q" value="' . htmlspecialchars($searchQuery) . '" placeholder="Search photos… e.g. Homepage Hero, Gallery">';
+    echo '</form></header>';
+    echo '<main class="admin-content">' . $content . '</main>';
+    echo '</div></div>';
     echo '<script src="' . htmlspecialchars(cms_admin_url('assets/admin.js')) . '" defer></script>';
     echo '</body></html>';
 }

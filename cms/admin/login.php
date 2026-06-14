@@ -4,7 +4,7 @@ declare(strict_types=1);
 require_once __DIR__ . '/../includes/bootstrap.php';
 
 if (cms_is_logged_in()) {
-    header('Location: ' . cms_admin_url('library.php'));
+    header('Location: ' . cms_admin_url('dashboard.php'));
     exit;
 }
 
@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require_once __DIR__ . '/../data/keys.php';
             cms_register_missing_keys(cms_all_image_keys());
             cms_sync_registry_metadata();
-            header('Location: ' . cms_admin_url('library.php'));
+            header('Location: ' . cms_admin_url('dashboard.php'));
             exit;
         }
         $error = 'That username or password did not work. Please try again.';
@@ -40,4 +40,4 @@ $content .= '<label>Username<input type="text" name="username" required autocomp
 $content .= '<label>Password<input type="password" name="password" required autocomplete="current-password" placeholder="Your password"></label>';
 $content .= '<button type="submit" class="btn btn-primary btn-block">Sign in</button></form></div></div>';
 
-cms_admin_layout('Sign in', $content);
+cms_admin_layout('Sign in', $content, '', '', true);

@@ -36,3 +36,5 @@ uploads/*
 cms/uploads/*
 !cms/uploads/.gitkeep
 !cms/uploads/.htaccess
+cms/static/images/*
+!cms/static/images/.gitkeep
