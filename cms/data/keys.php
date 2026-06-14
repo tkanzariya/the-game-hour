@@ -27,9 +27,20 @@ function cms_filter_categories(): array
     return array_column(cms_dashboard_categories(), 'id');
 }
 
+/** Admin display label: section name + number (e.g. "Featured moments — 1"). */
+function cms_section_label(string $section, int $index): string
+{
+    return $section . ' — ' . $index;
+}
+
 /** @return array<string, array{title: string, category: string, fallback?: string, usage?: string}> */
 function cms_all_image_keys(): array
 {
+    static $registry = null;
+    if ($registry !== null) {
+        return $registry;
+    }
+
     $keys = require __DIR__ . '/keys-base.php';
 
     $services = [
@@ -73,7 +84,8 @@ function cms_all_image_keys(): array
         }
     }
 
-    return $keys;
+    $registry = $keys;
+    return $registry;
 }
 
 /** @return array{title: string, category: string, fallback?: string, usage?: string} */

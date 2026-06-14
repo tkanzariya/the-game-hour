@@ -3,11 +3,6 @@
  * Image key registry (mirrors src/data/image-keys.ts).
  * `fallback` = path under cms/static/images/ for bundled preview thumbnails.
  */
-function cms_section_label(string $section, int $index): string
-{
-    return $section . ' — ' . $index;
-}
-
 $keys = [
     'homepage-hero' => [
         'title' => cms_section_label('Hero', 1),
