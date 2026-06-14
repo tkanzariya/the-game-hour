@@ -2,25 +2,31 @@ import { Section } from '@/components/Section'
 import { LightboxImage } from '@/components/ImageLightbox'
 import { IconChip } from '@/components/Icon'
 import { Reveal, RevealItem } from '@/components/motion'
-import { ASSET_MAP } from '@/data/asset-map'
-import { getAssetUrl } from '@/lib/assets'
+import { getImageByKey } from '@/lib/assets'
 import { getAboutBelieveInPlay } from '@/lib/about-page'
 import { toLightboxGallery } from '@/lib/lightbox'
 import { resolveIconName } from '@/lib/service-icons'
 import SectionIntro from '@/sections/home/SectionIntro'
 
-const FEATURED_PILLAR_IDS = new Set(['connection', 'screen-free'])
+const FEATURED_PILLAR_IDS = ['connection', 'screen-free'] as const
+const ABOUT_PILLAR_KEYS: Record<(typeof FEATURED_PILLAR_IDS)[number], string> = {
+  connection: 'about-pillar-connection',
+  'screen-free': 'about-pillar-screen-free',
+}
 
 export default function AboutBelieveInPlay() {
   const content = getAboutBelieveInPlay()
-  const momentImages = ASSET_MAP.gallery.moments
-  const featured = content.pillars.filter((p) => FEATURED_PILLAR_IDS.has(p.id))
-  const compact = content.pillars.filter((p) => !FEATURED_PILLAR_IDS.has(p.id))
-  const featuredGallery = featured.map((pillar, index) => {
-    const image = momentImages[index]
+  const featured = content.pillars.filter((p) =>
+    FEATURED_PILLAR_IDS.includes(p.id as (typeof FEATURED_PILLAR_IDS)[number]),
+  )
+  const compact = content.pillars.filter(
+    (p) => !FEATURED_PILLAR_IDS.includes(p.id as (typeof FEATURED_PILLAR_IDS)[number]),
+  )
+  const featuredGallery = featured.map((pillar) => {
+    const key = ABOUT_PILLAR_KEYS[pillar.id as (typeof FEATURED_PILLAR_IDS)[number]]
     return {
-      src: getAssetUrl(image),
-      alt: image.alt ?? pillar.title,
+      src: getImageByKey(key),
+      alt: pillar.title,
       caption: pillar.description,
     }
   })
@@ -31,15 +37,15 @@ export default function AboutBelieveInPlay() {
       <SectionIntro title={content.title} subtitle={content.subtitle} />
       <Reveal staggerChildren className="grid gap-5 lg:grid-cols-2">
         {featured.map((pillar, index) => {
-          const image = momentImages[index]
+          const key = ABOUT_PILLAR_KEYS[pillar.id as (typeof FEATURED_PILLAR_IDS)[number]]
 
           return (
             <RevealItem key={pillar.id}>
               <article className="group surface-clay h-full overflow-hidden rounded-3xl transition-brand hover:-translate-y-1 hover:shadow-card-hover">
                 <div className="image-frame m-3 mb-0 aspect-[16/10] overflow-hidden">
                   <LightboxImage
-                    src={getAssetUrl(image)}
-                    alt={image.alt ?? pillar.title}
+                    src={getImageByKey(key)}
+                    alt={pillar.title}
                     caption={pillar.description}
                     gallery={lightboxGallery}
                     galleryIndex={index}

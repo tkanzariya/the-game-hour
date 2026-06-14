@@ -553,7 +553,6 @@ export type AboutPageContent = {
     title: string
     description: string
     primaryLabel: string
-    featuredGalleryItemId: string
   }
   experiencesInvite: {
     title: string

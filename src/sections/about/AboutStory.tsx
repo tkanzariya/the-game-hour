@@ -2,12 +2,12 @@ import { Section } from '@/components/Section'
 import { LightboxImage } from '@/components/ImageLightbox'
 import { Reveal, RevealItem } from '@/components/motion'
 import { ASSET_MAP } from '@/data/asset-map'
-import { getAssetUrl } from '@/lib/assets'
+import { getImageByKey } from '@/lib/assets'
 import { getAboutStory } from '@/lib/about-page'
 
 export default function AboutStory() {
   const story = getAboutStory()
-  const storyImage = getAssetUrl(ASSET_MAP.homepage.aboutTeaser)
+  const storyImage = getImageByKey('about-story')
 
   return (
     <Section tone="muted" id="story" profile="marketing">

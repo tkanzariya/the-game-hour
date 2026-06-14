@@ -93,10 +93,43 @@ const homepageKeys: Record<string, ImageKeyMeta> = {
     usage: 'Home page (/) — main hero · About page (/about) — hero (same image)',
   },
   'homepage-about-teaser': {
-    title: 'About Section Image',
+    title: 'Icebreakers Activity Card',
+    category: 'Service Activity Cards',
+    fallback: 'homepage/about-teaser.webp',
+    usage: 'All service pages — Icebreakers activity card image',
+  },
+}
+
+const aboutKeys: Record<string, ImageKeyMeta> = {
+  'about-hero': {
+    title: 'About Page Hero',
+    category: 'About',
+    fallback: 'homepage/hero.webp',
+    usage: 'About page (/about) — main hero banner',
+  },
+  'about-story': {
+    title: 'Our Story Section',
     category: 'About',
     fallback: 'homepage/about-teaser.webp',
-    usage: 'About page (/about) — story section · Icebreakers activity card on all service pages',
+    usage: 'About page — story section image and hero accent overlay',
+  },
+  'about-pillar-connection': {
+    title: 'Connection Pillar Photo',
+    category: 'About',
+    fallback: 'gallery/moments/moment-1.webp',
+    usage: 'About page — "Why we believe in play" — Connection card',
+  },
+  'about-pillar-screen-free': {
+    title: 'Screen-free Pillar Photo',
+    category: 'About',
+    fallback: 'gallery/moments/moment-2.webp',
+    usage: 'About page — "Why we believe in play" — Screen-free card',
+  },
+  'about-gallery-spotlight': {
+    title: 'Gallery Invite Spotlight',
+    category: 'About',
+    fallback: 'gallery/event-gallery-2.webp',
+    usage: 'About page — "See the joy in action" section',
   },
 }
 
@@ -191,6 +224,7 @@ export const CMS_KEY_ALIASES: Record<string, string> = {
 
 export const IMAGE_KEY_REGISTRY: Record<string, ImageKeyMeta> = {
   ...homepageKeys,
+  ...aboutKeys,
   ...serviceActivityKeys,
   ...galleryKeys,
   ...brandingKeys,

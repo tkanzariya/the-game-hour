@@ -3,15 +3,14 @@ import { Container } from '@/components/Container'
 import { LightboxImage } from '@/components/ImageLightbox'
 import { Reveal } from '@/components/motion'
 import { homeExperiencesPath } from '@/constants/routes'
-import { ASSET_MAP } from '@/data/asset-map'
-import { getAssetUrl } from '@/lib/assets'
+import { getImageByKey } from '@/lib/assets'
 import { getAboutHero } from '@/lib/about-page'
 import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
 
 export default function AboutHero() {
   const hero = getAboutHero()
-  const heroImage = getAssetUrl(ASSET_MAP.homepage.hero)
-  const accentImage = getAssetUrl(ASSET_MAP.homepage.aboutTeaser)
+  const heroImage = getImageByKey('about-hero')
+  const accentImage = getImageByKey('about-story')
 
   return (
     <header
@@ -64,7 +63,7 @@ export default function AboutHero() {
             <div className="image-frame">
               <LightboxImage
                 src={heroImage}
-                alt={ASSET_MAP.homepage.hero.alt ?? 'Guests laughing during a Game Hour event'}
+                alt="Guests laughing during a Game Hour event"
                 className="aspect-4/3 w-full object-cover lg:aspect-[5/4]"
                 wrapperClassName="w-full"
                 width={800}
@@ -76,7 +75,7 @@ export default function AboutHero() {
             <div className="absolute -bottom-4 -right-2 hidden overflow-hidden rounded-2xl border-4 border-primary shadow-glow-accent sm:block md:-right-4">
               <LightboxImage
                 src={accentImage}
-                alt={ASSET_MAP.homepage.aboutTeaser.alt ?? 'People playing games together'}
+                alt="People playing games together"
                 className="aspect-square w-28 object-cover md:w-36"
                 wrapperClassName="w-28 md:w-36"
                 width={144}
