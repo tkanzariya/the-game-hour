@@ -11,18 +11,18 @@ export default function AboutStory() {
 
   return (
     <Section tone="muted" id="story" profile="marketing">
-      <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
-        <Reveal className="order-2 lg:order-1">
-          <div className="image-frame">
+      <div className="grid items-start gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
+        <Reveal className="order-2 lg:order-1 lg:sticky lg:top-28">
+          <div className="image-frame overflow-hidden rounded-3xl">
             <CmsImageFrame
               ready={storyImage.ready}
               src={storyImage.src}
               alt={ASSET_MAP.homepage.aboutTeaser.alt ?? 'People playing games at an event'}
-              className="aspect-4/3 w-full object-cover lg:aspect-[4/5]"
+              className="aspect-[16/10] w-full object-cover"
               wrapperClassName="w-full"
-              skeletonClassName="aspect-4/3 w-full rounded-2xl lg:aspect-[4/5]"
-              width={640}
-              height={800}
+              skeletonClassName="aspect-[16/10] w-full rounded-3xl"
+              width={800}
+              height={500}
               loading="lazy"
               decoding="async"
             />
