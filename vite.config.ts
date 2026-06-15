@@ -5,8 +5,8 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  // Relative asset paths for Apache/cPanel static hosting (incl. subdirectories)
-  base: './',
+  // Absolute paths from site root — required for SPA deep links (/about, /gallery, etc.)
+  base: '/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
