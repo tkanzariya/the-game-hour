@@ -29,7 +29,8 @@ $rowsByKey = cms_index_rows_by_key(cms_get_all_images());
 $rows = cms_category_rows($category, $rowsByKey);
 $stats = cms_category_stats($category, $rowsByKey);
 
-$content = '<div class="page-header">';
+$content = cms_admin_flash_notice($message);
+$content .= '<div class="page-header">';
 $content .= '<a class="back-link" href="' . htmlspecialchars(cms_admin_url('photos/index.php')) . '">← Photos</a>';
 $content .= '<h1>' . htmlspecialchars($label) . '</h1>';
 $content .= '<p>' . htmlspecialchars(cms_category_hint($category)) . '</p>';

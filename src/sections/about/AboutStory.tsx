@@ -1,24 +1,26 @@
 import { Section } from '@/components/Section'
-import { LightboxImage } from '@/components/ImageLightbox'
+import { CmsImageFrame } from '@/components/CmsImages/CmsImageFrame'
 import { Reveal, RevealItem } from '@/components/motion'
 import { ASSET_MAP } from '@/data/asset-map'
-import { getImageByKey } from '@/lib/assets'
+import { useCmsImage } from '@/hooks/useCmsImage'
 import { getAboutStory } from '@/lib/about-page'
 
 export default function AboutStory() {
   const story = getAboutStory()
-  const storyImage = getImageByKey('about-story')
+  const storyImage = useCmsImage('about-story')
 
   return (
     <Section tone="muted" id="story" profile="marketing">
       <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14 xl:gap-16">
         <Reveal className="order-2 lg:order-1">
           <div className="image-frame">
-            <LightboxImage
-              src={storyImage}
+            <CmsImageFrame
+              ready={storyImage.ready}
+              src={storyImage.src}
               alt={ASSET_MAP.homepage.aboutTeaser.alt ?? 'People playing games at an event'}
               className="aspect-4/3 w-full object-cover lg:aspect-[4/5]"
               wrapperClassName="w-full"
+              skeletonClassName="aspect-4/3 w-full rounded-2xl lg:aspect-[4/5]"
               width={640}
               height={800}
               loading="lazy"

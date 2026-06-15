@@ -5,6 +5,7 @@ import { Section } from '@/components/Section'
 import { Reveal, RevealItem } from '@/components/motion'
 import { ROUTES } from '@/constants/routes'
 import { galleryData } from '@/data'
+import { useCmsImages } from '@/components/CmsImages'
 import { getHomeGalleryTeaser } from '@/lib/content/stats'
 import { getImageByKey } from '@/lib/assets'
 import { toLightboxGallery } from '@/lib/lightbox'
@@ -12,17 +13,20 @@ import SectionIntro from './SectionIntro'
 
 export default function HomeGalleryMoments() {
   const teaser = getHomeGalleryTeaser()
+  const { loaded } = useCmsImages()
   const maxItems = teaser?.maxItems ?? 4
   const moments = galleryData.items
     .filter((item) => item.id.startsWith('home-moment'))
     .slice(0, maxItems)
-  const lightboxGallery = toLightboxGallery(
-    moments.map((item, index) => ({
-      src: getImageByKey(`homepage-moment-${index + 1}`),
-      alt: item.alt,
-      caption: item.caption,
-    })),
-  )
+  const lightboxGallery = loaded
+    ? toLightboxGallery(
+        moments.map((item, index) => ({
+          src: getImageByKey(`homepage-moment-${index + 1}`),
+          alt: item.alt,
+          caption: item.caption,
+        })),
+      )
+    : []
 
   return (
     <Section id="moments" profile="marketing">
@@ -34,7 +38,7 @@ export default function HomeGalleryMoments() {
         {moments.map((item, index) => (
           <RevealItem key={item.id}>
             <GalleryCard
-              src={getImageByKey(`homepage-moment-${index + 1}`)}
+              src={loaded ? getImageByKey(`homepage-moment-${index + 1}`) : undefined}
               alt={item.alt}
               caption={item.caption}
               gallery={lightboxGallery}

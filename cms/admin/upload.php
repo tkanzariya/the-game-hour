@@ -34,18 +34,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if (!$category && $meta) {
                 $category = $meta['category'];
             }
-            $hadCustom = cms_has_custom_upload(cms_get_image_by_key($imageKey));
-            $result = cms_save_upload($imageKey, $_FILES['image'], $title ?: null, $category ?: null);
-            if ($result['ok']) {
-                $returnCategory = trim((string) ($_POST['return_category'] ?? ''));
-                $msgCode = $hadCustom ? 'replace_success' : 'upload_success';
-                if ($returnCategory !== '') {
-                    cms_redirect_with_msg(cms_category_url($returnCategory), $msgCode);
+            try {
+                cms_register_missing_keys(cms_all_image_keys());
+                $hadCustom = cms_has_custom_upload(cms_get_image_by_key($imageKey));
+                $result = cms_save_upload($imageKey, $_FILES['image'], $title ?: null, $category ?: null);
+                if ($result['ok']) {
+                    $returnCategory = trim((string) ($_POST['return_category'] ?? ''));
+                    $msgCode = $hadCustom ? 'replace_success' : 'upload_success';
+                    if ($returnCategory !== '') {
+                        cms_redirect_with_msg(cms_category_url($returnCategory), $msgCode);
+                    }
+                    cms_redirect_with_msg(
+                        cms_admin_url('photos/index.php') . cms_library_query_string('', trim((string) ($_POST['return_q'] ?? ''))),
+                        $msgCode,
+                    );
                 }
-                cms_redirect_with_msg(cms_admin_url('photos.php') . cms_library_query_string('', trim((string) ($_POST['return_q'] ?? ''))), $msgCode);
+                $errorCode = (string) ($result['code'] ?? 'upload_failed');
+                $error = (string) ($result['error'] ?? cms_flash_message('upload_failed'));
+            } catch (Throwable $e) {
+                $errorCode = 'upload_failed';
+                $error = 'Something went wrong while saving the photo. Please go back to Photos and check whether it uploaded.';
             }
-            $errorCode = (string) ($result['code'] ?? 'upload_failed');
-            $error = (string) ($result['error'] ?? cms_flash_message('upload_failed'));
         }
     }
 }
@@ -101,7 +110,7 @@ $content .= '<div class="dropzone-wrap">';
 $content .= '<div class="dropzone" id="upload-dropzone" role="button" tabindex="0">';
 $content .= '<div class="dropzone-icon">⬆️</div>';
 $content .= '<strong>Choose a new photo</strong>';
-$content .= '<span class="muted">Drag & drop or click to browse · JPG, PNG, WEBP · Max 5 MB</span>';
+$content .= '<span class="muted">Drag & drop or click to browse · JPG, PNG, WEBP</span>';
 $content .= '<input type="file" id="upload-file" name="image" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" required>';
 $content .= '</div>';
 $content .= '<div class="preview-box" id="upload-preview">';

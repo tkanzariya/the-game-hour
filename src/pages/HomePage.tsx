@@ -27,9 +27,9 @@ export default function HomePage() {
       <Seo {...homeSeo} />
 
       <HomeHero />
-      <HomeTrustedStats />
       <HomeEventCategories />
       <HomeWhyUs />
+      <HomeTrustedStats />
       <HomeGalleryMoments />
       <HomeTestimonials />
       <HomeHowItWorks />

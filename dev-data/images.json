@@ -1,0 +1,620 @@
+{
+    "images": [
+        {
+            "image_key": "homepage-hero",
+            "title": "Homepage Hero Banner",
+            "category": "Homepage",
+            "file_path": "homepage-hero.webp",
+            "updated_at": "2026-06-14 18:23:36"
+        },
+        {
+            "image_key": "homepage-about-teaser",
+            "title": "About Section Image",
+            "category": "About",
+            "file_path": "homepage-about-teaser.webp",
+            "updated_at": "2026-06-14 18:23:36"
+        },
+        {
+            "image_key": "homepage-team-building",
+            "title": "Team Building Activity Card",
+            "category": "Homepage",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "homepage-strategy-games",
+            "title": "Strategy Games Activity Card",
+            "category": "Homepage",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-hero",
+            "title": "Gallery Page Hero Banner",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-1",
+            "title": "Gallery Event Photo 1",
+            "category": "Gallery",
+            "file_path": "gallery-1.webp",
+            "updated_at": "2026-06-14 18:23:37"
+        },
+        {
+            "image_key": "gallery-2",
+            "title": "Gallery Event Photo 2",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-3",
+            "title": "Gallery Event Photo 3",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-4",
+            "title": "Gallery Event Photo 4",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-5",
+            "title": "Gallery Event Photo 5",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-6",
+            "title": "Gallery Event Photo 6",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-7",
+            "title": "Gallery Event Photo 7",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-8",
+            "title": "Gallery Event Photo 8",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-9",
+            "title": "Gallery Event Photo 9",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-moment-1",
+            "title": "Gallery Featured Moment 1",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-moment-2",
+            "title": "Gallery Featured Moment 2",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-moment-3",
+            "title": "Gallery Featured Moment 3",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-moment-4",
+            "title": "Gallery Featured Moment 4",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-moment-5",
+            "title": "Gallery Featured Moment 5",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "gallery-moment-6",
+            "title": "Gallery Featured Moment 6",
+            "category": "Gallery",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "branding-logo-light",
+            "title": "Logo (light background)",
+            "category": "Branding",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "branding-logo-dark",
+            "title": "Logo (dark background)",
+            "category": "Branding",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "seo-og-default",
+            "title": "Default Social Share Image",
+            "category": "SEO",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "seo-social-preview",
+            "title": "Social Preview Image",
+            "category": "SEO",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "birthday-games-title-card",
+            "title": "Birthday Games Title Card",
+            "category": "Birthday Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "birthday-games-slider-1",
+            "title": "Birthday Games Hero Banner",
+            "category": "Birthday Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "birthday-games-slider-2",
+            "title": "Birthday Games Slider Image 2",
+            "category": "Birthday Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "birthday-games-slider-3",
+            "title": "Birthday Games Slider Image 3",
+            "category": "Birthday Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "birthday-games-gallery-1",
+            "title": "Birthday Games Gallery Photo 1",
+            "category": "Birthday Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "birthday-games-gallery-2",
+            "title": "Birthday Games Gallery Photo 2",
+            "category": "Birthday Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "birthday-games-gallery-3",
+            "title": "Birthday Games Gallery Photo 3",
+            "category": "Birthday Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "birthday-games-gallery-4",
+            "title": "Birthday Games Gallery Photo 4",
+            "category": "Birthday Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "corporate-games-title-card",
+            "title": "Corporate Games Title Card",
+            "category": "Corporate Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "corporate-games-slider-1",
+            "title": "Corporate Games Hero Banner",
+            "category": "Corporate Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "corporate-games-slider-2",
+            "title": "Corporate Games Slider Image 2",
+            "category": "Corporate Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "corporate-games-slider-3",
+            "title": "Corporate Games Slider Image 3",
+            "category": "Corporate Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "corporate-games-gallery-1",
+            "title": "Corporate Games Gallery Photo 1",
+            "category": "Corporate Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "corporate-games-gallery-2",
+            "title": "Corporate Games Gallery Photo 2",
+            "category": "Corporate Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "corporate-games-gallery-3",
+            "title": "Corporate Games Gallery Photo 3",
+            "category": "Corporate Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "corporate-games-gallery-4",
+            "title": "Corporate Games Gallery Photo 4",
+            "category": "Corporate Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "social-gathering-games-title-card",
+            "title": "Social Gatherings Title Card",
+            "category": "Social Gatherings",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "social-gathering-games-slider-1",
+            "title": "Social Gatherings Hero Banner",
+            "category": "Social Gatherings",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "social-gathering-games-slider-2",
+            "title": "Social Gatherings Slider Image 2",
+            "category": "Social Gatherings",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "social-gathering-games-slider-3",
+            "title": "Social Gatherings Slider Image 3",
+            "category": "Social Gatherings",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "social-gathering-games-gallery-1",
+            "title": "Social Gatherings Gallery Photo 1",
+            "category": "Social Gatherings",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "social-gathering-games-gallery-2",
+            "title": "Social Gatherings Gallery Photo 2",
+            "category": "Social Gatherings",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "social-gathering-games-gallery-3",
+            "title": "Social Gatherings Gallery Photo 3",
+            "category": "Social Gatherings",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "social-gathering-games-gallery-4",
+            "title": "Social Gatherings Gallery Photo 4",
+            "category": "Social Gatherings",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "game-festival-title-card",
+            "title": "Game Festival Title Card",
+            "category": "Game Festival",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "game-festival-slider-1",
+            "title": "Game Festival Hero Banner",
+            "category": "Game Festival",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "game-festival-slider-2",
+            "title": "Game Festival Slider Image 2",
+            "category": "Game Festival",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "game-festival-slider-3",
+            "title": "Game Festival Slider Image 3",
+            "category": "Game Festival",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "game-festival-gallery-1",
+            "title": "Game Festival Gallery Photo 1",
+            "category": "Game Festival",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "game-festival-gallery-2",
+            "title": "Game Festival Gallery Photo 2",
+            "category": "Game Festival",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "game-festival-gallery-3",
+            "title": "Game Festival Gallery Photo 3",
+            "category": "Game Festival",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "game-festival-gallery-4",
+            "title": "Game Festival Gallery Photo 4",
+            "category": "Game Festival",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "school-and-collage-event-title-card",
+            "title": "School & College Title Card",
+            "category": "School & College",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "school-and-collage-event-slider-1",
+            "title": "School & College Hero Banner",
+            "category": "School & College",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "school-and-collage-event-slider-2",
+            "title": "School & College Slider Image 2",
+            "category": "School & College",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "school-and-collage-event-slider-3",
+            "title": "School & College Slider Image 3",
+            "category": "School & College",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "school-and-collage-event-gallery-1",
+            "title": "School & College Gallery Photo 1",
+            "category": "School & College",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "school-and-collage-event-gallery-2",
+            "title": "School & College Gallery Photo 2",
+            "category": "School & College",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "school-and-collage-event-gallery-3",
+            "title": "School & College Gallery Photo 3",
+            "category": "School & College",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "school-and-collage-event-gallery-4",
+            "title": "School & College Gallery Photo 4",
+            "category": "School & College",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "wedding-or-haldi-games-title-card",
+            "title": "Wedding Games Title Card",
+            "category": "Wedding Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "wedding-or-haldi-games-slider-1",
+            "title": "Wedding Games Hero Banner",
+            "category": "Wedding Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "wedding-or-haldi-games-slider-2",
+            "title": "Wedding Games Slider Image 2",
+            "category": "Wedding Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "wedding-or-haldi-games-slider-3",
+            "title": "Wedding Games Slider Image 3",
+            "category": "Wedding Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "wedding-or-haldi-games-gallery-1",
+            "title": "Wedding Games Gallery Photo 1",
+            "category": "Wedding Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "wedding-or-haldi-games-gallery-2",
+            "title": "Wedding Games Gallery Photo 2",
+            "category": "Wedding Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "wedding-or-haldi-games-gallery-3",
+            "title": "Wedding Games Gallery Photo 3",
+            "category": "Wedding Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "wedding-or-haldi-games-gallery-4",
+            "title": "Wedding Games Gallery Photo 4",
+            "category": "Wedding Games",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "traditional-games-title-card",
+            "title": "Community Events Title Card",
+            "category": "Community Events",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "traditional-games-slider-1",
+            "title": "Community Events Hero Banner",
+            "category": "Community Events",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "traditional-games-slider-2",
+            "title": "Community Events Slider Image 2",
+            "category": "Community Events",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "traditional-games-slider-3",
+            "title": "Community Events Slider Image 3",
+            "category": "Community Events",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "traditional-games-gallery-1",
+            "title": "Community Events Gallery Photo 1",
+            "category": "Community Events",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "traditional-games-gallery-2",
+            "title": "Community Events Gallery Photo 2",
+            "category": "Community Events",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "traditional-games-gallery-3",
+            "title": "Community Events Gallery Photo 3",
+            "category": "Community Events",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "traditional-games-gallery-4",
+            "title": "Community Events Gallery Photo 4",
+            "category": "Community Events",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "bollywood-games-title-card",
+            "title": "Bollywood Theme Title Card",
+            "category": "Bollywood Theme",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "bollywood-games-slider-1",
+            "title": "Bollywood Theme Hero Banner",
+            "category": "Bollywood Theme",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "bollywood-games-slider-2",
+            "title": "Bollywood Theme Slider Image 2",
+            "category": "Bollywood Theme",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "bollywood-games-slider-3",
+            "title": "Bollywood Theme Slider Image 3",
+            "category": "Bollywood Theme",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "bollywood-games-gallery-1",
+            "title": "Bollywood Theme Gallery Photo 1",
+            "category": "Bollywood Theme",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "bollywood-games-gallery-2",
+            "title": "Bollywood Theme Gallery Photo 2",
+            "category": "Bollywood Theme",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "bollywood-games-gallery-3",
+            "title": "Bollywood Theme Gallery Photo 3",
+            "category": "Bollywood Theme",
+            "file_path": null,
+            "updated_at": null
+        },
+        {
+            "image_key": "bollywood-games-gallery-4",
+            "title": "Bollywood Theme Gallery Photo 4",
+            "category": "Bollywood Theme",
+            "file_path": null,
+            "updated_at": null
+        }
+    ]
+}

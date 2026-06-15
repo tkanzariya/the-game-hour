@@ -3,9 +3,8 @@
  * Bundled assets remain as fallback when CMS is unavailable or slot is empty.
  */
 import {
-  FALLBACK_PATH_TO_IMAGE_KEYS,
+  FALLBACK_PATH_TO_IMAGE_KEY,
   IMAGE_KEY_REGISTRY,
-  cmsKeysSharingFallback,
   resolveCanonicalCmsKey,
   type ImageKeyMeta,
 } from '@/data/image-keys'
@@ -78,14 +77,13 @@ function bundledFallbackForKey(key: string): string {
 }
 
 function manifestUrlForKey(key: string): string | undefined {
-  for (const candidate of cmsKeysSharingFallback(key)) {
-    const direct = manifest[candidate]?.url
-    if (direct) return direct
-    for (const [manifestKey, entry] of Object.entries(manifest)) {
-      if (!entry?.url) continue
-      if (resolveCanonicalCmsKey(manifestKey) === candidate) {
-        return entry.url
-      }
+  const canonical = resolveCanonicalCmsKey(key)
+  const direct = manifest[canonical]?.url
+  if (direct) return direct
+  for (const [manifestKey, entry] of Object.entries(manifest)) {
+    if (!entry?.url) continue
+    if (resolveCanonicalCmsKey(manifestKey) === canonical) {
+      return entry.url
     }
   }
   return undefined
@@ -107,10 +105,9 @@ export function getImageByKey(key: string): string {
 export function getImageUrlForAssetPath(relativePath: string | undefined): string | undefined {
   if (!relativePath) return undefined
   const normalized = relativePath.replace(/^\/+/, '').replace(/\\/g, '/')
-  const keys = FALLBACK_PATH_TO_IMAGE_KEYS[normalized] ?? []
-  for (const cmsKey of keys) {
-    const url = manifestUrlForKey(cmsKey)
-    if (url) return url
+  const primaryKey = FALLBACK_PATH_TO_IMAGE_KEY[normalized]
+  if (primaryKey) {
+    return manifestUrlForKey(primaryKey)
   }
   return undefined
 }

@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
-import { LightboxImage } from '@/components/ImageLightbox'
+import { CmsImageFrame } from '@/components/CmsImages/CmsImageFrame'
 import { Reveal } from '@/components/motion'
 import { homeExperiencesPath } from '@/constants/routes'
 import { ASSET_MAP } from '@/data/asset-map'
-import { getAssetUrl } from '@/lib/assets'
+import { useCmsAssetUrl } from '@/hooks/useCmsImage'
 import { getSiteMetric } from '@/lib/site-stats'
 import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
 import { getSiteInfo } from '@/lib/content/company'
@@ -14,7 +14,7 @@ import { getHomeHeroContent } from '@/lib/content/home'
 export default function HomeHero() {
   const site = getSiteInfo()
   const hero = getHomeHeroContent()
-  const heroImage = getAssetUrl(ASSET_MAP.homepage.hero)
+  const heroImage = useCmsAssetUrl(ASSET_MAP.homepage.hero)
   const eventsHosted = getSiteMetric('events-hosted')
 
   return (
@@ -78,13 +78,13 @@ export default function HomeHero() {
 
           <Reveal className="relative lg:mt-2">
             <div className="image-frame lg:p-3">
-              <LightboxImage
-                src={heroImage}
+              <CmsImageFrame
+                ready={heroImage.ready}
+                src={heroImage.src}
                 alt={ASSET_MAP.homepage.hero.alt ?? 'Guests laughing during a Game Hour event'}
                 className="aspect-4/3 w-full object-cover lg:aspect-[5/4]"
                 wrapperClassName="w-full rounded-[inherit]"
-                width={640}
-                height={512}
+                skeletonClassName="aspect-4/3 w-full rounded-2xl lg:aspect-[5/4]"
                 fetchPriority="high"
                 decoding="async"
               />

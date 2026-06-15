@@ -20,7 +20,7 @@ return [
         // Resolves to site-root /uploads (public_html/uploads on cPanel)
         'dir' => dirname(__DIR__) . '/uploads',
         'public_url' => '/uploads',
-        'max_bytes' => 5 * 1024 * 1024, // 5 MB
+        'max_bytes' => 20 * 1024 * 1024, // 20 MB — compressed on save in a future release
         'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
         'allowed_mimes' => [
             'image/jpeg',

@@ -19,7 +19,7 @@ $keys = [
     'about-hero' => [
         'title' => cms_section_label('Hero', 1),
         'category' => 'About',
-        'fallback' => 'homepage/hero.webp',
+        'fallback' => 'gallery/moments/moment-3.webp',
         'usage' => 'About page (/about) — hero banner',
     ],
     'about-story' => [

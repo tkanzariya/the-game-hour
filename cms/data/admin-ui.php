@@ -1,5 +1,15 @@
 <?php
 
+/** Render admin success/error notice from ?msg= code. */
+function cms_admin_flash_notice(string $msgCode): string
+{
+    if ($msgCode === '') {
+        return '';
+    }
+    $text = cms_flash_message($msgCode);
+    return '<div class="notice notice-success" role="status">' . htmlspecialchars($text) . '</div>';
+}
+
 /** Plain-language hints for category pages. */
 function cms_category_hint(string $category): string
 {

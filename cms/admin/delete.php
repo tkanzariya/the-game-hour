@@ -28,4 +28,4 @@ if ($return === 'category' && $category !== '') {
     cms_redirect_with_msg(cms_category_url($category), $msgCode);
 }
 
-cms_redirect_with_msg(cms_admin_url('photos.php') . cms_library_query_string('', $search), $msgCode);
+cms_redirect_with_msg(cms_admin_url('photos/index.php') . cms_library_query_string('', $search), $msgCode);

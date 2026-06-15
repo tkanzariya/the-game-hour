@@ -10,13 +10,15 @@ cms_admin_bootstrap();
 
 $search = isset($_GET['q']) ? trim((string) $_GET['q']) : '';
 $filter = isset($_GET['category']) ? trim((string) $_GET['category']) : '';
+$message = isset($_GET['msg']) ? trim((string) $_GET['msg']) : '';
 
 $rowsByKey = cms_index_rows_by_key(cms_get_all_images());
 $allRows = array_values($rowsByKey);
 $totalSlots = count(cms_all_image_keys());
 $uploaded = cms_count_uploaded($allRows);
 
-$content = '<div class="page-header">';
+$content = cms_admin_flash_notice($message);
+$content .= '<div class="page-header">';
 $content .= '<a class="back-link" href="' . htmlspecialchars(cms_admin_url('dashboard.php')) . '">← Dashboard</a>';
 $content .= '<h1>Photos</h1>';
 $content .= '<p>Choose a section to update images on your website.</p>';

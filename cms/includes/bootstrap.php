@@ -200,8 +200,9 @@ function cms_validate_image_upload(array $file): array
     if ($err !== UPLOAD_ERR_OK) {
         return ['ok' => false, 'error' => 'Upload failed. Please try again.', 'code' => 'upload_failed'];
     }
-    if (($file['size'] ?? 0) > ($cfg['max_bytes'] ?? 5242880)) {
-        return ['ok' => false, 'error' => 'File too large. Maximum size is 5 MB.', 'code' => 'file_too_large'];
+    if (($file['size'] ?? 0) > ($cfg['max_bytes'] ?? 20971520)) {
+        $maxMb = (int) round(($cfg['max_bytes'] ?? 20971520) / 1048576);
+        return ['ok' => false, 'error' => 'File too large. Maximum size is ' . $maxMb . ' MB.', 'code' => 'file_too_large'];
     }
     $original = $file['name'] ?? '';
     $ext = strtolower(pathinfo($original, PATHINFO_EXTENSION));
@@ -333,7 +334,10 @@ function cms_save_upload(string $imageKey, array $file, ?string $title = null, ?
     }
 
     $row = cms_get_image_by_key($imageKey);
-    return ['ok' => true, 'image' => cms_image_public_payload($row)];
+    if ($row) {
+        return ['ok' => true, 'image' => cms_image_public_payload($row)];
+    }
+    return ['ok' => true];
 }
 
 function cms_delete_image(string $imageKey): array

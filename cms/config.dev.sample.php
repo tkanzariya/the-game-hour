@@ -23,7 +23,7 @@ return [
     'uploads' => [
         'dir' => __DIR__ . '/uploads',
         'public_url' => '/uploads',
-        'max_bytes' => 5 * 1024 * 1024,
+        'max_bytes' => 20 * 1024 * 1024,
         'allowed_extensions' => ['jpg', 'jpeg', 'png', 'webp'],
         'allowed_mimes' => ['image/jpeg', 'image/png', 'image/webp'],
     ],
