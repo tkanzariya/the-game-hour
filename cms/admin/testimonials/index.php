@@ -10,7 +10,8 @@ cms_content_seed_if_empty();
 $message = isset($_GET['msg']) ? cms_flash_message((string) $_GET['msg']) : '';
 $rows = cms_content_get_all_testimonials(true);
 
-$content = '<div class="page-header">';
+$content = cms_content_setup_notice_html();
+$content .= '<div class="page-header">';
 $content .= '<a class="back-link" href="' . htmlspecialchars(cms_admin_url('dashboard.php')) . '">← Dashboard</a>';
 $content .= '<div class="page-header-row">';
 $content .= '<div><h1>Testimonials</h1>';

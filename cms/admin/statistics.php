@@ -27,7 +27,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 $token = cms_csrf_token();
 
-$content = '<div class="page-header">';
+$content = cms_content_setup_notice_html();
+$content .= '<div class="page-header">';
 $content .= '<a class="back-link" href="' . htmlspecialchars(cms_admin_url('dashboard.php')) . '">← Dashboard</a>';
 $content .= '<h1>Statistics</h1>';
 $content .= '<p>Homepage numbers in the “Trusted experiences at scale” section. Labels are fixed.</p>';

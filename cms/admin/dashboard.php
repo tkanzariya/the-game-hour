@@ -16,9 +16,15 @@ $totalSlots = count(cms_all_image_keys());
 $uploaded = cms_count_uploaded($allRows);
 
 $testimonialRows = cms_content_get_all_testimonials(true);
-$visibleTestimonials = count(array_filter($testimonialRows, static fn (array $r): bool => !empty($r['visible'])));
+$visibleTestimonials = count(array_filter(
+    $testimonialRows,
+    static function (array $row): bool {
+        return !empty($row['visible']);
+    },
+));
 
-$content = '<div class="page-header">';
+$content = cms_content_setup_notice_html();
+$content .= '<div class="page-header">';
 $content .= '<h1>Dashboard</h1>';
 $content .= '<p>Manage photos, testimonials, and homepage statistics for your website.</p>';
 $content .= '</div>';

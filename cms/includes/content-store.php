@@ -15,14 +15,18 @@ function cms_content_testimonial_count(): int
     if (cms_content_uses_json()) {
         return cms_dev_content_count_testimonials();
     }
-    cms_content_migrate_if_needed();
+    if (!cms_content_db_ready()) {
+        return 0;
+    }
     $stmt = cms_db()->query('SELECT COUNT(*) FROM testimonials');
     return (int) $stmt->fetchColumn();
 }
 
 function cms_content_seed_if_empty(): void
 {
-    cms_content_migrate_if_needed();
+    if (!cms_content_db_ready()) {
+        return;
+    }
     if (cms_content_testimonial_count() === 0) {
         $rows = cms_content_seed_testimonials_from_json();
         if ($rows !== []) {
@@ -96,6 +100,9 @@ function cms_content_get_all_testimonials(bool $includeHidden = false): array
     if (cms_content_uses_json()) {
         return cms_dev_content_get_all_testimonials($includeHidden);
     }
+    if (!cms_content_db_ready()) {
+        return [];
+    }
     $sql = 'SELECT id, slug, name, role, review, rating, visible, sort_order, placement, service_slug, created_at, updated_at
             FROM testimonials';
     if (!$includeHidden) {
@@ -109,6 +116,9 @@ function cms_content_get_testimonial(int $id): ?array
 {
     if (cms_content_uses_json()) {
         return cms_dev_content_get_testimonial($id);
+    }
+    if (!cms_content_db_ready()) {
+        return null;
     }
     $stmt = cms_db()->prepare(
         'SELECT id, slug, name, role, review, rating, visible, sort_order, placement, service_slug, created_at, updated_at
@@ -180,6 +190,9 @@ function cms_content_validate_testimonial_input(array $input, bool $isUpdate): a
 /** @param array<string, mixed> $input */
 function cms_content_save_testimonial(array $input): array
 {
+    if (!cms_content_db_ready() && !cms_content_uses_json()) {
+        return ['ok' => false, 'error' => 'Content database is not set up yet. Import migrate-content-phase1.sql in phpMyAdmin.', 'code' => 'db_setup'];
+    }
     $id = (int) ($input['id'] ?? 0);
     $validated = cms_content_validate_testimonial_input($input, $id > 0);
     if (!$validated['ok']) {
@@ -246,6 +259,9 @@ function cms_content_delete_testimonial(int $id): bool
     if (cms_content_uses_json()) {
         return cms_dev_content_delete_testimonial($id);
     }
+    if (!cms_content_db_ready()) {
+        return false;
+    }
     $stmt = cms_db()->prepare('DELETE FROM testimonials WHERE id = :id');
     $stmt->execute(['id' => $id]);
     return $stmt->rowCount() > 0;
@@ -256,6 +272,9 @@ function cms_content_get_metric_values(): array
 {
     if (cms_content_uses_json()) {
         return cms_dev_content_get_metrics();
+    }
+    if (!cms_content_db_ready()) {
+        return cms_content_default_metrics();
     }
     $stmt = cms_db()->query('SELECT metric_key, value FROM site_metrics');
     $values = cms_content_default_metrics();
@@ -275,6 +294,9 @@ function cms_content_save_metric_values(array $values): void
 
     if (cms_content_uses_json()) {
         cms_dev_content_save_metrics($clean);
+        return;
+    }
+    if (!cms_content_db_ready()) {
         return;
     }
 
