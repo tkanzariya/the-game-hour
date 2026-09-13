@@ -3,7 +3,7 @@ import { Button } from '@/components/Button'
 import { PageHero } from '@/components/PageHero'
 import { Section } from '@/components/Section'
 import { SocialChannels } from '@/components/SocialChannels'
-import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
+import { getBookingLabel, getDefaultBookingUrl, isExternalBookingUrl } from '@/lib/content/booking'
 import { getContactInfo, getContactLocationDisplay, getSiteInfo } from '@/lib/content/company'
 import { SITE } from '@/utils/constants'
 import { buildSeo } from '@/utils/seo'
@@ -29,7 +29,7 @@ export default function ContactPage() {
         containerWidth="wide"
       >
         <div className="mt-8 flex flex-wrap gap-3">
-          <Button variant="secondary" size="lg" href={bookingUrl} external>
+          <Button variant="secondary" size="lg" href={bookingUrl} external={isExternalBookingUrl(bookingUrl)}>
             {getBookingLabel('bookYourEvent')}
           </Button>
           <Button variant="whatsapp" size="lg" href={contact.whatsappUrl} external>

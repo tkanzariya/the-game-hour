@@ -1,0 +1,4 @@
+# CLI import tools must not be served over HTTP
+<IfModule mod_authz_core.c>
+  Require all denied
+</IfModule>

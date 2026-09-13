@@ -9,7 +9,7 @@
     "cms:sync": "node scripts/copy-cms-to-dist.mjs",
     "cms:audit": "node scripts/audit-image-mappings.mjs",
     "cms:verify": "node --experimental-strip-types scripts/verify-cms-mapping.mjs",
-    "cms:dev": "node scripts/copy-cms-to-dist.mjs && php -S localhost:8765 -t dist scripts/dev-router.php",
+    "cms:dev": "node scripts/run-cms-dev.mjs",
     "dev:booking": "npm run cms:dev",
     "lint": "eslint .",
     "format": "prettier --write .",

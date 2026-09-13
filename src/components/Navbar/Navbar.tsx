@@ -4,7 +4,7 @@ import { Container } from '@/components/Container'
 import { useScrolled } from '@/hooks/useScrolled'
 import { cn } from '@/utils/cn'
 import { ROUTES } from '@/constants/routes'
-import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
+import { getBookingLabel, getDefaultBookingUrl, isExternalBookingUrl } from '@/lib/content/booking'
 import { getSiteInfo } from '@/lib/content/company'
 import { getMainNavLinks } from '@/lib/navigation'
 import { getLogoUrl } from '@/lib/assets'
@@ -17,6 +17,7 @@ export default function Navbar() {
   const site = getSiteInfo()
   const bookingUrl = getDefaultBookingUrl()
   const bookLabel = getBookingLabel('book')
+  const bookingExternal = isExternalBookingUrl(bookingUrl)
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -85,25 +86,43 @@ export default function Navbar() {
                 </NavLink>
               ))}
 
-              <a
-                href={bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="ml-2 inline-flex min-h-10 shrink-0 items-center justify-center rounded-full surface-accent px-5 py-2 text-sm font-bold text-on-accent shadow-sm transition-brand hover:shadow-glow-accent hover:brightness-105 active:translate-y-px active:brightness-95"
-              >
-                {bookLabel}
-              </a>
+              {bookingExternal ? (
+                <a
+                  href={bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="ml-2 inline-flex min-h-10 shrink-0 items-center justify-center rounded-full surface-accent px-5 py-2 text-sm font-bold text-on-accent shadow-sm transition-brand hover:shadow-glow-accent hover:brightness-105 active:translate-y-px active:brightness-95"
+                >
+                  {bookLabel}
+                </a>
+              ) : (
+                <Link
+                  to={bookingUrl}
+                  className="ml-2 inline-flex min-h-10 shrink-0 items-center justify-center rounded-full surface-accent px-5 py-2 text-sm font-bold text-on-accent shadow-sm transition-brand hover:shadow-glow-accent hover:brightness-105 active:translate-y-px active:brightness-95"
+                >
+                  {bookLabel}
+                </Link>
+              )}
             </nav>
 
             <div className="flex items-center gap-2 lg:hidden">
-              <a
-                href={bookingUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex min-h-10 items-center justify-center rounded-full surface-accent px-4 py-2 text-sm font-bold text-on-accent shadow-sm transition-brand hover:brightness-105 active:translate-y-px"
-              >
-                {bookLabel}
-              </a>
+              {bookingExternal ? (
+                <a
+                  href={bookingUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex min-h-10 items-center justify-center rounded-full surface-accent px-4 py-2 text-sm font-bold text-on-accent shadow-sm transition-brand hover:brightness-105 active:translate-y-px"
+                >
+                  {bookLabel}
+                </a>
+              ) : (
+                <Link
+                  to={bookingUrl}
+                  className="inline-flex min-h-10 items-center justify-center rounded-full surface-accent px-4 py-2 text-sm font-bold text-on-accent shadow-sm transition-brand hover:brightness-105 active:translate-y-px"
+                >
+                  {bookLabel}
+                </Link>
+              )}
               <button
                 type="button"
                 className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 text-white transition-brand hover:bg-white/15 active:scale-[0.98]"

@@ -16,17 +16,18 @@ The **Image CMS** runs on production/staging (PHP + MySQL on cPanel). It is **no
 |------|--------|
 | **Admin URL** | `https://YOUR-DOMAIN/admin/login.php` |
 | **Shortcut** | `https://YOUR-DOMAIN/admin` → redirects to login |
-| **Credentials** | Set in `cms/config.php` on the server (never committed) |
+| **Operations** | `https://YOUR-DOMAIN/ops` (Events workspace; `/ops/login`) |
+| **Credentials** | Users table in MySQL (first admin is seeded from `cms/config.php`). Never commit config files. |
 
 **First-time server setup:** See [CMS Deployment Checklist](deployment/CMS_DEPLOYMENT_CHECKLIST.md).
 
-**How it works:** See [Image CMS Architecture](cms/IMAGE_CMS_ARCHITECTURE.md).
+**How it works:** See [Image CMS Architecture](cms/IMAGE_CMS_ARCHITECTURE.md). Operations schema: `cms/sql/migrate-ops.sql`.
 
 ### Sign in
 
-1. Open `/admin/login.php`
-2. Enter username and password from `cms/config.php`
-3. Library loads all **85 image slots** with friendly labels
+1. Website photos: `/admin/login.php` (admin role only)
+2. Events operations: `/ops/login`
+3. Same account works for both once the `users` table exists
 
 ### Find an image quickly
 

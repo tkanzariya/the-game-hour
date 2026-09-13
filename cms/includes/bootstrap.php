@@ -3,6 +3,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/dev-json-store.php';
 require_once __DIR__ . '/../data/flash-messages.php';
+require_once __DIR__ . '/ops-migrate.php';
 
 /** Load Phase 1 content module (testimonials + statistics) on demand. */
 function cms_load_content_store(): void
@@ -135,7 +136,46 @@ function cms_verify_csrf(?string $token): bool
 function cms_is_logged_in(): bool
 {
     cms_start_session();
-    return !empty($_SESSION['cms_admin']);
+    return !empty($_SESSION['cms_user']) && is_array($_SESSION['cms_user']);
+}
+
+/** @return array{id: int, name: string, email: string, role: string}|null */
+function cms_current_user(): ?array
+{
+    cms_start_session();
+    $user = $_SESSION['cms_user'] ?? null;
+    if (!is_array($user) || empty($user['role'])) {
+        return null;
+    }
+    return [
+        'id' => (int) ($user['id'] ?? 0),
+        'name' => (string) ($user['name'] ?? ''),
+        'email' => (string) ($user['email'] ?? ''),
+        'role' => (string) ($user['role'] ?? ''),
+    ];
+}
+
+function cms_current_role(): string
+{
+    return cms_current_user()['role'] ?? '';
+}
+
+function cms_is_admin(): bool
+{
+    return cms_is_logged_in() && cms_current_role() === 'admin';
+}
+
+function cms_session_user_payload(): array
+{
+    $user = cms_current_user();
+    if ($user === null) {
+        return ['ok' => true, 'user' => null, 'csrf' => cms_csrf_token()];
+    }
+    return [
+        'ok' => true,
+        'user' => $user,
+        'csrf' => cms_csrf_token(),
+    ];
 }
 
 function cms_admin_base_path(): string
@@ -152,7 +192,7 @@ function cms_admin_url(string $path = ''): string
     return $base . '/' . ltrim($path, '/');
 }
 
-function cms_require_admin(): void
+function cms_require_login(): void
 {
     if (!cms_is_logged_in()) {
         header('Location: ' . cms_admin_url('login.php'));
@@ -160,18 +200,102 @@ function cms_require_admin(): void
     }
 }
 
-function cms_login(string $username, string $password): bool
+function cms_require_admin(): void
 {
-    $admin = cms_config()['admin'];
-    if ($username !== ($admin['username'] ?? '')) {
-        return false;
+    cms_require_login();
+    if (!cms_is_admin()) {
+        header('Location: /ops');
+        exit;
     }
-    if (!password_verify($password, $admin['password_hash'] ?? '')) {
-        return false;
-    }
+}
+
+function cms_ops_establish_session(array $user): void
+{
     cms_start_session();
     session_regenerate_id(true);
-    $_SESSION['cms_admin'] = $username;
+    $_SESSION['cms_user'] = [
+        'id' => (int) ($user['id'] ?? 0),
+        'name' => (string) ($user['name'] ?? ''),
+        'email' => (string) ($user['email'] ?? ''),
+        'role' => (string) ($user['role'] ?? 'coach'),
+    ];
+}
+
+function cms_login_from_config(string $username, string $password): ?array
+{
+    $admin = cms_config()['admin'] ?? [];
+    $configUser = (string) ($admin['username'] ?? '');
+    $hash = (string) ($admin['password_hash'] ?? '');
+    if ($username === '' || $configUser === '' || !hash_equals($configUser, $username)) {
+        return null;
+    }
+    if ($hash === '' || !password_verify($password, $hash)) {
+        return null;
+    }
+    return [
+        'id' => 0,
+        'name' => $configUser,
+        'email' => cms_ops_seed_email_from_username($configUser),
+        'role' => 'admin',
+        'password_hash' => $hash,
+    ];
+}
+
+function cms_login_from_users_table(string $identifier, string $password): ?array
+{
+    if (cms_dev_json_enabled() || !cms_ops_db_ready()) {
+        return null;
+    }
+    $email = strtolower(trim($identifier));
+    $stmt = cms_db()->prepare(
+        'SELECT id, name, email, password_hash, role, is_active
+         FROM users
+         WHERE email = :email OR name = :name
+         LIMIT 1',
+    );
+    $stmt->execute(['email' => $email, 'name' => $identifier]);
+    $row = $stmt->fetch();
+    if (!$row || !(int) ($row['is_active'] ?? 0)) {
+        return null;
+    }
+    if (!password_verify($password, (string) $row['password_hash'])) {
+        return null;
+    }
+    return [
+        'id' => (int) $row['id'],
+        'name' => (string) $row['name'],
+        'email' => (string) $row['email'],
+        'role' => (string) $row['role'],
+    ];
+}
+
+function cms_login(string $username, string $password): bool
+{
+    $username = trim($username);
+    if ($username === '' || $password === '') {
+        return false;
+    }
+
+    if (!cms_dev_json_enabled()) {
+        cms_ops_migrate_if_needed();
+    }
+
+    $user = cms_login_from_users_table($username, $password);
+    if ($user === null) {
+        $fromConfig = cms_login_from_config($username, $password);
+        if ($fromConfig === null) {
+            return false;
+        }
+        if (!cms_dev_json_enabled() && cms_ops_tables_exist()) {
+            cms_ops_seed_admin_from_config();
+            $seeded = cms_login_from_users_table($username, $password);
+            $user = $seeded ?? $fromConfig;
+        } else {
+            $user = $fromConfig;
+        }
+    }
+
+    cms_ops_establish_session($user);
     return true;
 }
 
@@ -433,7 +557,6 @@ function cms_resolve_preview_file(string $key): ?array
 function cms_admin_favicon_tags(): string
 {
     return '<link rel="icon" href="/favicon.ico" sizes="any">'
-        . '<link rel="icon" type="image/svg+xml" href="/favicon.svg">'
         . '<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">'
         . '<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">'
         . '<link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">'
@@ -454,7 +577,7 @@ function cms_admin_layout(string $title, string $content, string $activeNav = ''
         return;
     }
 
-    $user = $_SESSION['cms_admin'] ?? 'admin';
+    $user = cms_current_user()['name'] ?? 'admin';
     $nav = static function (string $id, string $label, string $href) use ($activeNav): string {
         $active = $activeNav === $id ? ' is-active' : '';
         return '<a class="sidebar-link' . $active . '" href="' . htmlspecialchars($href) . '">' . $label . '</a>';

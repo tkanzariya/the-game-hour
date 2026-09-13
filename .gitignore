@@ -40,6 +40,7 @@ cms/uploads/*
 !cms/uploads/payment-screenshots/
 cms/uploads/payment-screenshots/*
 !cms/uploads/payment-screenshots/.gitkeep
+!cms/uploads/payment-screenshots/.htaccess
 cms/static/images/*
 !cms/static/images/.gitkeep
 cms/dev-data/*

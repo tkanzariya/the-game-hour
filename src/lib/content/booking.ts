@@ -11,6 +11,10 @@ export function getDefaultBookingUrl(): string {
   return bookingData.urls.default
 }
 
+export function isExternalBookingUrl(url: string): boolean {
+  return /^(https?:)?\/\//i.test(url)
+}
+
 export function getCorporateBookingUrl(): string {
   return bookingData.urls.corporate
 }

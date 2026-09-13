@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
-import { MainLayout } from '@/layouts'
+import { MainLayout, OpsLayout, OpsRoot } from '@/layouts'
 import { ProductionRedirect } from '@/components/ProductionRedirect'
 import { HOME_SECTIONS, ROUTES } from '@/constants/routes'
 import { LegacyServiceRedirect } from '@/components/LegacyServiceRedirect'
@@ -14,6 +14,9 @@ import NotFoundPage from '@/pages/NotFoundPage'
 import DesignPreviewPage from '@/pages/DesignPreviewPage'
 import NewUiPreviewPage from '@/pages/NewUiPreviewPage'
 import CoralThemePreviewPage from '@/pages/CoralThemePreviewPage'
+import OpsLoginPage from '@/pages/ops/OpsLoginPage'
+import OpsEventsPage from '@/pages/ops/OpsEventsPage'
+import OpsEventDetailPage from '@/pages/ops/OpsEventDetailPage'
 
 const isDev = import.meta.env.DEV
 
@@ -56,6 +59,21 @@ const previewRoutes = isDev
     ]
 
 export const router = createBrowserRouter([
+  {
+    element: <OpsRoot />,
+    children: [
+      { path: 'ops/login', element: <OpsLoginPage /> },
+      {
+        path: 'ops',
+        element: <OpsLayout />,
+        children: [
+          { index: true, element: <Navigate to={ROUTES.opsEvents} replace /> },
+          { path: 'events', element: <OpsEventsPage /> },
+          { path: 'events/:id', element: <OpsEventDetailPage /> },
+        ],
+      },
+    ],
+  },
   {
     path: ROUTES.home,
     element: <MainLayout />,

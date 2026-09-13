@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion'
 import { cn } from '@/utils/cn'
-import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
+import { getBookingLabel, getDefaultBookingUrl, isExternalBookingUrl } from '@/lib/content/booking'
 import { getContactInfo } from '@/lib/content/company'
 import { FEATURE_FLAGS } from '@/utils/constants'
 
@@ -17,6 +17,7 @@ export default function FloatingActions({ preview = false }: FloatingActionsProp
   const contact = getContactInfo()
   const bookingUrl = getDefaultBookingUrl()
   const bookLabel = getBookingLabel('bookNow')
+  const bookingExternal = isExternalBookingUrl(bookingUrl)
 
   return (
     <motion.div
@@ -30,8 +31,8 @@ export default function FloatingActions({ preview = false }: FloatingActionsProp
         whileHover={{ scale: 1.02, y: -1 }}
         whileTap={{ scale: 0.98, y: 0 }}
         href={bookingUrl}
-        target="_blank"
-        rel="noopener noreferrer"
+        target={bookingExternal ? '_blank' : undefined}
+        rel={bookingExternal ? 'noopener noreferrer' : undefined}
         className={cn(
           'inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-secondary/80 surface-accent px-5 py-3 text-sm font-bold text-on-accent shadow-fab transition-brand hover:shadow-glow-accent hover:brightness-105 active:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-secondary',
           'max-w-[calc(100vw-1.5rem)] sm:min-w-[8.5rem]',

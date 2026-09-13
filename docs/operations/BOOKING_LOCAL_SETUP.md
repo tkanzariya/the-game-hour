@@ -34,8 +34,17 @@ Submit with a payment screenshot → check `cms/dev-data/bookings.json` and `cms
 
 1. Copy [`cms/config.sample.php`](cms/config.sample.php) → `cms/config.local.php` (or use production values without the `dev.json_store` key).
 2. Fill `db.host`, `db.name`, `db.user`, `db.pass` from cPanel → **MySQL® Databases** (or copy from live `config.php` on the server).
-3. Import [`cms/sql/migrate-events.sql`](cms/sql/migrate-events.sql) in phpMyAdmin **or** let the API create the table on first booking (needs `CREATE TABLE` privilege).
+3. Import [`cms/sql/migrate-events.sql`](cms/sql/migrate-events.sql) and [`cms/sql/migrate-ops.sql`](cms/sql/migrate-ops.sql) in phpMyAdmin **or** let the API create tables on first ops/booking request (needs `CREATE TABLE` privilege).
 4. Restart `npm run cms:dev` (or deploy CMS) and submit a test booking — confirm a row in `events`.
+
+## Operations workspace
+
+- URL: http://localhost:5173/ops/login (needs `npm run cms:dev` as well as Vite)
+- Local JSON mode: sign in with `devadmin` / `dev123` from `config.dev.sample.php`. Events come from `cms/dev-data/bookings.json`. Games and Team lists stay empty until MySQL import.
+- Live MySQL: first admin user is copied from `cms/config.php` into the `users` table. Then sign in at `/ops/login`.
+- Historical Bubble CSV import is **not run yet**. When fuller exports arrive, see expected columns in [`cms/tools/import-bubble.php`](../../cms/tools/import-bubble.php) and run it from the command line.
+
+## Payment bank details
 
 ### Where to find credentials
 

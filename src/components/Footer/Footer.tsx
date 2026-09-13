@@ -3,7 +3,7 @@ import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { SocialChannels } from '@/components/SocialChannels'
 import { ROUTES } from '@/constants/routes'
-import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
+import { getBookingLabel, getDefaultBookingUrl, isExternalBookingUrl } from '@/lib/content/booking'
 import { getContactInfo, getContactLocationDisplay, getFooterContent, getSiteInfo } from '@/lib/content/company'
 import {
   getFooterCta,
@@ -101,7 +101,7 @@ export default function Footer() {
           </h3>
           <p className="mt-4 text-sm leading-relaxed text-white/75">{cta.description}</p>
           <div className="mt-5 flex flex-col gap-3">
-            <Button variant="secondary" size="sm" href={bookingUrl} external>
+            <Button variant="secondary" size="sm" href={bookingUrl} external={isExternalBookingUrl(bookingUrl)}>
               {getBookingLabel('bookNow')}
             </Button>
             <Button

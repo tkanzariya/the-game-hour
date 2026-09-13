@@ -31,6 +31,7 @@ npm run dev
 4. Choose file: `cms/sql/migrate-events.sql` from this project on your computer
 5. Click **Go**
 6. Confirm table **`events`** appears in the left list
+7. Import `cms/sql/migrate-ops.sql` the same way (users, team_members, games). Extra event columns are added automatically on first `/ops` API call if you skip a manual ALTER.
 
 ---
 

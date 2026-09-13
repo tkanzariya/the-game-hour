@@ -14,6 +14,7 @@ export {
   getBookingUrlForService,
   getBookingLabels,
   getBookingLabel,
+  isExternalBookingUrl,
 } from './booking'
 export {
   getCompanyInfo,

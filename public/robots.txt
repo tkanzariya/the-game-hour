@@ -1,4 +1,10 @@
 User-agent: *
 Allow: /
+Disallow: /ops
+Disallow: /ops/
+Disallow: /admin
+Disallow: /admin/
+Disallow: /cms
+Disallow: /cms/
 
 Sitemap: https://thegamehour.com/sitemap.xml

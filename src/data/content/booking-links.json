@@ -2,11 +2,11 @@
   "meta": {
     "source": "The Game Hour booking forms",
     "generated": "2026-05-23",
-    "note": "Single source for all booking URLs and CTA button labels. Swap version-test URLs to production before launch."
+    "note": "Same-origin booking forms. Corporate services use urls.corporate."
   },
   "urls": {
-    "default": "https://the-game-hour.bubbleapps.io/version-test/",
-    "corporate": "https://the-game-hour.bubbleapps.io/version-test/corporate_booking"
+    "default": "/book/social",
+    "corporate": "/book/corporate"
   },
   "corporateServiceSlug": "corporate-games",
   "labels": {

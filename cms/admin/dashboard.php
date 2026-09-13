@@ -26,7 +26,7 @@ $visibleTestimonials = count(array_filter(
 $content = cms_content_setup_notice_html();
 $content .= '<div class="page-header">';
 $content .= '<h1>Dashboard</h1>';
-$content .= '<p>Manage photos, testimonials, and homepage statistics for your website.</p>';
+$content .= '<p>Manage photos, testimonials, and homepage statistics for your website. Event bookings live in <a href="/ops/events">Operations</a>.</p>';
 $content .= '</div>';
 
 $content .= '<div class="category-grid dashboard-sections">';

@@ -36,6 +36,10 @@
 | `/book` | redirect | Goes to `/book/social` | Direct URL only — site CTAs still Bubble |
 | `/book/social` | `BookingPage` (social) | Local social booking form | Direct URL only |
 | `/book/corporate` | `BookingPage` (corporate) | Local corporate booking form | Direct URL only |
+| `/ops/login` | `OpsLoginPage` | Operations sign-in | Direct URL; `noindex` |
+| `/ops` | redirect | Goes to `/ops/events` | Direct URL |
+| `/ops/events` | `OpsEventsPage` | Admin events list | Direct URL; admin session |
+| `/ops/events/:id` | `OpsEventDetailPage` | Event summary + edit | Direct URL; admin session |
 
 ---
 
