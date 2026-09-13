@@ -73,7 +73,7 @@
     {
       "id": 103,
       "event_category": "social",
-      "event_status": "upcoming",
+      "event_status": "cancelled",
       "email": "nisha.demo@example.com",
       "contact_name": "Nisha Patel",
       "phone": "9000000103",
@@ -108,7 +108,7 @@
     {
       "id": 104,
       "event_category": "corporate",
-      "event_status": "upcoming",
+      "event_status": "cancelled",
       "email": "events.demo@example.com",
       "contact_name": "Ravi Mehta",
       "phone": "9000000104",

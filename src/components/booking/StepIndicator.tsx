@@ -8,12 +8,12 @@ export function StepIndicator({
   labels = ['Event details', 'Advance payment'],
 }: StepIndicatorProps) {
   return (
-    <ul className="steps w-full" aria-label={`Step ${step} of 2`}>
-      <li className="step step-primary" data-content={step > 1 ? '✓' : '1'}>
-        {labels[0]}
+    <ul className="steps w-full max-w-full min-w-0 text-sm sm:text-base" aria-label={`Step ${step} of 2`}>
+      <li className="step step-primary min-w-0" data-content={step > 1 ? '✓' : '1'}>
+        <span className="px-1">{labels[0]}</span>
       </li>
-      <li className={step === 2 ? 'step step-primary' : 'step'} data-content="2">
-        {labels[1]}
+      <li className={`min-w-0 ${step === 2 ? 'step step-primary' : 'step'}`} data-content="2">
+        <span className="px-1">{labels[1]}</span>
       </li>
     </ul>
   )

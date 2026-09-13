@@ -1,6 +1,6 @@
 ---
 description: Ops workspace header, filters, and events API behavior
-globs: src/layouts/OpsLayout.tsx,src/pages/ops/**/*.tsx,src/lib/ops/**/*.ts,cms/api/ops/**/*.php,cms/includes/ops-*.php
+globs: src/layouts/OpsLayout.tsx,src/pages/ops/**/*.tsx,src/lib/ops/**/*.ts,src/lib/ops/**/*.tsx,cms/api/ops/**/*.php,cms/includes/ops-*.php
 alwaysApply: false
 ---
 
@@ -8,9 +8,10 @@ alwaysApply: false
 
 - Brand in `OpsNav` is the **logo image** (`getLogoUrl('dark')`, alt `The Game Hour` from site info). Do not use the signed-in user's `name` as the logo. `users.name` is `The Game Hour` for the admin account — show **email** when the name matches the site name.
 - Navbar is `bg-neutral text-neutral-content`. Ghost buttons and CMS link must include `text-neutral-content!`. daisyUI `btn-ghost` otherwise uses `base-content` (navy on dark = unreadable). Do not use `dark:` with daisyUI colors.
-- Default events status filter is **`all`**, not `upcoming`. Imported Bubble data is mostly completed/pending; Upcoming looks empty even when the API works.
+- Default events status filter is **`all`**. Status values are `pending`, `cancelled`, `completed`. Do not bring back `upcoming`; migrate leftover `upcoming` rows to `cancelled`.
+- Logged-out ops users must land on `/ops/login`. Poll `/cms/api/auth/me.php` and treat events API `401`/`419` as session expiry. Do not leave a stale workspace on screen.
 - Events list uses `cms/includes/ops-store.php`. That file must stay PHP 7.4-safe or the UI shows "Could not load events".
 - Iterate on ops UI locally (`npm run local`), not by pushing to live. Dummy events live in `cms/data/ops-dummy.json`.
-- Events table: one `table-fixed` (no per-month overflow). Truncated cells use a **fixed portal** hover tip (not daisyUI `tooltip` — that clips inside tables). Social/corporate is row background (`bg-secondary/15` / `bg-info/15`). Status is a `status` dot. Row click opens view; pencil opens `?edit=1`. Mobile list shows customer, event type, event date, booked date, price, status, and category tint.
-- Event view: `btn btn-ghost` with `arrow-left` for back. Field labels are uppercase muted; values are `font-medium`. Payment screenshot: warning alert if missing; fixed `h-48 w-32` `object-contain` thumbnail + Open/Download if present. Live Bubble CDN URLs go through `screenshot.php` (path may be https, not a local file). Delete uses a modal; type `DELETE` to confirm. API is `DELETE /cms/api/ops/events.php?id=` with CSRF.
-- Event edit reuses booking fields (`DatePickerField` / `TimePickerField` / `TextField` / `SelectField` / `TextAreaField`). Pass `minDate={null}` so past event dates stay selectable. Payment: show advance fields only after “Advance payment received”; show full-payment fields only after that checkbox. Games and coaches use searchable `SearchMultiSelect`, not checkbox lists.
+- Events table: one `table-fixed` (no per-month overflow). Truncated cells use a **fixed portal** hover tip (not daisyUI `tooltip` — that clips inside tables). Social/corporate is row background (`bg-secondary/15` / `bg-info/15`). Status is a `status` dot. Row click opens view; pencil opens `?edit=1`. Mobile cards keep the status badge on its own row so it does not overflow with the edit button. Paginate by packing whole months toward ~20 events; never split a month. Date range filter: all / current month / last month / last 6 months / current year / last year (`from`/`to` query on events API).
+- Event view: `btn btn-ghost` with `arrow-left` for back. Field labels are uppercase muted; values are `font-medium`. Payment screenshot: warning alert if missing; fixed `h-48 w-32` `object-contain` thumbnail + Open/Download if present. Live Bubble CDN URLs go through `screenshot.php` (path may be https, not a local file). Delete uses a modal; type `DELETE` to confirm. API is `DELETE /cms/api/ops/events.php?id=` with CSRF. Save/edit/delete must show a daisyUI `toast` + `alert`.
+- Event edit reuses booking fields (`DatePickerField` / `TimePickerField` / `TextField` / `SelectField` / `TextAreaField`). Pass `minDate={null}` so past event dates stay selectable. Payment: “Advance payment received” and “Full payment received” follow the stored `advance_payment_completed` / `full_payment_completed` flags. Show amount/date fields only after those checkboxes. Games and coaches use searchable `SearchMultiSelect`, not checkbox lists.

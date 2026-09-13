@@ -26,6 +26,18 @@ async function readJson(res: Response): Promise<JsonMap> {
   }
 }
 
+function notifySessionExpired(res: Response): void {
+  if (res.status === 401 || res.status === 419) {
+    window.dispatchEvent(new Event('ops:session-expired'))
+  }
+}
+
+async function opsFetch(input: string, init?: RequestInit): Promise<Response> {
+  const res = await fetch(input, { credentials: 'include', ...init })
+  notifySessionExpired(res)
+  return res
+}
+
 export type SessionPayload = {
   ok: boolean
   user: OpsUser | null
@@ -91,15 +103,17 @@ export async function fetchEvents(filters: {
   category: EventCategoryFilter
   status: EventStatusFilter
   q: string
+  from?: string
+  to?: string
 }): Promise<{ ok: true; events: OpsEventSummary[] } | { ok: false; error: string }> {
   const params = new URLSearchParams()
   if (filters.category !== 'all') params.set('category', filters.category)
   if (filters.status !== 'all') params.set('status', filters.status)
   if (filters.q.trim()) params.set('q', filters.q.trim())
+  if (filters.from) params.set('from', filters.from)
+  if (filters.to) params.set('to', filters.to)
   const query = params.toString()
-  const res = await fetch(`${EVENTS_URL}${query ? `?${query}` : ''}`, {
-    credentials: 'include',
-  })
+  const res = await opsFetch(`${EVENTS_URL}${query ? `?${query}` : ''}`)
   const raw = await res.text()
   let data: JsonMap = {}
   try {
@@ -119,9 +133,7 @@ export async function fetchEvents(filters: {
 export async function fetchEvent(
   id: string,
 ): Promise<{ ok: true; event: OpsEventDetail } | { ok: false; error: string }> {
-  const res = await fetch(`${EVENTS_URL}?id=${encodeURIComponent(id)}`, {
-    credentials: 'include',
-  })
+  const res = await opsFetch(`${EVENTS_URL}?id=${encodeURIComponent(id)}`)
   const data = await readJson(res)
   if (!res.ok || !data.ok || !data.event) {
     return { ok: false, error: String(data.error ?? 'Event not found.') }
@@ -134,9 +146,8 @@ export async function updateEvent(
   patch: OpsEventPatch,
   csrf: string,
 ): Promise<{ ok: true; event: OpsEventDetail } | { ok: false; error: string }> {
-  const res = await fetch(`${EVENTS_URL}?id=${encodeURIComponent(id)}`, {
+  const res = await opsFetch(`${EVENTS_URL}?id=${encodeURIComponent(id)}`, {
     method: 'POST',
-    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
       'X-CSRF-Token': csrf,
@@ -154,9 +165,8 @@ export async function deleteEvent(
   id: string,
   csrf: string,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
-  const res = await fetch(`${EVENTS_URL}?id=${encodeURIComponent(id)}`, {
+  const res = await opsFetch(`${EVENTS_URL}?id=${encodeURIComponent(id)}`, {
     method: 'DELETE',
-    credentials: 'include',
     headers: {
       'X-CSRF-Token': csrf,
     },
@@ -169,14 +179,14 @@ export async function deleteEvent(
 }
 
 export async function fetchGames(): Promise<OpsGame[]> {
-  const res = await fetch(GAMES_URL, { credentials: 'include' })
+  const res = await opsFetch(GAMES_URL)
   const data = await readJson(res)
   if (!res.ok || !data.ok) return []
   return (data.games as OpsGame[]) ?? []
 }
 
 export async function fetchTeam(): Promise<OpsTeamMember[]> {
-  const res = await fetch(TEAM_URL, { credentials: 'include' })
+  const res = await opsFetch(TEAM_URL)
   const data = await readJson(res)
   if (!res.ok || !data.ok) return []
   return (data.team as OpsTeamMember[]) ?? []

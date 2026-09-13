@@ -151,7 +151,7 @@ export function SelectField({
         aria-describedby={error ? `${id}-error` : undefined}
         {...rest}
       >
-        <option value="" disabled hidden>
+        <option value="" disabled>
           {placeholder}
         </option>
         {options.map((opt) => (

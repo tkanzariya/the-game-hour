@@ -4,6 +4,11 @@ import { Link, useNavigate } from 'react-router-dom'
 import Icon from '@/components/Icon/Icon'
 import { fetchEvents } from '@/lib/ops/api'
 import {
+  DATE_RANGE_OPTIONS,
+  eventDateRangeBounds,
+  type EventDateRangeFilter,
+} from '@/lib/ops/dateRange'
+import {
   ageGroupLabel,
   eventTypeLabel,
   formatBookingDate,
@@ -24,6 +29,8 @@ export default function OpsEventsPage() {
   const navigate = useNavigate()
   const [category, setCategory] = useState<EventCategoryFilter>('all')
   const [status, setStatus] = useState<EventStatusFilter>('all')
+  const [dateRange, setDateRange] = useState<EventDateRangeFilter>('all')
+  const [page, setPage] = useState(1)
   const [q, setQ] = useState('')
   const [search, setSearch] = useState('')
   const [events, setEvents] = useState<OpsEventSummary[]>([])
@@ -35,10 +42,22 @@ export default function OpsEventsPage() {
     return () => window.clearTimeout(handle)
   }, [q])
 
+  const rangeBounds = useMemo(() => eventDateRangeBounds(dateRange), [dateRange])
+
+  useEffect(() => {
+    setPage(1)
+  }, [category, status, search, dateRange])
+
   useEffect(() => {
     let cancelled = false
     setLoading(true)
-    fetchEvents({ category, status, q: search })
+    fetchEvents({
+      category,
+      status,
+      q: search,
+      from: rangeBounds.from,
+      to: rangeBounds.to,
+    })
       .then((result) => {
         if (cancelled) return
         if (!result.ok) {
@@ -55,9 +74,13 @@ export default function OpsEventsPage() {
     return () => {
       cancelled = true
     }
-  }, [category, status, search])
+  }, [category, status, search, rangeBounds.from, rangeBounds.to])
 
   const grouped = useMemo(() => groupByMonth(events), [events])
+  const pages = useMemo(() => paginateMonthGroups(grouped, PAGE_SIZE), [grouped])
+  const pageCount = Math.max(pages.length, 1)
+  const currentPage = Math.min(page, pageCount)
+  const visibleGroups = pages[currentPage - 1] ?? []
 
   return (
     <div className="space-y-6">
@@ -70,7 +93,7 @@ export default function OpsEventsPage() {
       </div>
 
       <div className="card bg-base-100 shadow">
-        <div className="card-body gap-4">
+        <div className="card-body gap-4 p-4 sm:p-6">
           <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
             <fieldset className="fieldset">
               <legend className="fieldset-legend">Category</legend>
@@ -102,6 +125,22 @@ export default function OpsEventsPage() {
                 ))}
               </div>
             </fieldset>
+            <fieldset className="fieldset w-full lg:w-56">
+              <legend className="fieldset-legend">Date range</legend>
+              <select
+                className="select w-full"
+                value={dateRange}
+                onChange={(e) =>
+                  setDateRange(e.target.value as EventDateRangeFilter)
+                }
+              >
+                {DATE_RANGE_OPTIONS.map((option) => (
+                  <option key={option.value} value={option.value}>
+                    {option.label}
+                  </option>
+                ))}
+              </select>
+            </fieldset>
           </div>
           <label className="input w-full">
             <span className="label">Search</span>
@@ -126,8 +165,8 @@ export default function OpsEventsPage() {
               Pending
             </li>
             <li className="flex items-center gap-2">
-              <span className="status status-info" />
-              Upcoming
+              <span className="status status-error" />
+              Cancelled
             </li>
             <li className="flex items-center gap-2">
               <span className="status status-success" />
@@ -187,7 +226,7 @@ export default function OpsEventsPage() {
                   </th>
                 </tr>
               </thead>
-              {grouped.map((group) => (
+              {visibleGroups.map((group) => (
                 <tbody key={group.heading}>
                   <tr>
                     <th colSpan={9} className="bg-base-200 font-semibold">
@@ -243,18 +282,25 @@ export default function OpsEventsPage() {
             </table>
           </div>
         </div>
-        <div className="space-y-4 md:hidden">
-          {grouped.map((group) => (
+        <div className="space-y-3 md:hidden">
+          {visibleGroups.map((group) => (
             <section key={group.heading} className="space-y-2">
-              <h2 className="text-lg font-medium">{group.heading}</h2>
-              <ul className="list rounded-box bg-base-100 shadow">
+              <h2 className="text-base font-semibold">{group.heading}</h2>
+              <div className="grid gap-2">
                 {group.events.map((event) => (
                   <EventMobileRow key={String(event.id)} event={event} />
                 ))}
-              </ul>
+              </div>
             </section>
           ))}
         </div>
+        {pageCount > 1 ? (
+          <EventsPagination
+            page={currentPage}
+            pageCount={pageCount}
+            onPage={setPage}
+          />
+        ) : null}
         </>
       )}
     </div>
@@ -266,28 +312,53 @@ function EventMobileRow({ event }: { event: OpsEventSummary }) {
   const viewPath = `${ROUTES.opsEvents}/${event.id}`
 
   return (
-    <li
+    <article
       role="link"
       tabIndex={0}
       aria-label={`View ${event.display_name}`}
-      className={`list-row cursor-pointer ${rowTone(event.event_category)}`}
+      className={`card card-sm min-w-0 cursor-pointer overflow-hidden shadow-sm ${rowTone(event.event_category)}`}
       onClick={() => navigate(viewPath)}
       onKeyDown={(e) => onRowKey(e, () => navigate(viewPath))}
     >
-      <StatusDot status={event.event_status} />
-      <div className="list-col-grow">
-        <div className="font-medium">{event.display_name}</div>
-        <div className="text-sm text-base-content/70">{eventTypeLabel(event.event_type)}</div>
-        <div className="text-sm text-base-content/70">
-          Event {formatEventDate(event.event_date)}
+      <div className="card-body min-w-0 gap-2 p-3">
+        <div className="flex min-w-0 items-start gap-2">
+          <div className="min-w-0 flex-1">
+            <h3 className="truncate font-medium leading-tight">{event.display_name}</h3>
+            <p className="text-xs text-base-content/70">{eventTypeLabel(event.event_type)}</p>
+          </div>
+          <EditEventButton id={event.id} name={event.display_name} />
         </div>
-        <div className="text-sm text-base-content/70">
-          Booked {formatBookingDate(event.created_at)}
-        </div>
-        <div className="text-sm font-medium">{formatMoney(event.price)}</div>
+        <span
+          className={`badge badge-sm w-fit ${
+            event.event_status === 'pending'
+              ? 'badge-warning'
+              : event.event_status === 'cancelled'
+                ? 'badge-error'
+                : 'badge-success'
+          }`}
+        >
+          {statusLabel(event.event_status)}
+        </span>
+        <dl className="grid grid-cols-2 gap-x-3 gap-y-1 text-sm">
+          <div>
+            <dt className="text-xs text-base-content/50">Event</dt>
+            <dd>{formatEventDate(event.event_date)}</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-base-content/50">Booked</dt>
+            <dd>{formatBookingDate(event.created_at)}</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-base-content/50">Price</dt>
+            <dd className="font-medium">{formatMoney(event.price)}</dd>
+          </div>
+          <div>
+            <dt className="text-xs text-base-content/50">People</dt>
+            <dd>{event.participant_count}</dd>
+          </div>
+        </dl>
       </div>
-      <EditEventButton id={event.id} name={event.display_name} />
-    </li>
+    </article>
   )
 }
 
@@ -305,7 +376,7 @@ function EditEventButton({
   return (
     <Link
       to={`${ROUTES.opsEvents}/${id}?edit=1`}
-      className="btn btn-ghost btn-square btn-sm"
+      className="btn btn-ghost btn-square btn-sm shrink-0"
       aria-label={`Edit ${name}`}
       onClick={stopRow}
     >
@@ -356,8 +427,8 @@ function StatusDot({ status }: { status: OpsEventSummary['event_status'] }) {
   const color =
     status === 'pending'
       ? 'status-warning'
-      : status === 'upcoming'
-        ? 'status-info'
+      : status === 'cancelled'
+        ? 'status-error'
         : 'status-success'
   const label = statusLabel(status)
   return (
@@ -389,9 +460,70 @@ const categoryOptions: { value: EventCategoryFilter; label: string }[] = [
 const statusOptions: { value: EventStatusFilter; label: string }[] = [
   { value: 'all', label: 'All' },
   { value: 'pending', label: 'Pending' },
-  { value: 'upcoming', label: 'Upcoming' },
+  { value: 'cancelled', label: 'Cancelled' },
   { value: 'completed', label: 'Completed' },
 ]
+
+const PAGE_SIZE = 20
+
+type MonthGroup = { heading: string; events: OpsEventSummary[] }
+
+function paginateMonthGroups(groups: MonthGroup[], pageSize: number): MonthGroup[][] {
+  const pages: MonthGroup[][] = []
+  let current: MonthGroup[] = []
+  let count = 0
+  for (const group of groups) {
+    const size = group.events.length
+    if (current.length > 0 && count + size > pageSize) {
+      pages.push(current)
+      current = []
+      count = 0
+    }
+    current.push(group)
+    count += size
+  }
+  if (current.length > 0) pages.push(current)
+  return pages
+}
+
+function EventsPagination({
+  page,
+  pageCount,
+  onPage,
+}: {
+  page: number
+  pageCount: number
+  onPage: (page: number) => void
+}) {
+  return (
+    <div className="flex flex-wrap items-center justify-between gap-3">
+      <p className="text-sm text-base-content/70">
+        Page {page} of {pageCount}
+      </p>
+      <div className="join">
+        <button
+          type="button"
+          className="btn join-item"
+          disabled={page <= 1}
+          onClick={() => onPage(page - 1)}
+        >
+          Prev
+        </button>
+        <button type="button" className="btn join-item btn-active">
+          {page}
+        </button>
+        <button
+          type="button"
+          className="btn join-item"
+          disabled={page >= pageCount}
+          onClick={() => onPage(page + 1)}
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  )
+}
 
 function groupByMonth(events: OpsEventSummary[]) {
   const groups: { heading: string; events: OpsEventSummary[] }[] = []

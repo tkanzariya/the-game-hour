@@ -1,7 +1,9 @@
+import { useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import { cn } from '@/utils/cn'
 import { getBookingLabel, getDefaultBookingUrl, isExternalBookingUrl } from '@/lib/content/booking'
 import { getContactInfo } from '@/lib/content/company'
+import { ROUTES } from '@/constants/routes'
 import { FEATURE_FLAGS } from '@/utils/constants'
 
 type FloatingActionsProps = {
@@ -12,6 +14,10 @@ const fabIconClass =
   'flex h-12 w-12 shrink-0 items-center justify-center rounded-full text-on-accent shadow-fab transition-brand focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-secondary'
 
 export default function FloatingActions({ preview = false }: FloatingActionsProps) {
+  const location = useLocation()
+  const onBookingPage =
+    location.pathname === ROUTES.bookSocial || location.pathname === ROUTES.bookCorporate
+
   if (!preview && !FEATURE_FLAGS.floatingCta) return null
 
   const contact = getContactInfo()
@@ -27,6 +33,7 @@ export default function FloatingActions({ preview = false }: FloatingActionsProp
       className="fixed right-3 bottom-3 z-40 flex flex-col items-end gap-2.5 sm:right-4 sm:bottom-4 md:gap-3"
       aria-label="Quick contact actions"
     >
+      {!onBookingPage ? (
       <motion.a
         whileHover={{ scale: 1.02, y: -1 }}
         whileTap={{ scale: 0.98, y: 0 }}
@@ -44,6 +51,7 @@ export default function FloatingActions({ preview = false }: FloatingActionsProp
         </span>
         <span className="whitespace-nowrap">{bookLabel}</span>
       </motion.a>
+      ) : null}
 
       <div className="flex gap-2.5">
         {(preview || FEATURE_FLAGS.whatsappButton) && (

@@ -29,73 +29,58 @@ export function BookingPaymentStep({
   const canSubmit = Boolean(screenshot) && !submitting
 
   return (
-    <div className="flex flex-col gap-6">
-      <div role="alert" className="alert alert-warning alert-soft">
-        <span>
+    <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
+      <div role="alert" className="alert alert-warning">
+        <span className="min-w-0 text-sm leading-relaxed sm:text-base">
           <strong>Your booking is not saved yet.</strong> {payment.screenshotRequired}
         </span>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
-        <section className="card bg-primary text-primary-content shadow-lg">
-          <div className="card-body items-center text-center">
-            <h2 className="card-title font-heading">{payment.title}</h2>
-            <p className="text-sm opacity-90">{payment.intro}</p>
+      <div className="grid min-w-0 gap-5 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)] lg:gap-6">
+        <section className="card min-w-0 overflow-hidden bg-primary text-primary-content shadow-lg">
+          <div className="card-body min-w-0 items-center gap-3 p-4 text-center sm:p-6">
+            <h2 className="card-title font-heading text-lg sm:text-xl">{payment.title}</h2>
+            <p className="text-sm leading-relaxed opacity-90">{payment.intro}</p>
             <img
               src={upiQrUrl}
               alt={`UPI QR code for ${payment.upiId}`}
               width={220}
               height={220}
-              className="rounded-box bg-base-100 p-2"
+              className="rounded-box h-auto w-full max-w-[220px] bg-base-100 p-2"
             />
-            <p className="text-sm">
+            <p className="w-full min-w-0 text-sm break-all">
               UPI ID:{' '}
               <span className="font-heading font-semibold select-all">
                 {payment.upiId}
               </span>
             </p>
-            <div className="divider text-xs uppercase">Or bank transfer</div>
-            <dl className="w-full space-y-1 text-left text-sm">
-              <div className="flex justify-between gap-3">
-                <dt className="opacity-70">Bank</dt>
-                <dd className="font-semibold">{payment.bank.name}</dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt className="opacity-70">Name</dt>
-                <dd className="font-semibold">{payment.bank.accountName}</dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt className="opacity-70">Account</dt>
-                <dd className="font-semibold select-all">
-                  {payment.bank.accountNumber}
-                </dd>
-              </div>
-              <div className="flex justify-between gap-3">
-                <dt className="opacity-70">IFSC</dt>
-                <dd className="font-semibold select-all">{payment.bank.ifsc}</dd>
-              </div>
+            <div className="divider my-1 w-full text-xs uppercase">Or bank transfer</div>
+            <dl className="w-full min-w-0 space-y-3 text-left text-sm">
+              <BankRow label="Bank" value={payment.bank.name} />
+              <BankRow label="Name" value={payment.bank.accountName} />
+              <BankRow label="Account" value={payment.bank.accountNumber} selectAll />
+              <BankRow label="IFSC" value={payment.bank.ifsc} selectAll />
             </dl>
           </div>
         </section>
 
-        <div className="flex flex-col gap-5">
-          <section className="card card-border bg-base-100">
-            <div className="card-body">
+        <div className="flex min-w-0 flex-col gap-5">
+          <section className="card card-border min-w-0 overflow-hidden bg-base-100">
+            <div className="card-body min-w-0 gap-4 p-4 sm:p-6">
               <h3 className="card-title font-heading text-lg">How to pay</h3>
-              <ul className="steps steps-vertical">
+              <ol className="space-y-3">
                 {payment.steps.map((item, i) => (
-                  <li
-                    key={item.title}
-                    className="step step-primary"
-                    data-content={String(i + 1)}
-                  >
-                    <span className="text-left">
+                  <li key={item.title} className="flex min-w-0 items-start gap-3">
+                    <span className="bg-primary text-primary-content mt-0.5 flex size-7 shrink-0 items-center justify-center rounded-full text-sm font-bold">
+                      {i + 1}
+                    </span>
+                    <span className="min-w-0 text-sm leading-relaxed">
                       <strong>{item.title}:</strong> {item.body}
                     </span>
                   </li>
                 ))}
-              </ul>
-              <p className="text-sm opacity-70">
+              </ol>
+              <p className="text-sm leading-relaxed">
                 {payment.help.split('+91')[0]}
                 <a
                   href={`tel:${payment.helpPhone}`}
@@ -107,8 +92,8 @@ export function BookingPaymentStep({
             </div>
           </section>
 
-          <section className="card card-border bg-base-100">
-            <div className="card-body">
+          <section className="card card-border min-w-0 overflow-hidden bg-base-100">
+            <div className="card-body min-w-0 p-4 sm:p-6">
               <FileDropzone
                 id="payment_screenshot"
                 label="Payment screenshot"
@@ -123,7 +108,7 @@ export function BookingPaymentStep({
       </div>
 
       {submitError ? (
-        <div role="alert" className="alert alert-error alert-soft">
+        <div role="alert" className="alert alert-error">
           <span>{submitError}</span>
         </div>
       ) : null}
@@ -156,6 +141,25 @@ export function BookingPaymentStep({
           {submitting ? 'Submitting…' : 'Submit booking'}
         </Button>
       </div>
+    </div>
+  )
+}
+
+function BankRow({
+  label,
+  value,
+  selectAll,
+}: {
+  label: string
+  value: string
+  selectAll?: boolean
+}) {
+  return (
+    <div className="min-w-0">
+      <dt className="text-xs tracking-wide uppercase opacity-80">{label}</dt>
+      <dd className={`mt-0.5 font-semibold break-words ${selectAll ? 'select-all' : ''}`}>
+        {value}
+      </dd>
     </div>
   )
 }

@@ -4,7 +4,7 @@
 CREATE TABLE IF NOT EXISTS events (
   id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   event_category ENUM('social', 'corporate') NOT NULL,
-  event_status ENUM('pending', 'upcoming', 'completed') NOT NULL DEFAULT 'pending',
+  event_status ENUM('pending', 'cancelled', 'completed') NOT NULL DEFAULT 'pending',
   email VARCHAR(255) NOT NULL,
   contact_name VARCHAR(255) NOT NULL DEFAULT '',
   phone VARCHAR(20) NOT NULL DEFAULT '',

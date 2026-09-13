@@ -61,7 +61,7 @@ export function eventTypeLabel(value: string | null | undefined): string {
 
 export function statusLabel(status: OpsEventSummary['event_status']): string {
   if (status === 'pending') return 'Pending'
-  if (status === 'upcoming') return 'Upcoming'
+  if (status === 'cancelled') return 'Cancelled'
   return 'Completed'
 }
 

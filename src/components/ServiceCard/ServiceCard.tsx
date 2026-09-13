@@ -107,9 +107,9 @@ export default function ServiceCard({
       <div
         className={cn(
           isClay && isShowcase
-            ? 'image-frame m-3 mb-0 aspect-[16/10]'
+            ? 'image-frame m-3 mb-0 aspect-[16/10] sm:m-3'
             : isClay
-              ? 'image-frame m-4 mb-0 aspect-[5/4]'
+              ? 'image-frame m-3 mb-0 aspect-[5/4] sm:m-4'
               : 'relative aspect-4/3 overflow-hidden bg-surface-muted',
         )}
       >
@@ -135,9 +135,9 @@ export default function ServiceCard({
         className={cn(
           'flex flex-col',
           isClay && isShowcase
-            ? 'p-5 pt-4 md:p-6 md:pt-5'
+            ? 'p-4 pt-3 md:p-6 md:pt-5'
             : isClay
-              ? 'flex-1 p-6 pt-5 md:p-7 md:pt-6'
+              ? 'flex-1 p-4 pt-4 md:p-7 md:pt-6'
               : 'flex-1 p-6 text-center',
         )}
       >

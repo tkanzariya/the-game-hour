@@ -44,6 +44,18 @@ function cms_ops_read_json_body(): array
     return is_array($data) ? $data : [];
 }
 
+function cms_ops_canonical_event_status($raw): string
+{
+    $value = (string) $raw;
+    if ($value === 'upcoming' || $value === 'cancelled') {
+        return 'cancelled';
+    }
+    if ($value === 'completed') {
+        return 'completed';
+    }
+    return 'pending';
+}
+
 function cms_ops_display_name(array $row): string
 {
     $company = trim((string) ($row['company_name'] ?? ''));
@@ -70,7 +82,7 @@ function cms_ops_serialize_event(array $row, array $games = [], array $team = []
         'id' => $row['id'],
         'display_name' => cms_ops_display_name($row),
         'event_category' => (string) ($row['event_category'] ?? ''),
-        'event_status' => (string) ($row['event_status'] ?? 'pending'),
+        'event_status' => cms_ops_canonical_event_status($row['event_status'] ?? 'pending'),
         'email' => (string) ($row['email'] ?? ''),
         'contact_name' => (string) ($row['contact_name'] ?? ''),
         'phone' => (string) ($row['phone'] ?? ''),
@@ -116,8 +128,22 @@ function cms_ops_money($value): ?float
     return round((float) $value, 2);
 }
 
+function cms_ops_ymd_param($raw): string
+{
+    $value = trim((string) $raw);
+    if (preg_match('/^\d{4}-\d{2}-\d{2}$/', $value)) {
+        return $value;
+    }
+    return '';
+}
+
+function cms_ops_event_date_key($raw): string
+{
+    return substr((string) $raw, 0, 10);
+}
+
 /**
- * @param array{category?: string, status?: string, q?: string} $filters
+ * @param array{category?: string, status?: string, q?: string, from?: string, to?: string} $filters
  * @return list<array<string, mixed>>
  */
 function cms_ops_list_events(array $filters): array
@@ -138,7 +164,9 @@ function cms_ops_list_events(array $filters): array
         $params['category'] = $category;
     }
     $status = trim((string) ($filters['status'] ?? ''));
-    if (in_array($status, ['pending', 'upcoming', 'completed'], true)) {
+    if ($status === 'cancelled' || $status === 'upcoming') {
+        $sql .= " AND event_status IN ('cancelled', 'upcoming')";
+    } elseif (in_array($status, ['pending', 'completed'], true)) {
         $sql .= ' AND event_status = :status';
         $params['status'] = $status;
     }
@@ -149,6 +177,16 @@ function cms_ops_list_events(array $filters): array
             OR birthday_person_name LIKE :q OR phone LIKE :q OR email LIKE :q
         )';
         $params['q'] = '%' . $q . '%';
+    }
+    $from = cms_ops_ymd_param($filters['from'] ?? '');
+    if ($from !== '') {
+        $sql .= ' AND event_date >= :from_date';
+        $params['from_date'] = $from;
+    }
+    $to = cms_ops_ymd_param($filters['to'] ?? '');
+    if ($to !== '') {
+        $sql .= ' AND event_date <= :to_date';
+        $params['to_date'] = $to;
     }
     $sql .= ' ORDER BY event_date DESC, event_time DESC, id DESC';
     $stmt = cms_db()->prepare($sql);
@@ -394,7 +432,7 @@ function cms_ops_normalize_patch_value(string $kind, $raw)
 {
     if ($kind === 'status') {
         $value = (string) $raw;
-        if (!in_array($value, ['pending', 'upcoming', 'completed'], true)) {
+        if (!in_array($value, ['pending', 'cancelled', 'completed'], true)) {
             return new RuntimeException('Invalid event status.');
         }
         return $value;
@@ -669,7 +707,7 @@ function cms_ops_json_save_bundle(array $data): void
 }
 
 /**
- * @param array{category?: string, status?: string, q?: string} $filters
+ * @param array{category?: string, status?: string, q?: string, from?: string, to?: string} $filters
  * @return list<array<string, mixed>>
  */
 function cms_ops_list_events_json(array $filters): array
@@ -685,7 +723,10 @@ function cms_ops_list_events_json(array $filters): array
             continue;
         }
         $status = trim((string) ($filters['status'] ?? ''));
-        if (in_array($status, ['pending', 'upcoming', 'completed'], true) && ($row['event_status'] ?? '') !== $status) {
+        if (
+            in_array($status, ['pending', 'cancelled', 'completed', 'upcoming'], true)
+            && cms_ops_canonical_event_status($row['event_status'] ?? '') !== cms_ops_canonical_event_status($status)
+        ) {
             continue;
         }
         $q = strtolower(trim((string) ($filters['q'] ?? '')));
@@ -700,6 +741,15 @@ function cms_ops_list_events_json(array $filters): array
             if (!str_contains($hay, $q)) {
                 continue;
             }
+        }
+        $from = cms_ops_ymd_param($filters['from'] ?? '');
+        $to = cms_ops_ymd_param($filters['to'] ?? '');
+        $eventDate = cms_ops_event_date_key($row['event_date'] ?? '');
+        if ($from !== '' && ($eventDate === '' || $eventDate < $from)) {
+            continue;
+        }
+        if ($to !== '' && ($eventDate === '' || $eventDate > $to)) {
+            continue;
         }
         $out[] = cms_ops_serialize_event($row);
     }

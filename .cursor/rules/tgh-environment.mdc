@@ -12,3 +12,5 @@ alwaysApply: true
 - Never commit `cms/config.local.php`, `.env`, passwords, bcrypt hashes, or PII SQL under `cms/dev-data/`.
 - Public Book CTAs stay on same-origin `/book/social` and `/book/corporate`. Do not point them back at Bubble.
 - Ops is `noindex`. `robots.txt` disallows `/ops`, `/admin`, `/cms`.
+- Ops SPA must redirect to `/ops/login` when the session is gone (poll `me.php`; `401`/`419` on events APIs). Do not leave a logged-out workspace on screen.
+- Event status ENUM is `pending`/`cancelled`/`completed`. `cms_ops_migrate_cancelled_status()` maps leftover `upcoming` rows. Do not reintroduce `upcoming`.

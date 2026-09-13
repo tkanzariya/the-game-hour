@@ -103,7 +103,7 @@ export default function BookingPage({ category }: BookingPageProps) {
       />
 
       <Section tone="default" padding="sm" profile="marketing">
-        <div className="mx-auto max-w-3xl">
+        <div className="mx-auto w-full min-w-0 max-w-3xl overflow-x-clip pb-24 sm:pb-8">
           {bookingId !== null ? (
             <BookingSuccess bookingId={bookingId} category={category} />
           ) : (

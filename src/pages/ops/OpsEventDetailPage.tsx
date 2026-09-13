@@ -12,6 +12,7 @@ import { SearchMultiSelect } from '@/components/ops/SearchMultiSelect'
 import { getBookingFormContent } from '@/lib/booking/api'
 import { deleteEvent, fetchEvent, fetchGames, fetchTeam, updateEvent } from '@/lib/ops/api'
 import { useOpsAuth } from '@/lib/ops/auth'
+import { useOpsToast } from '@/lib/ops/toast'
 import {
   ageGroupLabel,
   categoryLabel,
@@ -101,8 +102,8 @@ export default function OpsEventDetailPage() {
               className={`badge ${
                 event.event_status === 'pending'
                   ? 'badge-warning'
-                  : event.event_status === 'upcoming'
-                    ? 'badge-info'
+                  : event.event_status === 'cancelled'
+                    ? 'badge-error'
                     : 'badge-success'
               }`}
             >
@@ -171,6 +172,7 @@ function DeleteEventDialog({
   onClose: () => void
 }) {
   const navigate = useNavigate()
+  const { notify } = useOpsToast()
   const dialogRef = useRef<HTMLDialogElement>(null)
   const [confirmText, setConfirmText] = useState('')
   const [deleting, setDeleting] = useState(false)
@@ -200,6 +202,7 @@ function DeleteEventDialog({
       return
     }
     onClose()
+    notify('Event deleted')
     navigate(ROUTES.opsEvents)
   }
 
@@ -445,6 +448,7 @@ function EventEditForm({
   onSaved: (event: OpsEventDetail) => void
 }) {
   const content = getBookingFormContent()
+  const { notify } = useOpsToast()
   const [status, setStatus] = useState(event.event_status)
   const [venueName, setVenueName] = useState(event.venue_name ?? '')
   const [eventDate, setEventDate] = useState(event.event_date)
@@ -507,6 +511,7 @@ function EventEditForm({
       return
     }
     onSaved(result.event)
+    notify('Event details saved')
   }
 
   return (
@@ -526,7 +531,7 @@ function EventEditForm({
               label="Status"
               options={[
                 { value: 'pending', label: 'Pending' },
-                { value: 'upcoming', label: 'Upcoming' },
+                { value: 'cancelled', label: 'Cancelled' },
                 { value: 'completed', label: 'Completed' },
               ]}
               value={status}
@@ -619,7 +624,7 @@ function EventEditForm({
             <TextField
               id="instagram_handle"
               label="Instagram"
-              placeholder="@handle"
+              placeholder={content.placeholders.instagram}
               value={instagram}
               onChange={(e) => setInstagram(e.target.value)}
             />
@@ -662,6 +667,7 @@ function EventEditForm({
               id="price"
               label="Event price"
               inputMode="decimal"
+              placeholder={content.placeholders.price}
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
@@ -669,6 +675,7 @@ function EventEditForm({
               id="event_expenses"
               label="Expenses"
               inputMode="decimal"
+              placeholder={content.placeholders.expenses}
               value={expenses}
               onChange={(e) => setExpenses(e.target.value)}
             />
@@ -691,6 +698,7 @@ function EventEditForm({
                   id="advance_amount"
                   label="Advance amount"
                   inputMode="decimal"
+                  placeholder={content.placeholders.advanceAmount}
                   value={advanceAmount}
                   onChange={(e) => setAdvanceAmount(e.target.value)}
                 />
@@ -717,6 +725,7 @@ function EventEditForm({
                       id="full_payment_amount"
                       label="Full payment amount"
                       inputMode="decimal"
+                      placeholder={content.placeholders.fullPaymentAmount}
                       value={finalAmount}
                       onChange={(e) => setFinalAmount(e.target.value)}
                     />

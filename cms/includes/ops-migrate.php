@@ -53,6 +53,7 @@ function cms_ops_migrate_if_needed(): void
             $pdo->exec($statement);
         }
         cms_ops_add_event_columns();
+        cms_ops_migrate_cancelled_status();
         cms_ops_add_bubble_id_columns();
         cms_ops_seed_admin_from_config();
         if (!cms_ops_tables_exist()) {
@@ -101,6 +102,32 @@ function cms_ops_add_event_columns(): void
     if (!cms_ops_column_exists('events', 'added_to_calendar')) {
         $pdo->exec('ALTER TABLE events ADD COLUMN added_to_calendar TINYINT(1) NOT NULL DEFAULT 0');
     }
+}
+
+function cms_ops_migrate_cancelled_status(): void
+{
+    if (!cms_events_table_exists()) {
+        return;
+    }
+    $pdo = cms_db();
+    $stmt = $pdo->query("SHOW COLUMNS FROM events LIKE 'event_status'");
+    $column = $stmt ? $stmt->fetch() : false;
+    if (!is_array($column)) {
+        return;
+    }
+    $type = strtolower((string) ($column['Type'] ?? ''));
+    if (strpos($type, 'cancelled') !== false && strpos($type, 'upcoming') === false) {
+        return;
+    }
+    if (strpos($type, 'cancelled') === false) {
+        $pdo->exec(
+            "ALTER TABLE events MODIFY event_status ENUM('pending','upcoming','cancelled','completed') NOT NULL DEFAULT 'pending'",
+        );
+    }
+    $pdo->exec("UPDATE events SET event_status = 'cancelled' WHERE event_status = 'upcoming'");
+    $pdo->exec(
+        "ALTER TABLE events MODIFY event_status ENUM('pending','cancelled','completed') NOT NULL DEFAULT 'pending'",
+    );
 }
 
 function cms_ops_add_unique_if_missing(string $table, string $indexName, string $column): void

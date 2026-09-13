@@ -59,7 +59,7 @@ export default function OpsLayout() {
   }
 
   return (
-    <div className="min-h-svh bg-base-200">
+    <div className="min-h-svh overflow-x-clip bg-base-200">
       <Seo {...seo} />
       <OpsNav
         name={user.name}
@@ -70,7 +70,7 @@ export default function OpsLayout() {
           navigate(ROUTES.opsLogin)
         }}
       />
-      <main className="mx-auto max-w-6xl px-4 py-6">
+      <main className="mx-auto w-full min-w-0 max-w-6xl px-3 py-4 sm:px-4 sm:py-6">
         <Outlet />
       </main>
     </div>

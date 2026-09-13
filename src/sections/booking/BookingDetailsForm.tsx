@@ -63,7 +63,7 @@ export function BookingDetailsForm({
       noValidate
     >
       <section className="card card-border bg-base-100">
-        <div className="card-body gap-4">
+        <div className="card-body gap-4 p-4 sm:p-6">
           <h2 className="card-title font-heading text-lg">Your details</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <TextField
@@ -174,7 +174,7 @@ export function BookingDetailsForm({
       </section>
 
       <section className="card card-border bg-base-100">
-        <div className="card-body gap-4">
+        <div className="card-body gap-4 p-4 sm:p-6">
           <h2 className="card-title font-heading text-lg">Event</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             {category === 'social' ? (
@@ -252,7 +252,7 @@ export function BookingDetailsForm({
       </section>
 
       <section className="card card-border bg-base-100">
-        <div className="card-body gap-4">
+        <div className="card-body gap-4 p-4 sm:p-6">
           <h2 className="card-title font-heading text-lg">Venue & extras</h2>
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="sm:col-span-2">
@@ -314,10 +314,10 @@ export function BookingDetailsForm({
       </section>
 
       <section className="card card-border bg-base-100">
-        <div className="card-body gap-4">
+        <div className="card-body gap-4 p-4 sm:p-6">
           <h2 className="card-title font-heading text-lg">Terms</h2>
-          <div role="note" className="alert alert-soft alert-warning">
-            <ol className="list-decimal space-y-1.5 pl-4 text-sm">
+          <div role="note" className="alert alert-warning">
+            <ol className="list-decimal space-y-2 pl-5 text-sm font-medium leading-relaxed text-warning-content">
               {content.terms.map((t) => (
                 <li key={t}>{t}</li>
               ))}

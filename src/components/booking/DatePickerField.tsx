@@ -101,7 +101,7 @@ export function DatePickerField({
           <div
             role="dialog"
             aria-label="Choose date"
-            className="card card-border bg-base-100 absolute z-30 mt-2 w-full min-w-[17rem] p-3 shadow-lg"
+            className="card card-border bg-base-100 absolute z-30 mt-2 w-full min-w-0 p-3 shadow-lg sm:min-w-[17rem]"
           >
             <div className="mb-2 flex items-center justify-between gap-2">
               <button

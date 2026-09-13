@@ -34,7 +34,7 @@ export function FileDropzone({
     <FieldShell id={id} label={label} required={required} error={error}>
       <div
         className={cn(
-          'rounded-box border-2 border-dashed p-5',
+          'rounded-box min-w-0 overflow-hidden border-2 border-dashed p-4',
           dragging ? 'border-secondary bg-base-200' : 'border-base-300 bg-base-200/50',
           error && 'border-error',
           file && !error && 'border-success',
@@ -55,13 +55,20 @@ export function FileDropzone({
           id={id}
           type="file"
           accept={accept}
-          className="file-input w-full"
+          className="sr-only"
           onChange={(e) => pick(e.target.files)}
         />
-        <p className="label mt-2">
+        <button
+          type="button"
+          className="btn btn-block"
+          onClick={() => inputRef.current?.click()}
+        >
+          {file ? 'Replace file' : 'Choose file'}
+        </button>
+        <p className="mt-2 text-sm leading-snug break-words text-base-content/70">
           {file
             ? `${file.name} · ${(file.size / 1024).toFixed(0)} KB`
-            : 'JPG, PNG, or WEBP — drag onto this box or choose a file'}
+            : 'JPG, PNG, or WEBP. Tap Choose file or drop an image here.'}
         </p>
       </div>
       {file ? (

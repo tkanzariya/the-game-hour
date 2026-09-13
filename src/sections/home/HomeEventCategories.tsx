@@ -18,7 +18,7 @@ export default function HomeEventCategories() {
       />
       <Reveal
         staggerChildren
-        className="grid gap-9 sm:grid-cols-2 sm:gap-10 lg:gap-11 xl:grid-cols-3 xl:gap-12"
+        className="grid gap-5 sm:grid-cols-2 sm:gap-10 lg:gap-11 xl:grid-cols-3 xl:gap-12"
       >
         {services.map((service) => {
           const slug = service.slug as ServiceSlug

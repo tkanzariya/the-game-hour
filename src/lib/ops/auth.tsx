@@ -27,17 +27,40 @@ export function OpsAuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     let cancelled = false
+    const applySession = (session: Awaited<ReturnType<typeof fetchSession>>) => {
+      if (cancelled) return
+      setUser(session.user)
+      setCsrf(session.csrf)
+    }
+
     fetchSession()
-      .then((session) => {
-        if (cancelled) return
-        setUser(session.user)
-        setCsrf(session.csrf)
-      })
+      .then(applySession)
       .finally(() => {
         if (!cancelled) setLoading(false)
       })
+
+    const refresh = () => {
+      if (document.visibilityState === 'hidden') return
+      void fetchSession().then(applySession)
+    }
+
+    const onExpired = () => {
+      if (cancelled) return
+      setUser(null)
+      setCsrf('')
+    }
+
+    const interval = window.setInterval(refresh, 20000)
+    window.addEventListener('focus', refresh)
+    document.addEventListener('visibilitychange', refresh)
+    window.addEventListener('ops:session-expired', onExpired)
+
     return () => {
       cancelled = true
+      window.clearInterval(interval)
+      window.removeEventListener('focus', refresh)
+      document.removeEventListener('visibilitychange', refresh)
+      window.removeEventListener('ops:session-expired', onExpired)
     }
   }, [])
 

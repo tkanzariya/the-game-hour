@@ -68,7 +68,7 @@ export default function PageHero({
         {subtitle && (
           <p
             className={cn(
-              'mt-4 max-w-2xl font-body text-lg text-white/92 md:text-xl lg:max-w-3xl',
+              'mt-4 max-w-2xl font-body text-base leading-relaxed text-white/92 md:text-xl lg:max-w-3xl',
               align === 'center' && 'mx-auto',
             )}
           >

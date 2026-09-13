@@ -8,13 +8,14 @@ export type OpsUser = {
 }
 
 export type EventCategoryFilter = 'all' | 'social' | 'corporate'
-export type EventStatusFilter = 'all' | 'pending' | 'upcoming' | 'completed'
+export type EventStatusFilter = 'all' | 'pending' | 'cancelled' | 'completed'
+export type EventDateRangeFilter = import('./dateRange').EventDateRangeFilter
 
 export type OpsEventSummary = {
   id: number | string
   display_name: string
   event_category: 'social' | 'corporate'
-  event_status: 'pending' | 'upcoming' | 'completed'
+  event_status: 'pending' | 'cancelled' | 'completed'
   email: string
   contact_name: string
   phone: string

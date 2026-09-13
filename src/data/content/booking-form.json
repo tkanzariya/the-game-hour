@@ -32,8 +32,7 @@
     "Booking will be confirmed after the Payment.",
     "Rest of the 50% will be collected after the Event.",
     "If Booking is cancelled from your side, no refunds will be provided.",
-    "The Game Hour will bring all the game equipment needed.",
-    "Our activities will continue for straight 90 mins."
+    "The Game Hour will bring all the game equipment needed."
   ],
   "eventTypes": [
     { "value": "birthday", "label": "Birthday" },
@@ -80,6 +79,11 @@
     "participants": "Enter number of participants",
     "venue": "Enter venue / location of event",
     "referral": "Choose how you heard about us",
-    "specialRequirements": "Enter any special requirements. Extra charges may apply."
+    "specialRequirements": "Enter any special requirements. Extra charges may apply.",
+    "price": "Enter event price in ₹",
+    "expenses": "Enter expenses in ₹",
+    "advanceAmount": "Enter advance amount in ₹",
+    "fullPaymentAmount": "Enter full payment amount in ₹",
+    "instagram": "Enter Instagram handle"
   }
 }

@@ -204,11 +204,13 @@ function cms_bubble_map_position(string $raw): string
 function cms_bubble_map_status(string $raw): string
 {
     $v = strtolower(trim($raw));
-    return match ($v) {
-        'completed', 'complete', 'done' => 'completed',
-        'upcoming', 'confirmed', 'scheduled' => 'upcoming',
-        default => 'pending',
-    };
+    if (in_array($v, ['completed', 'complete', 'done'], true)) {
+        return 'completed';
+    }
+    if (in_array($v, ['cancelled', 'canceled'], true)) {
+        return 'cancelled';
+    }
+    return 'pending';
 }
 
 function cms_bubble_map_category(string $raw): string

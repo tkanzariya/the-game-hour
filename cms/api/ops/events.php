@@ -45,6 +45,8 @@ if ($method === 'GET') {
             'category' => (string) ($_GET['category'] ?? ''),
             'status' => (string) ($_GET['status'] ?? ''),
             'q' => (string) ($_GET['q'] ?? ''),
+            'from' => (string) ($_GET['from'] ?? ''),
+            'to' => (string) ($_GET['to'] ?? ''),
         ]);
         cms_json_response(['ok' => true, 'events' => $events]);
     } catch (Throwable $e) {
