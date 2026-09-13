@@ -107,9 +107,6 @@ export async function fetchEvents(filters: {
   } catch {
     data = {}
   }
-  // #region agent log
-  fetch('http://127.0.0.1:7314/ingest/bc48680f-cb31-4c2c-b170-30d2bd81067b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8016b3'},body:JSON.stringify({sessionId:'8016b3',runId:'post-fix',hypothesisId:'A',location:'src/lib/ops/api.ts:fetchEvents',message:'events API response',data:{status:res.status,ok:res.ok,contentType:res.headers.get('content-type'),rawLen:raw.length,parseOk:Object.keys(data).length>0,dataOk:data.ok??null,error:typeof data.error==='string'?data.error.slice(0,180):null,debug:data.debug??null,bodyStart:raw.slice(0,120),filterStatus:filters.status,eventCount:Array.isArray(data.events)?data.events.length:0},timestamp:Date.now()})}).catch(()=>{});
-  // #endregion
   if (!res.ok || !data.ok) {
     return {
       ok: false,
@@ -151,6 +148,24 @@ export async function updateEvent(
     return { ok: false, error: String(data.error ?? 'Could not save event.') }
   }
   return { ok: true, event: data.event as OpsEventDetail }
+}
+
+export async function deleteEvent(
+  id: string,
+  csrf: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const res = await fetch(`${EVENTS_URL}?id=${encodeURIComponent(id)}`, {
+    method: 'DELETE',
+    credentials: 'include',
+    headers: {
+      'X-CSRF-Token': csrf,
+    },
+  })
+  const data = await readJson(res)
+  if (!res.ok || !data.ok) {
+    return { ok: false, error: String(data.error ?? 'Could not delete event.') }
+  }
+  return { ok: true }
 }
 
 export async function fetchGames(): Promise<OpsGame[]> {

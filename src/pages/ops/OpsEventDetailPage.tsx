@@ -1,7 +1,16 @@
-import { useEffect, useState, type FormEvent } from 'react'
-import { Link, useParams } from 'react-router-dom'
-import bookingForm from '@/data/content/booking-form.json'
-import { fetchEvent, fetchGames, fetchTeam, updateEvent } from '@/lib/ops/api'
+import { useEffect, useRef, useState, type FormEvent } from 'react'
+import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
+import {
+  DatePickerField,
+  SelectField,
+  TextAreaField,
+  TextField,
+  TimePickerField,
+} from '@/components/booking'
+import Icon from '@/components/Icon/Icon'
+import { SearchMultiSelect } from '@/components/ops/SearchMultiSelect'
+import { getBookingFormContent } from '@/lib/booking/api'
+import { deleteEvent, fetchEvent, fetchGames, fetchTeam, updateEvent } from '@/lib/ops/api'
 import { useOpsAuth } from '@/lib/ops/auth'
 import {
   ageGroupLabel,
@@ -23,13 +32,15 @@ import { ROUTES } from '@/constants/routes'
 
 export default function OpsEventDetailPage() {
   const { id = '' } = useParams()
+  const [searchParams] = useSearchParams()
   const { csrf } = useOpsAuth()
   const [event, setEvent] = useState<OpsEventDetail | null>(null)
   const [games, setGames] = useState<OpsGame[]>([])
   const [team, setTeam] = useState<OpsTeamMember[]>([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
-  const [editing, setEditing] = useState(false)
+  const [editing, setEditing] = useState(searchParams.get('edit') === '1')
+  const [deleteOpen, setDeleteOpen] = useState(false)
 
   const load = () => {
     if (!id) return
@@ -65,7 +76,8 @@ export default function OpsEventDetailPage() {
   if (error || !event) {
     return (
       <div className="space-y-4">
-        <Link to={ROUTES.opsEvents} className="link">
+        <Link to={ROUTES.opsEvents} className="btn btn-ghost btn-sm gap-2">
+          <Icon name="arrow-left" size="sm" />
           Back to events
         </Link>
         <div role="alert" className="alert alert-error">
@@ -79,10 +91,11 @@ export default function OpsEventDetailPage() {
     <div className="space-y-6">
       <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
-          <Link to={ROUTES.opsEvents} className="link">
+          <Link to={ROUTES.opsEvents} className="btn btn-ghost btn-sm gap-2">
+            <Icon name="arrow-left" size="sm" />
             Back to events
           </Link>
-          <h1 className="mt-2 text-2xl font-semibold">{event.display_name}</h1>
+          <h1 className="mt-3 text-2xl font-semibold">{event.display_name}</h1>
           <div className="mt-2 flex flex-wrap gap-2">
             <span
               className={`badge ${
@@ -100,14 +113,33 @@ export default function OpsEventDetailPage() {
             </span>
           </div>
         </div>
-        <button
-          type="button"
-          className="btn"
-          onClick={() => setEditing((value) => !value)}
-        >
-          {editing ? 'Cancel' : 'Edit'}
-        </button>
+        <div className="flex flex-wrap gap-2">
+          <button
+            type="button"
+            className="btn"
+            onClick={() => setEditing((value) => !value)}
+          >
+            {editing ? 'Cancel' : 'Edit'}
+          </button>
+          {!editing ? (
+            <button
+              type="button"
+              className="btn btn-error btn-outline gap-2"
+              onClick={() => setDeleteOpen(true)}
+            >
+              <Icon name="trash" size="sm" />
+              Delete
+            </button>
+          ) : null}
+        </div>
       </div>
+
+      <DeleteEventDialog
+        event={event}
+        csrf={csrf}
+        open={deleteOpen}
+        onClose={() => setDeleteOpen(false)}
+      />
 
       {editing ? (
         <EventEditForm
@@ -124,6 +156,117 @@ export default function OpsEventDetailPage() {
         <EventReadView event={event} />
       )}
     </div>
+  )
+}
+
+function DeleteEventDialog({
+  event,
+  csrf,
+  open,
+  onClose,
+}: {
+  event: OpsEventDetail
+  csrf: string
+  open: boolean
+  onClose: () => void
+}) {
+  const navigate = useNavigate()
+  const dialogRef = useRef<HTMLDialogElement>(null)
+  const [confirmText, setConfirmText] = useState('')
+  const [deleting, setDeleting] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const canDelete = confirmText.trim().toUpperCase() === 'DELETE'
+
+  useEffect(() => {
+    const el = dialogRef.current
+    if (!el) return
+    if (open) {
+      setConfirmText('')
+      setError(null)
+      if (!el.open) el.showModal()
+      return
+    }
+    if (el.open) el.close()
+  }, [open])
+
+  const onConfirm = async () => {
+    if (!canDelete || deleting) return
+    setDeleting(true)
+    setError(null)
+    const result = await deleteEvent(String(event.id), csrf)
+    setDeleting(false)
+    if (!result.ok) {
+      setError(result.error)
+      return
+    }
+    onClose()
+    navigate(ROUTES.opsEvents)
+  }
+
+  return (
+    <dialog
+      ref={dialogRef}
+      className="modal"
+      onClose={onClose}
+      aria-labelledby="delete-event-title"
+    >
+      <div className="modal-box">
+        <h3 id="delete-event-title" className="font-heading text-lg font-bold">
+          Delete this event?
+        </h3>
+        <div role="alert" className="alert alert-warning mt-4">
+          <span>
+            This permanently removes {event.display_name} ({formatEventDate(event.event_date)}).
+            Game and coach assignments and the payment screenshot are removed. This cannot be
+            undone.
+          </span>
+        </div>
+        <fieldset className="fieldset mt-4 p-0">
+          <legend className="fieldset-legend">Type DELETE to confirm</legend>
+          <input
+            className="input w-full"
+            value={confirmText}
+            autoComplete="off"
+            spellCheck={false}
+            placeholder="DELETE"
+            disabled={deleting}
+            onChange={(e) => setConfirmText(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter') {
+                e.preventDefault()
+                void onConfirm()
+              }
+            }}
+          />
+        </fieldset>
+        {error ? (
+          <div role="alert" className="alert alert-error mt-4">
+            <span>{error}</span>
+          </div>
+        ) : null}
+        <div className="modal-action">
+          <form method="dialog">
+            <button type="submit" className="btn" disabled={deleting}>
+              Cancel
+            </button>
+          </form>
+          <button
+            type="button"
+            className="btn btn-error"
+            disabled={!canDelete || deleting}
+            onClick={() => void onConfirm()}
+          >
+            {deleting ? <span className="loading loading-spinner" /> : <Icon name="trash" size="sm" />}
+            Delete event
+          </button>
+        </div>
+      </div>
+      <form method="dialog" className="modal-backdrop">
+        <button type="submit" disabled={deleting}>
+          close
+        </button>
+      </form>
+    </dialog>
   )
 }
 
@@ -187,17 +330,7 @@ function EventReadView({ event }: { event: OpsEventDetail }) {
               value={`${formatMoney(event.full_payment_amount)} · ${event.full_payment_completed ? 'received' : 'not received'}${event.full_payment_date ? ` · ${formatEventDate(event.full_payment_date)}` : ''}`}
             />
           </div>
-          {event.screenshot_url ? (
-            <figure className="mt-2 max-w-sm">
-              <img
-                src={event.screenshot_url}
-                alt="Payment screenshot"
-                className="rounded-box"
-              />
-            </figure>
-          ) : (
-            <p>No payment screenshot on file.</p>
-          )}
+          <PaymentScreenshot url={event.screenshot_url} />
         </div>
       </article>
 
@@ -240,9 +373,60 @@ function EventReadView({ event }: { event: OpsEventDetail }) {
 
 function Definition({ label, value }: { label: string; value: string }) {
   return (
-    <div>
-      <dt className="text-sm text-base-content/60">{label}</dt>
-      <dd>{value || '—'}</dd>
+    <div className="border-base-200 border-b py-2.5 last:border-b-0">
+      <dt className="text-xs font-semibold tracking-wide text-base-content/50 uppercase">
+        {label}
+      </dt>
+      <dd className="mt-1 text-base font-medium text-base-content">{value || '—'}</dd>
+    </div>
+  )
+}
+
+function PaymentScreenshot({ url }: { url: string | null }) {
+  const [failed, setFailed] = useState(false)
+  const missing = !url || failed
+
+  if (missing) {
+    return (
+      <div role="alert" className="alert alert-warning mt-4">
+        <span>No payment screenshot on file.</span>
+      </div>
+    )
+  }
+
+  const downloadUrl = url.includes('?') ? `${url}&download=1` : `${url}?download=1`
+
+  return (
+    <div className="mt-4 space-y-3">
+      <p className="text-xs font-semibold tracking-wide text-base-content/50 uppercase">
+        Payment screenshot
+      </p>
+      <figure className="bg-base-200 h-48 w-32 overflow-hidden rounded-box border-base-300 border">
+        <img
+          src={url}
+          alt="Payment screenshot preview"
+          className="h-full w-full object-contain"
+          onError={() => setFailed(true)}
+        />
+      </figure>
+      <p className="text-sm text-base-content/60">
+        Open or download to view the full image.
+      </p>
+      <div className="join">
+        <a
+          className="btn join-item btn-sm gap-2"
+          href={url}
+          target="_blank"
+          rel="noreferrer"
+        >
+          <Icon name="external-link" size="sm" />
+          Open
+        </a>
+        <a className="btn join-item btn-sm gap-2" href={downloadUrl} download>
+          <Icon name="download" size="sm" />
+          Download
+        </a>
+      </div>
     </div>
   )
 }
@@ -260,14 +444,17 @@ function EventEditForm({
   csrf: string
   onSaved: (event: OpsEventDetail) => void
 }) {
+  const content = getBookingFormContent()
   const [status, setStatus] = useState(event.event_status)
   const [venueName, setVenueName] = useState(event.venue_name ?? '')
   const [eventDate, setEventDate] = useState(event.event_date)
   const [eventTime, setEventTime] = useState(timeInputValue(event.event_time))
-  const [venueType, setVenueType] = useState(event.venue_type ?? 'indoor')
+  const [venueType, setVenueType] = useState(event.venue_type ?? '')
   const [participants, setParticipants] = useState(String(event.participant_count))
   const [eventType, setEventType] = useState(event.event_type ?? '')
   const [ageGroup, setAgeGroup] = useState(event.age_group ?? '')
+  const [paymentMode, setPaymentMode] = useState(event.payment_mode ?? '')
+  const [referralSource, setReferralSource] = useState(event.referral_source ?? '')
   const [price, setPrice] = useState(moneyInput(event.price))
   const [expenses, setExpenses] = useState(moneyInput(event.event_expenses))
   const [advanceAmount, setAdvanceAmount] = useState(moneyInput(event.advance_amount))
@@ -293,10 +480,12 @@ function EventEditForm({
       venue_name: venueName,
       event_date: eventDate,
       event_time: eventTime,
-      venue_type: venueType,
+      venue_type: venueType === 'outdoor' || venueType === 'indoor' ? venueType : undefined,
       participant_count: Number(participants) || 1,
       event_type: eventType || null,
       age_group: ageGroup || null,
+      payment_mode: paymentMode || null,
+      referral_source: referralSource || null,
       price: parseMoney(price),
       event_expenses: parseMoney(expenses),
       advance_amount: parseMoney(advanceAmount),
@@ -304,7 +493,7 @@ function EventEditForm({
       advance_payment_completed: advanceDone,
       full_payment_amount: parseMoney(finalAmount),
       full_payment_date: finalDate || null,
-      full_payment_completed: finalDone,
+      full_payment_completed: advanceDone && finalDone,
       added_to_calendar: onCalendar,
       instagram_handle: instagram,
       special_requirements: notes,
@@ -321,271 +510,265 @@ function EventEditForm({
   }
 
   return (
-    <form className="space-y-4" onSubmit={onSubmit}>
+    <form className="flex flex-col gap-6" onSubmit={onSubmit}>
       {error ? (
         <div role="alert" className="alert alert-error">
           <span>{error}</span>
         </div>
       ) : null}
 
-      <div className="card bg-base-100 shadow">
-        <div className="card-body grid gap-4 sm:grid-cols-2">
-          <h2 className="card-title sm:col-span-2">Event details</h2>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Status</legend>
-            <select
-              className="select w-full"
+      <section className="card card-border bg-base-100">
+        <div className="card-body gap-4">
+          <h2 className="card-title font-heading text-lg">Event</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <SelectField
+              id="event_status"
+              label="Status"
+              options={[
+                { value: 'pending', label: 'Pending' },
+                { value: 'upcoming', label: 'Upcoming' },
+                { value: 'completed', label: 'Completed' },
+              ]}
               value={status}
               onChange={(e) => setStatus(e.target.value as OpsEventDetail['event_status'])}
-            >
-              <option value="pending">Pending</option>
-              <option value="upcoming">Upcoming</option>
-              <option value="completed">Completed</option>
-            </select>
-          </fieldset>
-          <label className="label cursor-pointer justify-start gap-3 sm:col-span-2">
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={onCalendar}
-              onChange={(e) => setOnCalendar(e.target.checked)}
             />
-            <span>Added to calendar</span>
-          </label>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Venue</legend>
-            <input
-              className="input w-full"
-              value={venueName}
-              onChange={(e) => setVenueName(e.target.value)}
-            />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Venue type</legend>
-            <select
-              className="select w-full"
-              value={venueType}
-              onChange={(e) => setVenueType(e.target.value as 'indoor' | 'outdoor')}
-            >
-              <option value="indoor">Indoor</option>
-              <option value="outdoor">Outdoor</option>
-            </select>
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Date</legend>
-            <input
-              className="input w-full"
-              type="date"
-              value={eventDate}
-              onChange={(e) => setEventDate(e.target.value)}
-              required
-            />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Time</legend>
-            <input
-              className="input w-full"
-              type="time"
-              step={900}
-              value={eventTime}
-              onChange={(e) => setEventTime(e.target.value)}
-              required
-            />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Participants</legend>
-            <input
-              className="input w-full"
-              type="number"
-              min={1}
+            <label className="flex cursor-pointer items-center gap-3 self-end pb-2 text-sm">
+              <input
+                type="checkbox"
+                className="checkbox"
+                checked={onCalendar}
+                onChange={(e) => setOnCalendar(e.target.checked)}
+              />
+              <span>Added to calendar</span>
+            </label>
+
+            {event.event_category === 'social' ? (
+              <SelectField
+                id="event_type"
+                label="Type of Event"
+                placeholder="Choose Event Type"
+                options={extraSelectOption(content.eventTypes, eventType)}
+                value={eventType}
+                onChange={(e) => setEventType(e.target.value)}
+              />
+            ) : null}
+
+            <TextField
+              id="participant_count"
+              label="No. of Participants"
+              inputMode="numeric"
+              placeholder={content.placeholders.participants}
               value={participants}
-              onChange={(e) => setParticipants(e.target.value)}
+              onChange={(e) =>
+                setParticipants(e.target.value.replace(/\D/g, ''))
+              }
             />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Instagram</legend>
-            <input
-              className="input w-full"
+
+            {event.event_category === 'social' ? (
+              <SelectField
+                id="age_group"
+                label="Age Group"
+                placeholder="Choose age group"
+                options={extraSelectOption(content.ageGroups, ageGroup)}
+                value={ageGroup}
+                onChange={(e) => setAgeGroup(e.target.value)}
+              />
+            ) : null}
+
+            <DatePickerField
+              id="event_date"
+              label="Date of Event"
+              required
+              minDate={null}
+              placeholder="Select date"
+              value={eventDate}
+              onChange={setEventDate}
+            />
+            <TimePickerField
+              id="event_time"
+              label="Time of Event"
+              required
+              value={eventTime}
+              onChange={setEventTime}
+            />
+          </div>
+        </div>
+      </section>
+
+      <section className="card card-border bg-base-100">
+        <div className="card-body gap-4">
+          <h2 className="card-title font-heading text-lg">Venue & extras</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <div className="sm:col-span-2">
+              <TextField
+                id="venue_name"
+                label="Venue of Event"
+                placeholder={content.placeholders.venue}
+                value={venueName}
+                onChange={(e) => setVenueName(e.target.value)}
+              />
+            </div>
+            <SelectField
+              id="venue_type"
+              label="Venue Type"
+              placeholder="Choose Type of Venue"
+              options={content.venueTypes}
+              value={venueType}
+              onChange={(e) => setVenueType(e.target.value)}
+            />
+            <TextField
+              id="instagram_handle"
+              label="Instagram"
+              placeholder="@handle"
               value={instagram}
               onChange={(e) => setInstagram(e.target.value)}
             />
-          </fieldset>
-          {event.event_category === 'social' ? (
-            <>
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Event type</legend>
-                <select
-                  className="select w-full"
-                  value={eventType}
-                  onChange={(e) => setEventType(e.target.value)}
-                >
-                  <option value="">Choose type</option>
-                  {bookingForm.eventTypes.map((item) => (
-                    <option key={item.value} value={item.value}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </fieldset>
-              <fieldset className="fieldset">
-                <legend className="fieldset-legend">Age group</legend>
-                <select
-                  className="select w-full"
-                  value={ageGroup}
-                  onChange={(e) => setAgeGroup(e.target.value)}
-                >
-                  <option value="">Choose age group</option>
-                  {bookingForm.ageGroups.map((item) => (
-                    <option key={item.value} value={item.value}>
-                      {item.label}
-                    </option>
-                  ))}
-                </select>
-              </fieldset>
-            </>
-          ) : null}
-          <fieldset className="fieldset sm:col-span-2">
-            <legend className="fieldset-legend">Special requirements</legend>
-            <textarea
-              className="textarea w-full"
-              rows={3}
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
+            <SelectField
+              id="payment_mode"
+              label="Mode of Payment"
+              placeholder="Choose Mode of Payment"
+              options={extraSelectOption(content.paymentModes, paymentMode)}
+              value={paymentMode}
+              onChange={(e) => setPaymentMode(e.target.value)}
             />
-          </fieldset>
+            <div className="sm:col-span-2">
+              <SelectField
+                id="referral_source"
+                label="How did you hear about us?"
+                placeholder={content.placeholders.referral}
+                options={extraSelectOption(content.referralSources, referralSource)}
+                value={referralSource}
+                onChange={(e) => setReferralSource(e.target.value)}
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <TextAreaField
+                id="special_requirements"
+                label="Special Requirements"
+                placeholder={content.placeholders.specialRequirements}
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+              />
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="card bg-base-100 shadow">
-        <div className="card-body grid gap-4 sm:grid-cols-2">
-          <h2 className="card-title sm:col-span-2">Payment</h2>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Event price</legend>
-            <input
-              className="input w-full"
+      <section className="card card-border bg-base-100">
+        <div className="card-body gap-4">
+          <h2 className="card-title font-heading text-lg">Payment</h2>
+          <div className="grid gap-4 sm:grid-cols-2">
+            <TextField
+              id="price"
+              label="Event price"
               inputMode="decimal"
               value={price}
               onChange={(e) => setPrice(e.target.value)}
             />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Expenses</legend>
-            <input
-              className="input w-full"
+            <TextField
+              id="event_expenses"
+              label="Expenses"
               inputMode="decimal"
               value={expenses}
               onChange={(e) => setExpenses(e.target.value)}
             />
-          </fieldset>
-          <label className="label cursor-pointer justify-start gap-3 sm:col-span-2">
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={advanceDone}
-              onChange={(e) => setAdvanceDone(e.target.checked)}
-            />
-            <span>Advance payment received</span>
-          </label>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Advance amount</legend>
-            <input
-              className="input w-full"
-              inputMode="decimal"
-              value={advanceAmount}
-              onChange={(e) => setAdvanceAmount(e.target.value)}
-            />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Advance date</legend>
-            <input
-              className="input w-full"
-              type="date"
-              value={advanceDate}
-              onChange={(e) => setAdvanceDate(e.target.value)}
-            />
-          </fieldset>
-          <label className="label cursor-pointer justify-start gap-3 sm:col-span-2">
-            <input
-              type="checkbox"
-              className="checkbox"
-              checked={finalDone}
-              onChange={(e) => setFinalDone(e.target.checked)}
-            />
-            <span>Final payment received</span>
-          </label>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Final amount</legend>
-            <input
-              className="input w-full"
-              inputMode="decimal"
-              value={finalAmount}
-              onChange={(e) => setFinalAmount(e.target.value)}
-            />
-          </fieldset>
-          <fieldset className="fieldset">
-            <legend className="fieldset-legend">Final date</legend>
-            <input
-              className="input w-full"
-              type="date"
-              value={finalDate}
-              onChange={(e) => setFinalDate(e.target.value)}
-            />
-          </fieldset>
+            <label className="flex cursor-pointer items-start gap-3 text-sm sm:col-span-2">
+              <input
+                type="checkbox"
+                className="checkbox mt-0.5"
+                checked={advanceDone}
+                onChange={(e) => {
+                  const checked = e.target.checked
+                  setAdvanceDone(checked)
+                  if (!checked) setFinalDone(false)
+                }}
+              />
+              <span>Advance payment received</span>
+            </label>
+            {advanceDone ? (
+              <>
+                <TextField
+                  id="advance_amount"
+                  label="Advance amount"
+                  inputMode="decimal"
+                  value={advanceAmount}
+                  onChange={(e) => setAdvanceAmount(e.target.value)}
+                />
+                <DatePickerField
+                  id="advance_payment_date"
+                  label="Advance date"
+                  minDate={null}
+                  placeholder="Select date"
+                  value={advanceDate}
+                  onChange={setAdvanceDate}
+                />
+                <label className="flex cursor-pointer items-start gap-3 text-sm sm:col-span-2">
+                  <input
+                    type="checkbox"
+                    className="checkbox mt-0.5"
+                    checked={finalDone}
+                    onChange={(e) => setFinalDone(e.target.checked)}
+                  />
+                  <span>Full payment received</span>
+                </label>
+                {finalDone ? (
+                  <>
+                    <TextField
+                      id="full_payment_amount"
+                      label="Full payment amount"
+                      inputMode="decimal"
+                      value={finalAmount}
+                      onChange={(e) => setFinalAmount(e.target.value)}
+                    />
+                    <DatePickerField
+                      id="full_payment_date"
+                      label="Full payment date"
+                      minDate={null}
+                      placeholder="Select date"
+                      value={finalDate}
+                      onChange={setFinalDate}
+                    />
+                  </>
+                ) : null}
+              </>
+            ) : null}
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <fieldset className="card bg-base-100 shadow">
-          <div className="card-body">
-            <legend className="fieldset-legend">Games played</legend>
-            {games.length === 0 ? (
-              <p>No games in the catalogue yet. Import will fill this list.</p>
-            ) : (
-              <div className="max-h-64 space-y-2 overflow-y-auto">
-                {games.map((game) => (
-                  <label key={game.id} className="label cursor-pointer justify-start gap-3">
-                    <input
-                      type="checkbox"
-                      className="checkbox"
-                      checked={gameIds.includes(game.id)}
-                      onChange={() =>
-                        setGameIds((current) => toggleId(current, game.id))
-                      }
-                    />
-                    <span>{game.name}</span>
-                  </label>
-                ))}
-              </div>
-            )}
+      <div className="grid gap-6 lg:grid-cols-2">
+        <section className="card card-border bg-base-100 overflow-visible">
+          <div className="card-body overflow-visible">
+            <SearchMultiSelect
+              id="game_ids"
+              label="Games played"
+              placeholder="Search and select games"
+              searchPlaceholder="Search games"
+              emptyMessage="No games in the catalogue yet."
+              options={games.map((game) => ({ id: game.id, label: game.name }))}
+              value={gameIds}
+              onChange={setGameIds}
+            />
           </div>
-        </fieldset>
-        <fieldset className="card bg-base-100 shadow">
-          <div className="card-body">
-            <legend className="fieldset-legend">Team sent</legend>
-            {team.length === 0 ? (
-              <p>No team members yet. Import will fill this list.</p>
-            ) : (
-              <div className="max-h-64 space-y-2 overflow-y-auto">
-                {team.map((member) => (
-                  <label key={member.id} className="label cursor-pointer justify-start gap-3">
-                    <input
-                      type="checkbox"
-                      className="checkbox"
-                      checked={teamIds.includes(member.id)}
-                      onChange={() =>
-                        setTeamIds((current) => toggleId(current, member.id))
-                      }
-                    />
-                    <span>
-                      {member.name}
-                      {member.position ? ` · ${member.position}` : ''}
-                    </span>
-                  </label>
-                ))}
-              </div>
-            )}
+        </section>
+        <section className="card card-border bg-base-100 overflow-visible">
+          <div className="card-body overflow-visible">
+            <SearchMultiSelect
+              id="team_ids"
+              label="Team sent"
+              placeholder="Search and select coaches"
+              searchPlaceholder="Search coaches"
+              emptyMessage="No team members yet."
+              options={team.map((member) => ({
+                id: member.id,
+                label: member.name,
+                hint: member.position,
+              }))}
+              value={teamIds}
+              onChange={setTeamIds}
+            />
           </div>
-        </fieldset>
+        </section>
       </div>
 
       <button type="submit" className="btn btn-primary" disabled={saving}>
@@ -607,6 +790,12 @@ function parseMoney(value: string): number | null {
   return Number.isFinite(parsed) ? parsed : null
 }
 
-function toggleId(ids: number[], id: number): number[] {
-  return ids.includes(id) ? ids.filter((item) => item !== id) : [...ids, id]
+function extraSelectOption(
+  options: { value: string; label: string }[],
+  current: string,
+): { value: string; label: string }[] {
+  if (!current || options.some((item) => item.value === current)) {
+    return options
+  }
+  return [...options, { value: current, label: current }]
 }

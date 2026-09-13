@@ -10,6 +10,8 @@
     "cms:audit": "node scripts/audit-image-mappings.mjs",
     "cms:verify": "node --experimental-strip-types scripts/verify-cms-mapping.mjs",
     "cms:dev": "node scripts/run-cms-dev.mjs",
+    "local": "node scripts/run-local.mjs",
+    "dev:ops": "node scripts/run-local.mjs",
     "dev:booking": "npm run cms:dev",
     "lint": "eslint .",
     "format": "prettier --write .",

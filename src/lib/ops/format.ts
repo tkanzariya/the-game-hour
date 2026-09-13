@@ -29,6 +29,11 @@ export function formatEventDate(date: string): string {
   })
 }
 
+export function formatBookingDate(value: string | null | undefined): string {
+  if (!value) return '—'
+  return formatEventDate(value.slice(0, 10))
+}
+
 export function formatMonthHeading(date: string): string {
   const parsed = new Date(`${date}T00:00:00`)
   if (Number.isNaN(parsed.getTime())) return date

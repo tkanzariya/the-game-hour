@@ -92,6 +92,8 @@ export type OpsEventPatch = {
   age_group?: string | null
   participant_count?: number
   venue_type?: 'indoor' | 'outdoor'
+  payment_mode?: string | null
+  referral_source?: string | null
   special_requirements?: string | null
   game_ids?: number[]
   team_ids?: number[]

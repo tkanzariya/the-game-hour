@@ -17,7 +17,9 @@ Legacy site (`../TheGameHour-legacy`) is reference only — do not modify it.
 
 | Command                | Description                              |
 | ---------------------- | ---------------------------------------- |
-| `npm run dev`          | Local development server (React only)    |
+| `npm run local`        | PHP CMS (`:8765`) + Vite (`:5173`) for ops/booking |
+| `npm run cms:dev`      | PHP API only (Vite already running)                |
+| `npm run dev`          | Vite only — proxies `/cms` to `:8765`              |
 | `npm run build`        | Production build → `dist/` (+ CMS copy)  |
 | `npm run preview`      | Preview production build                 |
 | `npm run lint`         | ESLint                                   |

@@ -46,15 +46,7 @@ if ($method === 'GET') {
             'status' => (string) ($_GET['status'] ?? ''),
             'q' => (string) ($_GET['q'] ?? ''),
         ]);
-        cms_json_response([
-            'ok' => true,
-            'events' => $events,
-            'debug' => [
-                'stage' => 'list',
-                'count' => count($events),
-                'migrate' => cms_ops_migration_error(),
-            ],
-        ]);
+        cms_json_response(['ok' => true, 'events' => $events]);
     } catch (Throwable $e) {
         cms_json_response([
             'ok' => false,
@@ -68,6 +60,18 @@ if ($method === 'GET') {
             ],
         ], 500);
     }
+}
+
+if ($method === 'DELETE') {
+    cms_ops_verify_json_csrf();
+    if ($id === '') {
+        cms_json_response(['ok' => false, 'error' => 'Missing event id.'], 400);
+    }
+    $result = cms_ops_delete_event($id);
+    if (!$result['ok']) {
+        cms_json_response(['ok' => false, 'error' => $result['error']], 422);
+    }
+    cms_json_response(['ok' => true]);
 }
 
 if ($method === 'PATCH' || $method === 'POST') {

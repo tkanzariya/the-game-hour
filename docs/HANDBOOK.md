@@ -10,7 +10,7 @@ Single entry point for day-to-day website operations after launch.
 
 ## CMS access
 
-The **Image CMS** runs on production/staging (PHP + MySQL on cPanel). It is **not** available via `npm run dev`.
+The **Image CMS** runs on production (PHP + MySQL on cPanel). For **local events UI** (dummy JSON, no deploy) run `npm run local` and open http://localhost:5173/ops/login (`devadmin` / `dev123`). Details: [Local booking + ops setup](operations/BOOKING_LOCAL_SETUP.md).
 
 | Item | Value |
 |------|--------|

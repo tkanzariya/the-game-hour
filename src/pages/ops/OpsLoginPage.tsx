@@ -5,6 +5,10 @@ import { useOpsAuth } from '@/lib/ops/auth'
 import { ROUTES } from '@/constants/routes'
 import { buildSeo } from '@/utils/seo'
 
+function isLocalHost() {
+  return ['localhost', '127.0.0.1'].includes(window.location.hostname)
+}
+
 export default function OpsLoginPage() {
   const { user, loading, login } = useOpsAuth()
   const navigate = useNavigate()
@@ -57,6 +61,16 @@ export default function OpsLoginPage() {
           {error ? (
             <div role="alert" className="alert alert-error">
               <span>{error}</span>
+            </div>
+          ) : null}
+          {isLocalHost() ? (
+            <div role="alert" className="alert alert-info">
+              <span>
+                Local JSON mode. Run <kbd className="kbd kbd-sm">npm run local</kbd> (or keep{' '}
+                <kbd className="kbd kbd-sm">cms:dev</kbd> plus Vite). Sign in with{' '}
+                <kbd className="kbd kbd-sm">devadmin</kbd> /{' '}
+                <kbd className="kbd kbd-sm">dev123</kbd>.
+              </span>
             </div>
           ) : null}
           <fieldset className="fieldset">

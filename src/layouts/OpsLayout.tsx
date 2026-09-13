@@ -1,4 +1,3 @@
-import { useEffect } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Seo } from '@/components/Seo'
 import { getLogoUrl } from '@/lib/assets'
@@ -93,19 +92,6 @@ function OpsNav({
   const logoUrl = getLogoUrl('dark')
   const accountLabel =
     name.trim().toLowerCase() === site.name.trim().toLowerCase() ? email : name
-
-  useEffect(() => {
-    const brand = document.querySelector('[data-ops-brand]')
-    const cms = document.querySelector('[data-ops-cms]')
-    const brandCs = brand ? getComputedStyle(brand) : null
-    const cmsCs = cms ? getComputedStyle(cms) : null
-    const nav = document.querySelector('[data-ops-nav]')
-    const navCs = nav ? getComputedStyle(nav) : null
-    const logo = brand?.querySelector('img')
-    // #region agent log
-    fetch('http://127.0.0.1:7314/ingest/bc48680f-cb31-4c2c-b170-30d2bd81067b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8016b3'},body:JSON.stringify({sessionId:'8016b3',runId:'post-fix',hypothesisId:'E',location:'src/layouts/OpsLayout.tsx:OpsNav',message:'ops header contrast',data:{userName:name,accountLabel,brandAlt:logo?.getAttribute('alt')??null,brandColor:brandCs?.color??null,cmsColor:cmsCs?.color??null,navBg:navCs?.backgroundColor??null,cmsText:cms?.textContent??null},timestamp:Date.now()})}).catch(()=>{});
-    // #endregion
-  }, [accountLabel, name])
 
   return (
     <div className="navbar bg-neutral text-neutral-content" data-ops-nav>

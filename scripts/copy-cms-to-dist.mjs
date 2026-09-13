@@ -15,7 +15,13 @@ function copyDir(from, to) {
   for (const entry of fs.readdirSync(from, { withFileTypes: true })) {
     const s = path.join(from, entry.name)
     const d = path.join(to, entry.name)
-    if (entry.name === 'config.php' || entry.name === 'config.local.php') continue
+    if (
+      entry.name === 'config.php' ||
+      entry.name === 'config.local.php' ||
+      entry.name === 'dev-data'
+    ) {
+      continue
+    }
     if (entry.isDirectory()) copyDir(s, d)
     else fs.copyFileSync(s, d)
   }

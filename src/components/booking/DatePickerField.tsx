@@ -10,7 +10,9 @@ type DatePickerFieldProps = {
   error?: string
   value: string
   onChange: (ymd: string) => void
-  minDate?: string
+  /** Earliest selectable date. Defaults to today. Pass `null` to allow any past date. */
+  minDate?: string | null
+  placeholder?: string
 }
 
 function todayYmd(): string {
@@ -38,10 +40,11 @@ export function DatePickerField({
   value,
   onChange,
   minDate,
+  placeholder,
 }: DatePickerFieldProps) {
   const autoId = useId()
   const id = idProp ?? autoId
-  const min = minDate ?? todayYmd()
+  const min = minDate === null ? null : (minDate ?? todayYmd())
   const [open, setOpen] = useState(false)
   const selected = parseYmd(value) ?? new Date()
   const [view, setView] = useState(
@@ -84,7 +87,11 @@ export function DatePickerField({
           aria-expanded={open}
           onClick={() => setOpen((v) => !v)}
         >
-          <span>{value ? formatDisplayDate(value) : formatDisplayDate(min)}</span>
+          <span>
+            {value
+              ? formatDisplayDate(value)
+              : (placeholder ?? (min ? formatDisplayDate(min) : 'Select date'))}
+          </span>
           <span aria-hidden className="text-primary/50">
             ▾
           </span>
@@ -127,7 +134,7 @@ export function DatePickerField({
               {cells.map((day, idx) => {
                 if (day === null) return <span key={`e-${idx}`} />
                 const ymd = toYmd(new Date(year, month, day))
-                const disabled = ymd < min
+                const disabled = min !== null && ymd < min
                 const selectedDay = value === ymd
                 return (
                   <button

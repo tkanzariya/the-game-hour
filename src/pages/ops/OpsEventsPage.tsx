@@ -1,11 +1,15 @@
-import { useEffect, useMemo, useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useMemo, useState, type KeyboardEvent, type MouseEvent } from 'react'
+import { createPortal } from 'react-dom'
+import { Link, useNavigate } from 'react-router-dom'
+import Icon from '@/components/Icon/Icon'
 import { fetchEvents } from '@/lib/ops/api'
 import {
   ageGroupLabel,
-  categoryLabel,
+  eventTypeLabel,
+  formatBookingDate,
   formatEventDate,
   formatEventTime,
+  formatMoney,
   formatMonthHeading,
   statusLabel,
 } from '@/lib/ops/format'
@@ -17,6 +21,7 @@ import type {
 import { ROUTES } from '@/constants/routes'
 
 export default function OpsEventsPage() {
+  const navigate = useNavigate()
   const [category, setCategory] = useState<EventCategoryFilter>('all')
   const [status, setStatus] = useState<EventStatusFilter>('all')
   const [q, setQ] = useState('')
@@ -107,6 +112,28 @@ export default function OpsEventsPage() {
               onChange={(e) => setQ(e.target.value)}
             />
           </label>
+          <ul className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-base-content/70">
+            <li className="flex items-center gap-2">
+              <span className="bg-secondary/30 inline-block size-4 rounded-field" />
+              Social
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="bg-info/30 inline-block size-4 rounded-field" />
+              Corporate
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="status status-warning" />
+              Pending
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="status status-info" />
+              Upcoming
+            </li>
+            <li className="flex items-center gap-2">
+              <span className="status status-success" />
+              Completed
+            </li>
+          </ul>
         </div>
       </div>
 
@@ -128,96 +155,229 @@ export default function OpsEventsPage() {
           </div>
         </div>
       ) : (
-        grouped.map((group) => (
-          <section key={group.heading} className="space-y-3">
-            <h2 className="text-lg font-medium">{group.heading}</h2>
-            <div className="hidden overflow-x-auto rounded-box bg-base-100 shadow md:block">
-              <table className="table">
-                <thead>
+        <>
+        <div className="hidden md:block">
+          <div className="rounded-box bg-base-100 shadow">
+            <table className="table table-fixed table-sm w-full">
+              <colgroup>
+                <col className="w-28" />
+                <col className="w-24" />
+                <col />
+                <col className="w-16" />
+                <col className="w-32" />
+                <col />
+                <col className="w-16" />
+                <col className="w-28" />
+                <col className="w-12" />
+              </colgroup>
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Customer</th>
+                  <th>
+                    <span className="sr-only">Status</span>
+                  </th>
+                  <th>Phone</th>
+                  <th>Venue</th>
+                  <th>People</th>
+                  <th>Age</th>
+                  <th>
+                    <span className="sr-only">Edit</span>
+                  </th>
+                </tr>
+              </thead>
+              {grouped.map((group) => (
+                <tbody key={group.heading}>
                   <tr>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Customer</th>
-                    <th>Phone</th>
-                    <th>Venue</th>
-                    <th>People</th>
-                    <th>Age</th>
-                    <th></th>
+                    <th colSpan={9} className="bg-base-200 font-semibold">
+                      {group.heading}
+                    </th>
                   </tr>
-                </thead>
-                <tbody>
-                  {group.events.map((event) => (
-                    <tr key={String(event.id)}>
-                      <td>{formatEventDate(event.event_date)}</td>
-                      <td>{formatEventTime(event.event_time)}</td>
-                      <td>
-                        <div className="font-medium">{event.display_name}</div>
-                        <div className="mt-1 flex flex-wrap gap-1">
-                          <StatusBadge status={event.event_status} />
-                          <span className="badge badge-outline badge-sm">
-                            {categoryLabel(event.event_category)}
-                          </span>
-                        </div>
-                      </td>
-                      <td>{event.phone || '—'}</td>
-                      <td>{event.venue_name || '—'}</td>
-                      <td>{event.participant_count}</td>
-                      <td>{ageGroupLabel(event.age_group)}</td>
-                      <td>
-                        <Link
-                          className="btn btn-sm"
-                          to={`${ROUTES.opsEvents}/${event.id}`}
-                        >
-                          Open
-                        </Link>
-                      </td>
-                    </tr>
-                  ))}
+                  {group.events.map((event) => {
+                    const viewPath = `${ROUTES.opsEvents}/${event.id}`
+                    return (
+                      <tr
+                        key={String(event.id)}
+                        className={`cursor-pointer ${rowTone(event.event_category)}`}
+                        tabIndex={0}
+                        aria-label={`View ${event.display_name}`}
+                        onClick={() => navigate(viewPath)}
+                        onKeyDown={(e) => onRowKey(e, () => navigate(viewPath))}
+                      >
+                        <td className="whitespace-nowrap">
+                          {formatEventDate(event.event_date)}
+                        </td>
+                        <td className="whitespace-nowrap">
+                          {formatEventTime(event.event_time)}
+                        </td>
+                        <td className="font-medium">
+                          <CellTip text={event.display_name} />
+                        </td>
+                        <td>
+                          <StatusDot status={event.event_status} />
+                        </td>
+                        <td>
+                          <CellTip text={event.phone} />
+                        </td>
+                        <td>
+                          <CellTip text={event.venue_name ?? ''} />
+                        </td>
+                        <td className="text-end tabular-nums">
+                          {event.participant_count}
+                        </td>
+                        <td>
+                          <CellTip text={ageGroupLabel(event.age_group)} />
+                        </td>
+                        <td>
+                          <EditEventButton
+                            id={event.id}
+                            name={event.display_name}
+                          />
+                        </td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
-              </table>
-            </div>
-            <div className="grid gap-3 md:hidden">
-              {group.events.map((event) => (
-                <Link
-                  key={String(event.id)}
-                  to={`${ROUTES.opsEvents}/${event.id}`}
-                  className="card bg-base-100 shadow"
-                >
-                  <div className="card-body gap-2">
-                    <div className="flex flex-wrap gap-1">
-                      <StatusBadge status={event.event_status} />
-                      <span className="badge badge-outline badge-sm">
-                        {categoryLabel(event.event_category)}
-                      </span>
-                    </div>
-                    <h3 className="card-title text-base">{event.display_name}</h3>
-                    <p>
-                      {formatEventDate(event.event_date)} · {formatEventTime(event.event_time)}
-                    </p>
-                    <p>{event.venue_name || 'Venue not set'}</p>
-                    <p>
-                      {event.participant_count} people
-                      {event.age_group ? ` · ${ageGroupLabel(event.age_group)}` : ''}
-                    </p>
-                  </div>
-                </Link>
               ))}
-            </div>
-          </section>
-        ))
+            </table>
+          </div>
+        </div>
+        <div className="space-y-4 md:hidden">
+          {grouped.map((group) => (
+            <section key={group.heading} className="space-y-2">
+              <h2 className="text-lg font-medium">{group.heading}</h2>
+              <ul className="list rounded-box bg-base-100 shadow">
+                {group.events.map((event) => (
+                  <EventMobileRow key={String(event.id)} event={event} />
+                ))}
+              </ul>
+            </section>
+          ))}
+        </div>
+        </>
       )}
     </div>
   )
 }
 
-function StatusBadge({ status }: { status: OpsEventSummary['event_status'] }) {
+function EventMobileRow({ event }: { event: OpsEventSummary }) {
+  const navigate = useNavigate()
+  const viewPath = `${ROUTES.opsEvents}/${event.id}`
+
+  return (
+    <li
+      role="link"
+      tabIndex={0}
+      aria-label={`View ${event.display_name}`}
+      className={`list-row cursor-pointer ${rowTone(event.event_category)}`}
+      onClick={() => navigate(viewPath)}
+      onKeyDown={(e) => onRowKey(e, () => navigate(viewPath))}
+    >
+      <StatusDot status={event.event_status} />
+      <div className="list-col-grow">
+        <div className="font-medium">{event.display_name}</div>
+        <div className="text-sm text-base-content/70">{eventTypeLabel(event.event_type)}</div>
+        <div className="text-sm text-base-content/70">
+          Event {formatEventDate(event.event_date)}
+        </div>
+        <div className="text-sm text-base-content/70">
+          Booked {formatBookingDate(event.created_at)}
+        </div>
+        <div className="text-sm font-medium">{formatMoney(event.price)}</div>
+      </div>
+      <EditEventButton id={event.id} name={event.display_name} />
+    </li>
+  )
+}
+
+function EditEventButton({
+  id,
+  name,
+}: {
+  id: OpsEventSummary['id']
+  name: string
+}) {
+  const stopRow = (event: MouseEvent) => {
+    event.stopPropagation()
+  }
+
+  return (
+    <Link
+      to={`${ROUTES.opsEvents}/${id}?edit=1`}
+      className="btn btn-ghost btn-square btn-sm"
+      aria-label={`Edit ${name}`}
+      onClick={stopRow}
+    >
+      <Icon name="pencil" size="sm" />
+    </Link>
+  )
+}
+
+function CellTip({ text }: { text: string }) {
+  const value = text.trim()
+  const [tip, setTip] = useState<{ left: number; top: number } | null>(null)
+  if (!value || value === '—') {
+    return <span className="text-base-content/40">—</span>
+  }
+  return (
+    <>
+      <span
+        className="block truncate"
+        onMouseEnter={(event) => {
+          const el = event.currentTarget
+          if (el.scrollWidth <= el.clientWidth + 1) return
+          const box = el.getBoundingClientRect()
+          const maxWidth = 320
+          const left = Math.min(box.left, window.innerWidth - maxWidth - 12)
+          setTip({ left: Math.max(12, left), top: box.bottom + 8 })
+        }}
+        onMouseLeave={() => setTip(null)}
+      >
+        {value}
+      </span>
+      {tip
+        ? createPortal(
+            <div
+              role="tooltip"
+              className="rounded-box bg-neutral text-neutral-content pointer-events-none fixed z-50 max-w-xs px-3 py-2 text-sm shadow-lg"
+              style={{ left: tip.left, top: tip.top }}
+            >
+              {value}
+            </div>,
+            document.body,
+          )
+        : null}
+    </>
+  )
+}
+
+function StatusDot({ status }: { status: OpsEventSummary['event_status'] }) {
   const color =
     status === 'pending'
-      ? 'badge-warning'
+      ? 'status-warning'
       : status === 'upcoming'
-        ? 'badge-info'
-        : 'badge-success'
-  return <span className={`badge badge-sm ${color}`}>{statusLabel(status)}</span>
+        ? 'status-info'
+        : 'status-success'
+  const label = statusLabel(status)
+  return (
+    <div className="tooltip tooltip-bottom" data-tip={label}>
+      <span className={`status ${color}`} aria-label={label} />
+    </div>
+  )
+}
+
+function rowTone(category: OpsEventSummary['event_category']) {
+  return category === 'corporate'
+    ? 'bg-info/15 hover:bg-info/25'
+    : 'bg-secondary/15 hover:bg-secondary/25'
+}
+
+function onRowKey(event: KeyboardEvent, open: () => void) {
+  if (event.key === 'Enter' || event.key === ' ') {
+    event.preventDefault()
+    open()
+  }
 }
 
 const categoryOptions: { value: EventCategoryFilter; label: string }[] = [

@@ -97,15 +97,13 @@ function cms_ops_serialize_event(array $row, array $games = [], array $team = []
         'advance_payment_completed' => (int) ($row['advance_payment_completed'] ?? 0) === 1,
         'full_payment_completed' => (int) ($row['full_payment_completed'] ?? 0) === 1,
         'added_to_calendar' => (int) ($row['added_to_calendar'] ?? 0) === 1,
-        'has_screenshot' => !empty($row['payment_screenshot_path']),
+        'has_screenshot' => cms_ops_screenshot_from_row($row) !== null,
         'created_at' => $row['created_at'] ?? null,
     ];
     if ($detail) {
         $payload['games'] = $games;
         $payload['team'] = $team;
-        $payload['screenshot_url'] = !empty($row['payment_screenshot_path'])
-            ? '/cms/api/ops/screenshot.php?id=' . rawurlencode((string) $row['id'])
-            : null;
+        $payload['screenshot_url'] = cms_ops_screenshot_from_row($row);
     }
     return $payload;
 }
@@ -267,6 +265,8 @@ function cms_ops_update_event(string $id, array $patch): array
         'age_group' => 'string',
         'participant_count' => 'int',
         'venue_type' => 'venue',
+        'payment_mode' => 'string',
+        'referral_source' => 'string',
         'special_requirements' => 'string',
     ];
 
@@ -307,6 +307,87 @@ function cms_ops_update_event(string $id, array $patch): array
         return ['ok' => false, 'error' => 'Event not found after save.'];
     }
     return ['ok' => true, 'event' => $event];
+}
+
+/**
+ * @return array{ok: true}|array{ok: false, error: string}
+ */
+function cms_ops_delete_event(string $id)
+{
+    if (cms_dev_json_enabled()) {
+        return cms_ops_delete_event_json($id);
+    }
+    cms_ops_migrate_if_needed();
+    if (!ctype_digit($id) || !cms_events_table_exists()) {
+        return ['ok' => false, 'error' => 'Event not found.'];
+    }
+    $eventId = (int) $id;
+    $stmt = cms_db()->prepare('SELECT id, payment_screenshot_path FROM events WHERE id = :id LIMIT 1');
+    $stmt->execute(['id' => $eventId]);
+    $row = $stmt->fetch();
+    if (!$row) {
+        return ['ok' => false, 'error' => 'Event not found.'];
+    }
+
+    $pdo = cms_db();
+    $pdo->beginTransaction();
+    try {
+        $pdo->prepare('DELETE FROM event_games WHERE event_id = :id')->execute(['id' => $eventId]);
+        $pdo->prepare('DELETE FROM event_team WHERE event_id = :id')->execute(['id' => $eventId]);
+        $pdo->prepare('DELETE FROM events WHERE id = :id')->execute(['id' => $eventId]);
+        $pdo->commit();
+    } catch (Throwable $e) {
+        $pdo->rollBack();
+        return ['ok' => false, 'error' => 'Could not delete event.'];
+    }
+
+    cms_ops_delete_local_screenshot_file(
+        is_string($row['payment_screenshot_path'] ?? null) ? $row['payment_screenshot_path'] : null
+    );
+    return ['ok' => true];
+}
+
+/**
+ * @return array{ok: true}|array{ok: false, error: string}
+ */
+function cms_ops_delete_event_json(string $id)
+{
+    $data = cms_ops_json_bundle();
+    $kept = [];
+    $found = null;
+    foreach ($data['bookings'] as $row) {
+        if (!is_array($row) || (string) ($row['id'] ?? '') !== $id) {
+            $kept[] = $row;
+            continue;
+        }
+        $found = $row;
+    }
+    if ($found === null) {
+        return ['ok' => false, 'error' => 'Event not found.'];
+    }
+    $data['bookings'] = $kept;
+    cms_ops_json_save_bundle($data);
+    cms_ops_delete_local_screenshot_file(
+        is_string($found['payment_screenshot_path'] ?? null) ? $found['payment_screenshot_path'] : null
+    );
+    return ['ok' => true];
+}
+
+function cms_ops_delete_local_screenshot_file($relative)
+{
+    $source = cms_ops_screenshot_source_from_path($relative);
+    if ($source === null || $source['type'] !== 'file') {
+        return;
+    }
+    $uploads = realpath(cms_uploads_dir());
+    $real = realpath($source['path']);
+    if ($uploads === false || $real === false) {
+        return;
+    }
+    if (strpos($real, $uploads) !== 0 || !is_file($real)) {
+        return;
+    }
+    unlink($real);
 }
 
 function cms_ops_normalize_patch_value(string $kind, $raw)
@@ -491,7 +572,10 @@ function cms_ops_list_team(): array
     return $out;
 }
 
-function cms_ops_screenshot_absolute_path(string $id): ?string
+/**
+ * @return array{type: 'file', path: string}|array{type: 'url', url: string}|null
+ */
+function cms_ops_screenshot_source(string $id): ?array
 {
     $relative = null;
     if (cms_dev_json_enabled()) {
@@ -506,12 +590,53 @@ function cms_ops_screenshot_absolute_path(string $id): ?string
         $row = $stmt->fetch();
         $relative = is_string($row['payment_screenshot_path'] ?? null) ? $row['payment_screenshot_path'] : null;
     }
-    if (!$relative) {
+    return cms_ops_screenshot_source_from_path($relative);
+}
+
+/**
+ * Same-origin URL for an event screenshot, or null when nothing can be shown.
+ *
+ * @param array<string, mixed> $row
+ */
+function cms_ops_screenshot_from_row(array $row): ?string
+{
+    $source = cms_ops_screenshot_source_from_path(
+        is_string($row['payment_screenshot_path'] ?? null) ? $row['payment_screenshot_path'] : null
+    );
+    $id = (string) ($row['id'] ?? '');
+    if ($source === null || $id === '') {
         return null;
+    }
+    return '/cms/api/ops/screenshot.php?id=' . rawurlencode($id);
+}
+
+/**
+ * @return array{type: 'file', path: string}|array{type: 'url', url: string}|null
+ */
+function cms_ops_screenshot_source_from_path($raw): ?array
+{
+    $relative = trim((string) $raw);
+    if ($relative === '') {
+        return null;
+    }
+    if (preg_match('#^https?://#i', $relative)) {
+        return ['type' => 'url', 'url' => $relative];
     }
     $relative = str_replace(['\\', '..'], ['/', ''], $relative);
     $path = cms_uploads_dir() . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $relative);
-    return is_file($path) ? $path : null;
+    if (!is_file($path)) {
+        return null;
+    }
+    return ['type' => 'file', 'path' => $path];
+}
+
+function cms_ops_screenshot_absolute_path(string $id): ?string
+{
+    $source = cms_ops_screenshot_source($id);
+    if ($source === null || $source['type'] !== 'file') {
+        return null;
+    }
+    return $source['path'];
 }
 
 /** @return array{bookings: list<array<string, mixed>>, games?: list<array<string, mixed>>, team?: list<array<string, mixed>>} */
@@ -652,7 +777,7 @@ function cms_ops_update_event_json(string $id, array $patch): array
             'advance_amount', 'full_payment_amount', 'advance_payment_date', 'full_payment_date',
             'advance_payment_completed', 'full_payment_completed', 'added_to_calendar',
             'instagram_handle', 'event_type', 'age_group', 'participant_count', 'venue_type',
-            'special_requirements',
+            'payment_mode', 'referral_source', 'special_requirements',
         ];
         foreach ($map as $column) {
             if (!array_key_exists($column, $patch)) {
