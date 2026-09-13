@@ -1,0 +1,12 @@
+---
+description: Ops workspace header, filters, and events API behavior
+globs: src/layouts/OpsLayout.tsx,src/pages/ops/**/*.tsx,src/lib/ops/**/*.ts,cms/api/ops/**/*.php,cms/includes/ops-*.php
+alwaysApply: false
+---
+
+# Ops workspace
+
+- Brand in `OpsNav` is the **logo image** (`getLogoUrl('dark')`, alt `The Game Hour` from site info). Do not use the signed-in user's `name` as the logo. `users.name` is `The Game Hour` for the admin account — show **email** when the name matches the site name.
+- Navbar is `bg-neutral text-neutral-content`. Ghost buttons and CMS link must include `text-neutral-content!`. daisyUI `btn-ghost` otherwise uses `base-content` (navy on dark = unreadable). Do not use `dark:` with daisyUI colors.
+- Default events status filter is **`all`**, not `upcoming`. Imported Bubble data is mostly completed/pending; Upcoming looks empty even when the API works.
+- Events list uses `cms/includes/ops-store.php`. That file must stay PHP 7.4-safe or the UI shows "Could not load events".

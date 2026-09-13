@@ -1,0 +1,14 @@
+---
+description: Save production bugs and environment constraints so they are not repeated
+alwaysApply: true
+---
+
+# Persist learnings
+
+When you fix a bug or learn a hosting/data/UI constraint, add a short bullet to the matching rule in `.cursor/rules/` in the same turn. Do not wait to be asked.
+
+- Environment, deploy, PHP, MySQL, secrets → `tgh-environment.mdc`
+- CMS PHP syntax → `cms-php-74.mdc`
+- Ops workspace UI/API → `ops-workspace.mdc`
+
+Write the constraint and the forbidden pattern, not a story. Keep each rule under 50 lines. If a bullet is already there, do not duplicate it.

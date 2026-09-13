@@ -1,0 +1,21 @@
+---
+description: Keep CMS PHP compatible with live cPanel PHP 7.4.33
+globs: cms/**/*.php
+alwaysApply: false
+---
+
+# CMS PHP 7.4
+
+Live `/cms/api/ops/events.php` returned empty HTTP 500 because `cms/includes/ops-store.php` used PHP 8 syntax. Auth endpoints that only load `bootstrap.php` still worked.
+
+Forbidden in `cms/` (parse or runtime fatal on 7.4):
+
+- Type hints `mixed`, union types (`string|int`), `never`
+- `match (...)`
+- `$e::class` — use `get_class($e)`
+- Nullsafe `$foo?->bar`
+- Relying on `str_contains` / `str_starts_with` without the polyfills in `bootstrap.php`
+
+Arrow functions (`fn`) and trailing commas in calls are fine (7.4). `{mixed}` in docblocks is fine.
+
+If you add a PHP 8 helper, polyfill it at the top of `bootstrap.php` the same way as `str_contains`.

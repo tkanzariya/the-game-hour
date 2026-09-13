@@ -1,0 +1,13 @@
+---
+description: Live hosting, deploy, and secret constraints for The Game Hour
+alwaysApply: true
+---
+
+# Environment
+
+- Live cPanel PHP is **7.4.33**. CMS PHP must parse on 7.4. Do not use PHP 8-only syntax in `cms/`.
+- Live MySQL is **localhost on the server** (`thegameh_tgh_cms`). Windows cannot open remote 3306. Local CMS uses gitignored `cms/config.local.php` (JSON/dev).
+- Deploy is GitHub `main` → FTPS (`.github/workflows/deploy-ftp.yml`). Protect `cms/config.php` and uploads from overwrite.
+- Never commit `cms/config.local.php`, `.env`, passwords, bcrypt hashes, or PII SQL under `cms/dev-data/`.
+- Public Book CTAs stay on same-origin `/book/social` and `/book/corporate`. Do not point them back at Bubble.
+- Ops is `noindex`. `robots.txt` disallows `/ops`, `/admin`, `/cms`.
