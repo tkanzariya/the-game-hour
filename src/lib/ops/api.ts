@@ -108,7 +108,7 @@ export async function fetchEvents(filters: {
     data = {}
   }
   // #region agent log
-  fetch('http://127.0.0.1:7314/ingest/bc48680f-cb31-4c2c-b170-30d2bd81067b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8016b3'},body:JSON.stringify({sessionId:'8016b3',runId:'run1',hypothesisId:'A',location:'src/lib/ops/api.ts:fetchEvents',message:'events API response',data:{status:res.status,ok:res.ok,contentType:res.headers.get('content-type'),rawLen:raw.length,parseOk:Object.keys(data).length>0,dataOk:data.ok??null,error:typeof data.error==='string'?data.error.slice(0,180):null,debug:data.debug??null,bodyStart:raw.slice(0,120)},timestamp:Date.now()})}).catch(()=>{});
+  fetch('http://127.0.0.1:7314/ingest/bc48680f-cb31-4c2c-b170-30d2bd81067b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8016b3'},body:JSON.stringify({sessionId:'8016b3',runId:'post-fix',hypothesisId:'A',location:'src/lib/ops/api.ts:fetchEvents',message:'events API response',data:{status:res.status,ok:res.ok,contentType:res.headers.get('content-type'),rawLen:raw.length,parseOk:Object.keys(data).length>0,dataOk:data.ok??null,error:typeof data.error==='string'?data.error.slice(0,180):null,debug:data.debug??null,bodyStart:raw.slice(0,120),filterStatus:filters.status,eventCount:Array.isArray(data.events)?data.events.length:0},timestamp:Date.now()})}).catch(()=>{});
   // #endregion
   if (!res.ok || !data.ok) {
     return {

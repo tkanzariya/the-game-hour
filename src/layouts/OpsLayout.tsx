@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Seo } from '@/components/Seo'
+import { getLogoUrl } from '@/lib/assets'
+import { getSiteInfo } from '@/lib/content/company'
 import { useOpsAuth } from '@/lib/ops/auth'
 import { ROUTES } from '@/constants/routes'
 import { buildSeo } from '@/utils/seo'
@@ -35,6 +37,7 @@ export default function OpsLayout() {
         <Seo {...seo} />
         <OpsNav
           name={user.name}
+          email={user.email}
           isAdmin={false}
           onLogout={async () => {
             await logout()
@@ -61,6 +64,7 @@ export default function OpsLayout() {
       <Seo {...seo} />
       <OpsNav
         name={user.name}
+        email={user.email}
         isAdmin
         onLogout={async () => {
           await logout()
@@ -76,36 +80,58 @@ export default function OpsLayout() {
 
 function OpsNav({
   name,
+  email,
   isAdmin,
   onLogout,
 }: {
   name: string
+  email: string
   isAdmin: boolean
   onLogout: () => void
 }) {
+  const site = getSiteInfo()
+  const logoUrl = getLogoUrl('dark')
+  const accountLabel =
+    name.trim().toLowerCase() === site.name.trim().toLowerCase() ? email : name
+
   useEffect(() => {
     const brand = document.querySelector('[data-ops-brand]')
     const cms = document.querySelector('[data-ops-cms]')
     const brandCs = brand ? getComputedStyle(brand) : null
+    const cmsCs = cms ? getComputedStyle(cms) : null
     const nav = document.querySelector('[data-ops-nav]')
     const navCs = nav ? getComputedStyle(nav) : null
+    const logo = brand?.querySelector('img')
     // #region agent log
-    fetch('http://127.0.0.1:7314/ingest/bc48680f-cb31-4c2c-b170-30d2bd81067b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8016b3'},body:JSON.stringify({sessionId:'8016b3',runId:'run1',hypothesisId:'E',location:'src/layouts/OpsLayout.tsx:OpsNav',message:'ops header contrast',data:{userName:name,brandText:brand?.textContent??null,brandColor:brandCs?.color??null,navBg:navCs?.backgroundColor??null,cmsText:cms?.textContent??null},timestamp:Date.now()})}).catch(()=>{});
+    fetch('http://127.0.0.1:7314/ingest/bc48680f-cb31-4c2c-b170-30d2bd81067b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8016b3'},body:JSON.stringify({sessionId:'8016b3',runId:'post-fix',hypothesisId:'E',location:'src/layouts/OpsLayout.tsx:OpsNav',message:'ops header contrast',data:{userName:name,accountLabel,brandAlt:logo?.getAttribute('alt')??null,brandColor:brandCs?.color??null,cmsColor:cmsCs?.color??null,navBg:navCs?.backgroundColor??null,cmsText:cms?.textContent??null},timestamp:Date.now()})}).catch(()=>{});
     // #endregion
-  }, [name])
+  }, [accountLabel, name])
 
   return (
     <div className="navbar bg-neutral text-neutral-content" data-ops-nav>
       <div className="navbar-start gap-1">
-        <Link to={ROUTES.opsEvents} data-ops-brand className="btn btn-ghost text-lg">
-          The Game Hour
+        <Link
+          to={ROUTES.opsEvents}
+          data-ops-brand
+          className="btn btn-ghost h-12 min-h-12 gap-2 px-2 text-neutral-content!"
+        >
+          <img
+            src={logoUrl}
+            alt={site.name}
+            className="h-9 w-auto sm:h-10"
+            width={160}
+            height={40}
+          />
         </Link>
-        <Link to={ROUTES.opsEvents} className="btn btn-ghost btn-sm md:hidden">
+        <Link
+          to={ROUTES.opsEvents}
+          className="btn btn-ghost btn-sm text-neutral-content! md:hidden"
+        >
           Events
         </Link>
       </div>
       <div className="navbar-center hidden md:flex">
-        <ul className="menu menu-horizontal px-1">
+        <ul className="menu menu-horizontal px-1 text-neutral-content">
           <li>
             <NavLink
               to={ROUTES.opsEvents}
@@ -124,12 +150,16 @@ function OpsNav({
       </div>
       <div className="navbar-end gap-2">
         {isAdmin ? (
-          <a href="/admin/dashboard.php" data-ops-cms className="btn btn-ghost btn-sm">
+          <a
+            href="/admin/dashboard.php"
+            data-ops-cms
+            className="btn btn-ghost btn-sm text-neutral-content!"
+          >
             Website CMS
           </a>
         ) : null}
-        <span className="hidden text-sm sm:inline">{name}</span>
-        <button type="button" className="btn btn-sm" onClick={onLogout}>
+        <span className="hidden text-sm text-neutral-content sm:inline">{accountLabel}</span>
+        <button type="button" className="btn btn-sm btn-secondary" onClick={onLogout}>
           Log out
         </button>
       </div>

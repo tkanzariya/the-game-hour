@@ -18,7 +18,7 @@ import { ROUTES } from '@/constants/routes'
 
 export default function OpsEventsPage() {
   const [category, setCategory] = useState<EventCategoryFilter>('all')
-  const [status, setStatus] = useState<EventStatusFilter>('upcoming')
+  const [status, setStatus] = useState<EventStatusFilter>('all')
   const [q, setQ] = useState('')
   const [search, setSearch] = useState('')
   const [events, setEvents] = useState<OpsEventSummary[]>([])

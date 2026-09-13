@@ -11,7 +11,7 @@ try {
         'error' => 'Could not load events.',
         'debug' => [
             'stage' => 'require-ops-store',
-            'type' => $e::class,
+            'type' => get_class($e),
             'message' => $e->getMessage(),
             'line' => $e->getLine(),
             'file' => basename($e->getFile()),
@@ -61,7 +61,7 @@ if ($method === 'GET') {
             'error' => 'Could not load events.',
             'debug' => [
                 'stage' => 'list',
-                'type' => $e::class,
+                'type' => get_class($e),
                 'message' => $e->getMessage(),
                 'line' => $e->getLine(),
                 'file' => basename($e->getFile()),

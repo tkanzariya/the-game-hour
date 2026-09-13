@@ -1,6 +1,20 @@
 <?php
 declare(strict_types=1);
 
+if (!function_exists('str_contains')) {
+    function str_contains($haystack, $needle)
+    {
+        return $needle === '' || strpos((string) $haystack, (string) $needle) !== false;
+    }
+}
+if (!function_exists('str_starts_with')) {
+    function str_starts_with($haystack, $needle)
+    {
+        $needle = (string) $needle;
+        return $needle === '' || strncmp((string) $haystack, $needle, strlen($needle)) === 0;
+    }
+}
+
 require_once __DIR__ . '/dev-json-store.php';
 require_once __DIR__ . '/../data/flash-messages.php';
 require_once __DIR__ . '/ops-migrate.php';

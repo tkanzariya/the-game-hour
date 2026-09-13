@@ -110,7 +110,7 @@ function cms_ops_serialize_event(array $row, array $games = [], array $team = []
     return $payload;
 }
 
-function cms_ops_money(mixed $value): ?float
+function cms_ops_money($value): ?float
 {
     if ($value === null || $value === '') {
         return null;
@@ -309,7 +309,7 @@ function cms_ops_update_event(string $id, array $patch): array
     return ['ok' => true, 'event' => $event];
 }
 
-function cms_ops_normalize_patch_value(string $kind, mixed $raw): mixed
+function cms_ops_normalize_patch_value(string $kind, $raw)
 {
     if ($kind === 'status') {
         $value = (string) $raw;
@@ -370,7 +370,7 @@ function cms_ops_normalize_patch_value(string $kind, mixed $raw): mixed
 }
 
 /** @return list<int> */
-function cms_ops_int_ids(mixed $raw): array
+function cms_ops_int_ids($raw): array
 {
     if (!is_array($raw)) {
         return [];
@@ -603,7 +603,7 @@ function cms_ops_find_json_booking(string $id): ?array
  * @param list<int> $ids
  * @return list<array{id: int, name: string}>
  */
-function cms_ops_json_named_list(mixed $ids, string $kind): array
+function cms_ops_json_named_list($ids, string $kind): array
 {
     $wanted = cms_ops_int_ids($ids);
     $catalog = cms_ops_json_catalog($kind === 'team' ? 'team' : 'games');
@@ -658,17 +658,25 @@ function cms_ops_update_event_json(string $id, array $patch): array
             if (!array_key_exists($column, $patch)) {
                 continue;
             }
-            $kind = match ($column) {
-                'event_status' => 'status',
-                'venue_type' => 'venue',
-                'price', 'event_expenses', 'advance_amount', 'full_payment_amount' => 'money',
-                'advance_payment_completed', 'full_payment_completed', 'added_to_calendar' => 'bool',
-                'participant_count' => 'int',
-                'event_date' => 'date',
-                'advance_payment_date', 'full_payment_date' => 'date_or_null',
-                'event_time' => 'time',
-                default => 'string',
-            };
+            if ($column === 'event_status') {
+                $kind = 'status';
+            } elseif ($column === 'venue_type') {
+                $kind = 'venue';
+            } elseif (in_array($column, ['price', 'event_expenses', 'advance_amount', 'full_payment_amount'], true)) {
+                $kind = 'money';
+            } elseif (in_array($column, ['advance_payment_completed', 'full_payment_completed', 'added_to_calendar'], true)) {
+                $kind = 'bool';
+            } elseif ($column === 'participant_count') {
+                $kind = 'int';
+            } elseif ($column === 'event_date') {
+                $kind = 'date';
+            } elseif (in_array($column, ['advance_payment_date', 'full_payment_date'], true)) {
+                $kind = 'date_or_null';
+            } elseif ($column === 'event_time') {
+                $kind = 'time';
+            } else {
+                $kind = 'string';
+            }
             $value = cms_ops_normalize_patch_value($kind, $patch[$column]);
             if ($value instanceof RuntimeException) {
                 return ['ok' => false, 'error' => $value->getMessage()];
