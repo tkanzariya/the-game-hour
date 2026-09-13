@@ -18,7 +18,7 @@ npm run cms:dev
 npm run dev
 ```
 
-2. Open http://localhost:5173/book and submit a test booking with a screenshot.
+2. Open http://localhost:5173/book/social and submit a test booking with a screenshot.
 3. Check `cms/dev-data/bookings.json` — if a new entry appears, the form works.
 
 ---
@@ -41,7 +41,7 @@ npm run dev
 3. Set `pass` to your real DB password
 4. Keep `host` as **`localhost`**
 5. Deploy the new site build (`npm run build` → upload `dist/` contents)
-6. Test: open `https://yoursite.com/book`, submit once, then in phpMyAdmin open table `events` and confirm a new row
+6. Test: open `https://yoursite.com/book/social`, submit once, then in phpMyAdmin open table `events` and confirm a new row
 
 ---
 

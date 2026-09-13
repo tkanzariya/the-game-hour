@@ -8,28 +8,26 @@ type BookingSuccessProps = {
 
 export function BookingSuccess({ bookingId, category }: BookingSuccessProps) {
   return (
-    <div className="flex flex-col items-center gap-4 py-6 text-center">
-      <div className="flex size-14 items-center justify-center rounded-full bg-success/15 text-2xl text-success">
-        ✓
-      </div>
-      <h2 className="font-heading text-2xl font-bold text-primary">
-        Booking submitted
-      </h2>
-      <p className="max-w-md font-body text-sm leading-relaxed text-accent-muted-grey">
-        Thanks — we received your {category === 'corporate' ? 'corporate' : 'event'}{' '}
-        booking and payment screenshot. Our team will confirm after verifying the
-        advance payment.
-      </p>
-      <p className="rounded-xl bg-surface-muted px-4 py-2 font-heading text-sm font-semibold text-primary">
-        Reference: #{bookingId}
-      </p>
-      <div className="mt-4 flex flex-wrap justify-center gap-3">
-        <Button href={ROUTES.home} variant="primary">
-          Back to home
-        </Button>
-        <Button href={ROUTES.contact} variant="secondary">
-          Contact us
-        </Button>
+    <div className="card card-border bg-base-100 mx-auto max-w-lg text-center">
+      <div className="card-body items-center gap-4 py-10">
+        <div className="badge badge-success badge-lg">Confirmed</div>
+        <h2 className="card-title font-heading justify-center text-2xl">
+          We received your {category === 'corporate' ? 'corporate' : 'event'} booking
+        </h2>
+        <p className="text-sm opacity-70">
+          Our team will confirm after verifying the advance payment screenshot.
+        </p>
+        <p className="badge badge-outline badge-lg font-heading">
+          Reference #{bookingId}
+        </p>
+        <div className="card-actions mt-2 justify-center">
+          <Button href={ROUTES.home} variant="primary">
+            Back to home
+          </Button>
+          <Button href={ROUTES.contact} variant="secondary">
+            Contact us
+          </Button>
+        </div>
       </div>
     </div>
   )

@@ -115,7 +115,7 @@ Verified values and trust notes: [Trust Stats Update (archive)](../archive/audit
 
 ## Booking URLs
 
-**Local forms (new):** `/book` (social) and `/book/corporate` — details + advance payment screenshot → `events` table (or JSON in local CMS mode). Setup: [BOOKING_LOCAL_SETUP.md](operations/BOOKING_LOCAL_SETUP.md).
+**Local forms (new):** `/book/social` and `/book/corporate` (`/book` redirects to social) — details + advance payment screenshot → `events` table (or JSON in local CMS mode). Setup: [BOOKING_LOCAL_SETUP.md](operations/BOOKING_LOCAL_SETUP.md).
 
 **File:** `src/data/content/booking-links.json` (site CTAs still point at Bubble until you flip them)
 
@@ -129,7 +129,7 @@ Verified values and trust notes: [Trust Stats Update (archive)](../archive/audit
 - **`default`** — all standard Book CTAs
 - **`corporate`** — Corporate Games service page only
 
-**Before launch:** Point CTAs at `/book` and `/book/corporate`, or replace Bubble `version-test` URLs with production Bubble URLs if still using Bubble.
+**Before launch:** Point CTAs at `/book/social` and `/book/corporate`, or replace Bubble `version-test` URLs with production Bubble URLs if still using Bubble.
 
 **Full CTA map:** [Booking Routing Audit](operations/BOOKING_ROUTING_AUDIT.md)
 

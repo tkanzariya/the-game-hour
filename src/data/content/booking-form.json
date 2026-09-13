@@ -59,6 +59,15 @@
     { "value": "online", "label": "Online" },
     { "value": "online_cash", "label": "Online + Cash" }
   ],
+  "referralSources": [
+    { "value": "instagram", "label": "Instagram" },
+    { "value": "whatsapp", "label": "WhatsApp" },
+    { "value": "website", "label": "Website" },
+    { "value": "google", "label": "Google" },
+    { "value": "friend_family", "label": "Friend / Family" },
+    { "value": "repeat_customer", "label": "We've booked before" },
+    { "value": "other", "label": "Other" }
+  ],
   "placeholders": {
     "email": "Enter Email ID",
     "birthdayPersonName": "Enter Name of Birthday Person",
@@ -70,7 +79,7 @@
     "phone": "Enter 10-digit contact number",
     "participants": "Enter number of participants",
     "venue": "Enter venue / location of event",
-    "referral": "Website, Instagram, WhatsApp…",
+    "referral": "Choose how you heard about us",
     "specialRequirements": "Enter any special requirements. Extra charges may apply."
   }
 }

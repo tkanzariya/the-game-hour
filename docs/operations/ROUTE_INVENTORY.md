@@ -33,8 +33,9 @@
 | `/services` | `ServicesPage` | Service discovery, audiences, all experiences, gallery invite, final CTA | Yes | Services (dropdown + page) | 8 service links | Book, service cards, audience cards |
 | `/gallery` | `GalleryPage` | Photo gallery, browse, event stories, final CTA | Yes | Gallery | Gallery | Book, story → service links, final CTA |
 | `/contact` | `ContactPage` | Contact hero, phone, email, location, book + WhatsApp | Yes | Contact | Contact | Book, WhatsApp (hero) |
-| `/book` | `BookingPage` (social) | Local social booking form (details + payment) | Yes | — | — | Direct URL; CTAs still Bubble until flipped |
-| `/book/corporate` | `BookingPage` (corporate) | Local corporate booking form (details + payment) | Yes | — | — | Direct URL |
+| `/book` | redirect | Goes to `/book/social` | Direct URL only — site CTAs still Bubble |
+| `/book/social` | `BookingPage` (social) | Local social booking form | Direct URL only |
+| `/book/corporate` | `BookingPage` (corporate) | Local corporate booking form | Direct URL only |
 
 ---
 

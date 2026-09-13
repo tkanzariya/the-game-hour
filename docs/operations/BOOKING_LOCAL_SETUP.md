@@ -1,6 +1,6 @@
 # Local Booking Forms + Events DB
 
-Bookings live on this site at `/book` (social) and `/book/corporate` (corporate). Bubble CTAs are unchanged until you flip [`src/data/content/booking-links.json`](src/data/content/booking-links.json).
+Bookings live on this site at `/book/social` and `/book/corporate` (`/book` redirects to social). Bubble CTAs are unchanged until you flip [`src/data/content/booking-links.json`](src/data/content/booking-links.json).
 
 ## Prerequisites
 
@@ -25,7 +25,7 @@ npm run dev
 
 Open:
 
-- http://localhost:5173/book
+- http://localhost:5173/book/social
 - http://localhost:5173/book/corporate
 
 Submit with a payment screenshot → check `cms/dev-data/bookings.json` and `cms/uploads/payment-screenshots/`.
@@ -54,4 +54,4 @@ Configured in [`src/data/content/booking-form.json`](src/data/content/booking-fo
 
 ## Flip site CTAs (when ready)
 
-Point `urls.default` / `urls.corporate` in `booking-links.json` to `/book` and `/book/corporate` (same-origin paths, not Bubble).
+Point `urls.default` / `urls.corporate` in `booking-links.json` to `/book/social` and `/book/corporate` (same-origin paths, not Bubble).

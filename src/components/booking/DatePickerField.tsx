@@ -1,6 +1,5 @@
 import { useEffect, useId, useRef, useState } from 'react'
 import { FieldShell } from './FormFields'
-import { bookingControlClass } from './fieldStyles'
 import { formatDisplayDate } from '@/lib/booking/validation'
 import { cn } from '@/utils/cn'
 
@@ -77,10 +76,9 @@ export function DatePickerField({
           type="button"
           id={id}
           className={cn(
-            bookingControlClass,
-            'flex cursor-pointer items-center justify-between text-left',
-            !value && 'text-accent-muted-grey/70',
-            error && 'border-error/60',
+            'input w-full cursor-pointer justify-between text-left',
+            !value && 'text-base-content/50',
+            error && 'input-error',
           )}
           aria-haspopup="dialog"
           aria-expanded={open}
@@ -96,23 +94,21 @@ export function DatePickerField({
           <div
             role="dialog"
             aria-label="Choose date"
-            className="absolute z-30 mt-2 w-full min-w-[17rem] rounded-2xl border border-primary/10 bg-white p-3 shadow-card"
+            className="card card-border bg-base-100 absolute z-30 mt-2 w-full min-w-[17rem] p-3 shadow-lg"
           >
             <div className="mb-2 flex items-center justify-between gap-2">
               <button
                 type="button"
-                className="rounded-lg px-2 py-1 font-heading text-sm font-semibold text-primary hover:bg-surface-muted"
+                className="btn btn-ghost btn-sm"
                 onClick={() => setView(new Date(year, month - 1, 1))}
                 aria-label="Previous month"
               >
                 ‹
               </button>
-              <p className="font-heading text-sm font-bold text-primary">
-                {monthLabel}
-              </p>
+              <p className="font-heading text-sm font-bold">{monthLabel}</p>
               <button
                 type="button"
-                className="rounded-lg px-2 py-1 font-heading text-sm font-semibold text-primary hover:bg-surface-muted"
+                className="btn btn-ghost btn-sm"
                 onClick={() => setView(new Date(year, month + 1, 1))}
                 aria-label="Next month"
               >
@@ -139,10 +135,9 @@ export function DatePickerField({
                     type="button"
                     disabled={disabled}
                     className={cn(
-                      'rounded-lg py-1.5 font-body text-sm transition-brand',
-                      disabled && 'cursor-not-allowed text-on-disabled opacity-40',
-                      !disabled && 'hover:bg-accent-soft text-primary',
-                      selectedDay && 'bg-primary text-on-primary hover:bg-primary-700',
+                      'btn btn-ghost btn-sm',
+                      disabled && 'btn-disabled',
+                      selectedDay && 'btn-active',
                     )}
                     onClick={() => {
                       onChange(ymd)

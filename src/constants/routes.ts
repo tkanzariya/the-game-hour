@@ -9,6 +9,7 @@ export const ROUTES = {
   gallery: '/gallery',
   contact: '/contact',
   book: '/book',
+  bookSocial: '/book/social',
   bookCorporate: '/book/corporate',
   gameLibrary: '/game-library',
   designPreview: '/design-preview',

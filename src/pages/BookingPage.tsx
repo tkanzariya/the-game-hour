@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Seo } from '@/components/Seo'
-import { Container } from '@/components/Container'
+import { PageHero } from '@/components/PageHero'
+import { Section } from '@/components/Section'
 import { StepIndicator } from '@/components/booking'
 import {
   BookingDetailsForm,
@@ -37,7 +38,7 @@ export default function BookingPage({ category }: BookingPageProps) {
   const [bookingId, setBookingId] = useState<string | number | null>(null)
 
   const title = getBookingTitle(category)
-  const path = category === 'corporate' ? ROUTES.bookCorporate : ROUTES.book
+  const path = category === 'corporate' ? ROUTES.bookCorporate : ROUTES.bookSocial
   const seo = buildSeo({
     title: category === 'corporate' ? 'Corporate Booking' : 'Book your Event',
     description:
@@ -88,23 +89,27 @@ export default function BookingPage({ category }: BookingPageProps) {
   return (
     <>
       <Seo {...seo} />
-      <div className="min-h-[70vh] bg-gradient-to-b from-primary via-primary to-dark pb-16 pt-8 sm:pt-12">
-        <Container className="mx-auto max-w-xl">
-          <div className="surface-clay overflow-hidden rounded-3xl px-5 py-8 shadow-card sm:px-8 sm:py-10">
-            {bookingId !== null ? (
-              <BookingSuccess bookingId={bookingId} category={category} />
-            ) : (
-              <>
-                <h1 className="mb-2 text-center font-heading text-2xl font-bold text-primary sm:text-3xl">
-                  {title}
-                </h1>
-                <p className="mb-6 text-center font-body text-sm text-accent-muted-grey">
-                  {category === 'corporate'
-                    ? 'Corporate booking'
-                    : 'Social / celebration booking'}{' '}
-                  · Step {step} of 2
-                </p>
-                <StepIndicator step={step} />
+      <PageHero
+        title={bookingId !== null ? 'Booking submitted' : title}
+        subtitle={
+          bookingId !== null
+            ? 'We have your details and payment screenshot. Our team will confirm after verifying the advance payment.'
+            : category === 'corporate'
+              ? 'Share your company event details. Next you’ll complete the advance payment with a screenshot — we only save the booking after that.'
+              : 'Tell us about your celebration. Next you’ll complete the advance payment with a screenshot — we only save the booking after that.'
+        }
+        badge={category === 'corporate' ? 'Corporate booking' : 'Book your event'}
+        containerWidth="wide"
+      />
+
+      <Section tone="default" padding="sm" profile="marketing">
+        <div className="mx-auto max-w-3xl">
+          {bookingId !== null ? (
+            <BookingSuccess bookingId={bookingId} category={category} />
+          ) : (
+            <>
+              <StepIndicator step={step} />
+              <div className="mt-8">
                 {step === 1 ? (
                   <BookingDetailsForm
                     category={category}
@@ -131,11 +136,11 @@ export default function BookingPage({ category }: BookingPageProps) {
                     onSubmit={() => void handleSubmit()}
                   />
                 )}
-              </>
-            )}
-          </div>
-        </Container>
-      </div>
+              </div>
+            </>
+          )}
+        </div>
+      </Section>
     </>
   )
 }
