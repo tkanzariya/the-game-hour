@@ -8,6 +8,8 @@ export const ROUTES = {
   serviceDetail: '/services/:slug',
   gallery: '/gallery',
   contact: '/contact',
+  book: '/book',
+  bookCorporate: '/book/corporate',
   gameLibrary: '/game-library',
   designPreview: '/design-preview',
   newUiPreview: '/new-ui-preview',

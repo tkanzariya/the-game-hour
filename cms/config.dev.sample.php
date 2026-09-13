@@ -34,5 +34,7 @@ return [
     'dev' => [
         'json_store' => __DIR__ . '/dev-data/images.json',
         'content_store' => __DIR__ . '/dev-data/content.json',
+        // Local bookings without MySQL (npm run cms:dev + Vite proxy)
+        'bookings_store' => __DIR__ . '/dev-data/bookings.json',
     ],
 ];

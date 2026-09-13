@@ -8,6 +8,7 @@ import AboutPage from '@/pages/AboutPage'
 import ServiceDetailPage from '@/pages/ServiceDetailPage'
 import GalleryPage from '@/pages/GalleryPage'
 import ContactPage from '@/pages/ContactPage'
+import BookingPage from '@/pages/BookingPage'
 import GameLibraryPage from '@/pages/GameLibraryPage'
 import NotFoundPage from '@/pages/NotFoundPage'
 import DesignPreviewPage from '@/pages/DesignPreviewPage'
@@ -65,6 +66,8 @@ export const router = createBrowserRouter([
       { path: 'services/:slug', element: <ServiceDetailPage /> },
       { path: ROUTES.gallery.slice(1), element: <GalleryPage /> },
       { path: ROUTES.contact.slice(1), element: <ContactPage /> },
+      { path: 'book', element: <BookingPage category="social" /> },
+      { path: 'book/corporate', element: <BookingPage category="corporate" /> },
       ...(isDev
         ? [{ path: ROUTES.gameLibrary.slice(1), element: <GameLibraryPage /> }]
         : []),

@@ -35,6 +35,7 @@
   --color-dark-grey: #333333;
   --color-success: #22c55e;
   --color-warning: #f59e0b;
+  --color-error: #ef4444;
   --color-whatsapp: #25d366;
   --color-surface-muted: #e8eef6;
   --color-surface-elevated: #ffffff;
@@ -69,6 +70,7 @@
   --color-dark-grey: var(--color-dark-grey);
   --color-success: var(--color-success);
   --color-warning: var(--color-warning);
+  --color-error: var(--color-error);
   --color-whatsapp: var(--color-whatsapp);
   --color-surface-muted: var(--color-surface-muted);
   --color-surface-elevated: var(--color-surface-elevated);

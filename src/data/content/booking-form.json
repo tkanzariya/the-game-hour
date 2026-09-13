@@ -1,0 +1,76 @@
+{
+  "meta": {
+    "source": "Local booking forms (migrating from Bubble)",
+    "note": "Confirm bank account / IFSC with finance if Bubble screenshots disagreed."
+  },
+  "titles": {
+    "social": "Book your Event Now!",
+    "corporate": "Book your Corporate Event Now!"
+  },
+  "payment": {
+    "title": "Complete your advance payment",
+    "intro": "Please complete the advance payment using the QR code below for the agreed amount.",
+    "screenshotRequired": "After making the payment, upload a screenshot of the successful payment below. Your booking will be submitted only after the payment screenshot is uploaded.",
+    "help": "Need help with the payment amount? Contact Vijay Kanzariya at +91 99240 07700",
+    "helpPhone": "+919924007700",
+    "upiId": "pingakshaevents@sbi",
+    "upiPayeeName": "Pingaksha Events",
+    "bank": {
+      "name": "STATE BANK OF INDIA",
+      "accountName": "PINGAKSHA EVENTS",
+      "accountNumber": "43690602826",
+      "ifsc": "SBIN0000362"
+    },
+    "steps": [
+      { "title": "Pay", "body": "Scan the QR code and complete the advance payment." },
+      { "title": "Screenshot", "body": "Take a screenshot showing the successful payment." },
+      { "title": "Upload & Submit", "body": "Upload the screenshot below and click Submit." }
+    ]
+  },
+  "terms": [
+    "50% advance payment is required to confirm your booking.",
+    "Booking will be confirmed after the Payment.",
+    "Rest of the 50% will be collected after the Event.",
+    "If Booking is cancelled from your side, no refunds will be provided.",
+    "The Game Hour will bring all the game equipment needed.",
+    "Our activities will continue for straight 90 mins."
+  ],
+  "eventTypes": [
+    { "value": "birthday", "label": "Birthday" },
+    { "value": "get_together", "label": "Get Together" },
+    { "value": "traditional", "label": "Traditional" },
+    { "value": "playdate", "label": "Playdate" },
+    { "value": "game_festival", "label": "Game Festival" },
+    { "value": "sports_day", "label": "Sports Day" },
+    { "value": "kitty_party", "label": "Kitty Party" }
+  ],
+  "ageGroups": [
+    { "value": "4-7", "label": "4-7" },
+    { "value": "8-12", "label": "8-12" },
+    { "value": "13-14", "label": "13-14" },
+    { "value": "15+_adults", "label": "Adults (15+)" },
+    { "value": "senior_citizens", "label": "Senior Citizens" }
+  ],
+  "venueTypes": [
+    { "value": "indoor", "label": "Indoor" },
+    { "value": "outdoor", "label": "Outdoor" }
+  ],
+  "paymentModes": [
+    { "value": "online", "label": "Online" },
+    { "value": "online_cash", "label": "Online + Cash" }
+  ],
+  "placeholders": {
+    "email": "Enter Email ID",
+    "birthdayPersonName": "Enter Name of Birthday Person",
+    "companyName": "Enter Name of Company",
+    "contactNameSocial": "Enter your name",
+    "contactNameCorporate": "Enter your name",
+    "addressSocial": "Enter full address",
+    "addressCorporate": "Enter company address",
+    "phone": "Enter 10-digit contact number",
+    "participants": "Enter number of participants",
+    "venue": "Enter venue / location of event",
+    "referral": "Website, Instagram, WhatsApp…",
+    "specialRequirements": "Enter any special requirements. Extra charges may apply."
+  }
+}

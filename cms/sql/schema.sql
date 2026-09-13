@@ -75,3 +75,42 @@ INSERT INTO site_metrics (metric_key, value) VALUES
 ('games-conducted', '100+'),
 ('cities-served', '6')
 ON DUPLICATE KEY UPDATE metric_key = metric_key;
+
+-- Bookings (also in migrate-events.sql for existing installs)
+CREATE TABLE IF NOT EXISTS events (
+  id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  event_category ENUM('social', 'corporate') NOT NULL,
+  event_status ENUM('pending', 'upcoming', 'completed') NOT NULL DEFAULT 'pending',
+  email VARCHAR(255) NOT NULL,
+  contact_name VARCHAR(255) NOT NULL DEFAULT '',
+  phone VARCHAR(20) NOT NULL DEFAULT '',
+  address TEXT NOT NULL,
+  birthday_person_name VARCHAR(255) DEFAULT NULL,
+  company_name VARCHAR(255) DEFAULT NULL,
+  event_type VARCHAR(80) DEFAULT NULL,
+  participant_count INT UNSIGNED NOT NULL DEFAULT 1,
+  age_group VARCHAR(40) DEFAULT NULL,
+  event_date DATE NOT NULL,
+  event_time TIME NOT NULL,
+  venue_name VARCHAR(255) DEFAULT NULL,
+  venue_type ENUM('indoor', 'outdoor') NOT NULL,
+  payment_mode ENUM('online', 'online_cash') NOT NULL,
+  referral_source VARCHAR(255) DEFAULT NULL,
+  special_requirements TEXT DEFAULT NULL,
+  terms_accepted_at DATETIME NOT NULL,
+  price DECIMAL(12, 2) DEFAULT NULL,
+  advance_amount DECIMAL(12, 2) DEFAULT NULL,
+  full_payment_amount DECIMAL(12, 2) DEFAULT NULL,
+  event_expenses DECIMAL(12, 2) DEFAULT NULL,
+  advance_payment_date DATE DEFAULT NULL,
+  full_payment_date DATE DEFAULT NULL,
+  advance_payment_completed TINYINT(1) NOT NULL DEFAULT 0,
+  full_payment_completed TINYINT(1) NOT NULL DEFAULT 0,
+  payment_screenshot_path VARCHAR(512) DEFAULT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  KEY idx_event_category (event_category),
+  KEY idx_event_status (event_status),
+  KEY idx_event_date (event_date),
+  KEY idx_created (created_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

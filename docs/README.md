@@ -14,6 +14,8 @@
 | [HANDBOOK.md](HANDBOOK.md) | Day-to-day operations guide |
 | [operations/ROUTE_INVENTORY.md](operations/ROUTE_INVENTORY.md) | Routes, nav links, CTAs |
 | [operations/BOOKING_ROUTING_AUDIT.md](operations/BOOKING_ROUTING_AUDIT.md) | Booking URL map |
+| [operations/BOOKING_LOCAL_SETUP.md](operations/BOOKING_LOCAL_SETUP.md) | Local booking forms + Events MySQL setup |
+| [operations/BOOKING_ASAP.md](operations/BOOKING_ASAP.md) | Finish bookings without remote MySQL / support |
 | [operations/PROJECT_STRUCTURE.md](operations/PROJECT_STRUCTURE.md) | Repository layout |
 | [operations/LAYOUT_SYSTEM_AUDIT.md](operations/LAYOUT_SYSTEM_AUDIT.md) | Layout width profiles |
 | [operations/WEBSITE_AUDIT_REPORT.md](operations/WEBSITE_AUDIT_REPORT.md) | Baseline site audit |

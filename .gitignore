@@ -37,6 +37,9 @@ uploads/*
 cms/uploads/*
 !cms/uploads/.gitkeep
 !cms/uploads/.htaccess
+!cms/uploads/payment-screenshots/
+cms/uploads/payment-screenshots/*
+!cms/uploads/payment-screenshots/.gitkeep
 cms/static/images/*
 !cms/static/images/.gitkeep
 cms/dev-data/*
