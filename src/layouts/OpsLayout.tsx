@@ -1,3 +1,4 @@
+import { useEffect } from 'react'
 import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { Seo } from '@/components/Seo'
 import { useOpsAuth } from '@/lib/ops/auth'
@@ -82,10 +83,21 @@ function OpsNav({
   isAdmin: boolean
   onLogout: () => void
 }) {
+  useEffect(() => {
+    const brand = document.querySelector('[data-ops-brand]')
+    const cms = document.querySelector('[data-ops-cms]')
+    const brandCs = brand ? getComputedStyle(brand) : null
+    const nav = document.querySelector('[data-ops-nav]')
+    const navCs = nav ? getComputedStyle(nav) : null
+    // #region agent log
+    fetch('http://127.0.0.1:7314/ingest/bc48680f-cb31-4c2c-b170-30d2bd81067b',{method:'POST',headers:{'Content-Type':'application/json','X-Debug-Session-Id':'8016b3'},body:JSON.stringify({sessionId:'8016b3',runId:'run1',hypothesisId:'E',location:'src/layouts/OpsLayout.tsx:OpsNav',message:'ops header contrast',data:{userName:name,brandText:brand?.textContent??null,brandColor:brandCs?.color??null,navBg:navCs?.backgroundColor??null,cmsText:cms?.textContent??null},timestamp:Date.now()})}).catch(()=>{});
+    // #endregion
+  }, [name])
+
   return (
-    <div className="navbar bg-neutral text-neutral-content">
+    <div className="navbar bg-neutral text-neutral-content" data-ops-nav>
       <div className="navbar-start gap-1">
-        <Link to={ROUTES.opsEvents} className="btn btn-ghost text-lg">
+        <Link to={ROUTES.opsEvents} data-ops-brand className="btn btn-ghost text-lg">
           The Game Hour
         </Link>
         <Link to={ROUTES.opsEvents} className="btn btn-ghost btn-sm md:hidden">
@@ -112,7 +124,7 @@ function OpsNav({
       </div>
       <div className="navbar-end gap-2">
         {isAdmin ? (
-          <a href="/admin/dashboard.php" className="btn btn-ghost btn-sm">
+          <a href="/admin/dashboard.php" data-ops-cms className="btn btn-ghost btn-sm">
             Website CMS
           </a>
         ) : null}

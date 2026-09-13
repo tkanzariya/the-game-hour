@@ -2,7 +2,22 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../../includes/bootstrap.php';
-require_once __DIR__ . '/../../includes/ops-store.php';
+
+try {
+    require_once __DIR__ . '/../../includes/ops-store.php';
+} catch (Throwable $e) {
+    cms_json_response([
+        'ok' => false,
+        'error' => 'Could not load events.',
+        'debug' => [
+            'stage' => 'require-ops-store',
+            'type' => $e::class,
+            'message' => $e->getMessage(),
+            'line' => $e->getLine(),
+            'file' => basename($e->getFile()),
+        ],
+    ], 500);
+}
 
 header('Cache-Control: no-store');
 
@@ -25,12 +40,34 @@ if ($method === 'GET' && $id !== '') {
 }
 
 if ($method === 'GET') {
-    $events = cms_ops_list_events([
-        'category' => (string) ($_GET['category'] ?? ''),
-        'status' => (string) ($_GET['status'] ?? ''),
-        'q' => (string) ($_GET['q'] ?? ''),
-    ]);
-    cms_json_response(['ok' => true, 'events' => $events]);
+    try {
+        $events = cms_ops_list_events([
+            'category' => (string) ($_GET['category'] ?? ''),
+            'status' => (string) ($_GET['status'] ?? ''),
+            'q' => (string) ($_GET['q'] ?? ''),
+        ]);
+        cms_json_response([
+            'ok' => true,
+            'events' => $events,
+            'debug' => [
+                'stage' => 'list',
+                'count' => count($events),
+                'migrate' => cms_ops_migration_error(),
+            ],
+        ]);
+    } catch (Throwable $e) {
+        cms_json_response([
+            'ok' => false,
+            'error' => 'Could not load events.',
+            'debug' => [
+                'stage' => 'list',
+                'type' => $e::class,
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => basename($e->getFile()),
+            ],
+        ], 500);
+    }
 }
 
 if ($method === 'PATCH' || $method === 'POST') {
