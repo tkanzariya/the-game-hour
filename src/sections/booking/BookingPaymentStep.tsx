@@ -1,4 +1,3 @@
-import { Button } from '@/components/Button'
 import { FileDropzone } from '@/components/booking'
 import { getBookingFormContent } from '@/lib/booking/api'
 
@@ -25,8 +24,6 @@ export function BookingPaymentStep({
   const upiQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=220x220&data=${encodeURIComponent(
     `upi://pay?pa=${payment.upiId}&pn=${encodeURIComponent(payment.upiPayeeName)}`,
   )}`
-
-  const canSubmit = Boolean(screenshot) && !submitting
 
   return (
     <div className="flex min-w-0 flex-col gap-5 sm:gap-6">
@@ -114,33 +111,30 @@ export function BookingPaymentStep({
       ) : null}
 
       {!screenshot ? (
-        <p className="text-center text-sm font-semibold text-error">
-          Submit stays disabled until a payment screenshot is attached.
+        <p className="text-error text-center text-sm font-semibold">
+          Attach a payment screenshot, then submit. Your booking is not saved yet.
         </p>
       ) : null}
 
-      <div className="flex flex-col gap-3 sm:flex-row sm:justify-center">
-        <Button
+      <form
+        className="bg-base-100 sticky bottom-0 z-50 flex flex-col gap-3 py-3 sm:flex-row sm:justify-center"
+        onSubmit={(e) => {
+          e.preventDefault()
+          onSubmit()
+        }}
+      >
+        <button
           type="button"
-          variant="secondary"
-          size="lg"
-          className="sm:min-w-40"
+          className="btn btn-lg sm:min-w-40"
           onClick={onPrevious}
           disabled={submitting}
         >
           Previous
-        </Button>
-        <Button
-          type="button"
-          variant="primary"
-          size="lg"
-          className="sm:min-w-40"
-          disabled={!canSubmit}
-          onClick={onSubmit}
-        >
+        </button>
+        <button type="submit" className="btn btn-primary btn-lg sm:min-w-40" disabled={submitting}>
           {submitting ? 'Submitting…' : 'Submit booking'}
-        </Button>
-      </div>
+        </button>
+      </form>
     </div>
   )
 }

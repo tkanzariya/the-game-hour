@@ -18,6 +18,8 @@ export default function FloatingActions({ preview = false }: FloatingActionsProp
   const onBookingPage =
     location.pathname === ROUTES.bookSocial || location.pathname === ROUTES.bookCorporate
 
+  if (!preview && onBookingPage) return null
+
   if (!preview && !FEATURE_FLAGS.floatingCta) return null
 
   const contact = getContactInfo()
@@ -34,23 +36,23 @@ export default function FloatingActions({ preview = false }: FloatingActionsProp
       aria-label="Quick contact actions"
     >
       {!onBookingPage ? (
-      <motion.a
-        whileHover={{ scale: 1.02, y: -1 }}
-        whileTap={{ scale: 0.98, y: 0 }}
-        href={bookingUrl}
-        target={bookingExternal ? '_blank' : undefined}
-        rel={bookingExternal ? 'noopener noreferrer' : undefined}
-        className={cn(
-          'inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-secondary/80 surface-accent px-5 py-3 text-sm font-bold text-on-accent shadow-fab transition-brand hover:shadow-glow-accent hover:brightness-105 active:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-secondary',
-          'max-w-[calc(100vw-1.5rem)] sm:min-w-[8.5rem]',
-        )}
-        aria-label={bookLabel}
-      >
-        <span aria-hidden className="text-base">
-          ✦
-        </span>
-        <span className="whitespace-nowrap">{bookLabel}</span>
-      </motion.a>
+        <motion.a
+          whileHover={{ scale: 1.02, y: -1 }}
+          whileTap={{ scale: 0.98, y: 0 }}
+          href={bookingUrl}
+          target={bookingExternal ? '_blank' : undefined}
+          rel={bookingExternal ? 'noopener noreferrer' : undefined}
+          className={cn(
+            'inline-flex min-h-12 items-center justify-center gap-2 rounded-full border-2 border-secondary/80 surface-accent px-5 py-3 text-sm font-bold text-on-accent shadow-fab transition-brand hover:shadow-glow-accent hover:brightness-105 active:brightness-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-secondary',
+            'max-w-[calc(100vw-1.5rem)] sm:min-w-[8.5rem]',
+          )}
+          aria-label={bookLabel}
+        >
+          <span aria-hidden className="text-base">
+            ✦
+          </span>
+          <span className="whitespace-nowrap">{bookLabel}</span>
+        </motion.a>
       ) : null}
 
       <div className="flex gap-2.5">

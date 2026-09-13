@@ -65,6 +65,9 @@ export default function BookingPage({ category }: BookingPageProps) {
       setScreenshotError(
         'Attach a payment screenshot to submit. Your booking is not saved yet.',
       )
+      setSubmitError(
+        'Attach a payment screenshot to submit. Your booking is not saved yet.',
+      )
       return
     }
     setScreenshotError(undefined)
@@ -73,7 +76,11 @@ export default function BookingPage({ category }: BookingPageProps) {
     try {
       const result = await submitBooking(details, screenshot)
       if (!result.ok) {
-        setSubmitError(result.error)
+        const fieldHint =
+          result.fields && Object.keys(result.fields).length > 0
+            ? ` (${Object.keys(result.fields).join(', ')})`
+            : ''
+        setSubmitError(`${result.error}${fieldHint}`)
         if (result.fields?.payment_screenshot) {
           setScreenshotError(result.fields.payment_screenshot)
         }
@@ -81,6 +88,12 @@ export default function BookingPage({ category }: BookingPageProps) {
       }
       setBookingId(result.bookingId)
       window.scrollTo({ top: 0, behavior: 'smooth' })
+    } catch (err) {
+      setSubmitError(
+        err instanceof Error
+          ? err.message
+          : 'Could not submit the booking. Please try again.',
+      )
     } finally {
       setSubmitting(false)
     }
@@ -103,7 +116,7 @@ export default function BookingPage({ category }: BookingPageProps) {
       />
 
       <Section tone="default" padding="sm" profile="marketing">
-        <div className="mx-auto w-full min-w-0 max-w-3xl overflow-x-clip pb-24 sm:pb-8">
+        <div className="mx-auto w-full min-w-0 max-w-3xl pb-8">
           {bookingId !== null ? (
             <BookingSuccess bookingId={bookingId} category={category} />
           ) : (

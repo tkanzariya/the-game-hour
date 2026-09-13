@@ -11,6 +11,7 @@ alwaysApply: true
 - Deploy is GitHub `main` → FTPS (`.github/workflows/deploy-ftp.yml`). Protect `cms/config.php` and uploads from overwrite.
 - Never commit `cms/config.local.php`, `.env`, passwords, bcrypt hashes, or PII SQL under `cms/dev-data/`.
 - Public Book CTAs stay on same-origin `/book/social` and `/book/corporate`. Do not point them back at Bubble.
+- On `/book/social` and `/book/corporate`, do not render floating WhatsApp/Call FABs. They overlay age/date/time menus and **Submit booking** (`fixed z-40`). Booking Submit must stay a real `<button type="submit">` (not clay `Button` with `disabled:pointer-events-none`). Do not wrap that CTA in `overflow-x-clip`.
 - Ops is `noindex`. `robots.txt` disallows `/ops`, `/admin`, `/cms`.
 - Ops SPA must redirect to `/ops/login` when the session is gone (poll `me.php`; `401`/`419` on events APIs). Do not leave a logged-out workspace on screen.
 - Event status ENUM is `pending`/`cancelled`/`completed`. `cms_ops_migrate_cancelled_status()` maps leftover `upcoming` rows. Do not reintroduce `upcoming`.
