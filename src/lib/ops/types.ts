@@ -74,6 +74,72 @@ export type OpsTeamMember = {
   position?: string
 }
 
+export type OpsSummaryPeriod =
+  | 'all'
+  | 'week'
+  | 'month'
+  | 'year'
+  | 'last_month'
+  | 'last_6_months'
+  | 'last_year'
+
+export type OpsSummaryEvent = {
+  id: number | string
+  display_name: string
+  event_date: string
+  event_time?: string
+  venue_name?: string | null
+  event_category?: string
+  event_status?: string
+}
+
+export type OpsSummaryMonth = {
+  month: string
+  price: number
+  advance: number
+  final: number
+  expenses: number
+  social: number
+  corporate: number
+  events: number
+  finished: number
+  upcoming: number
+  overdue: number
+}
+
+export type OpsSummary = {
+  period: OpsSummaryPeriod
+  from: string
+  to: string
+  kpis: {
+    pending_next_7: number
+    pending_in_range: number
+    social_in_range: number
+    corporate_in_range: number
+    booked_price: number
+    collected_advance: number
+    remaining: number
+    expenses: number
+  }
+  this_month: {
+    month: string
+    revenue: number
+    expenses: number
+    profit: number
+  }
+  overall: {
+    events: number
+    revenue: number
+    expenses: number
+    profit: number
+  }
+  upcoming: OpsSummaryEvent[]
+  overdue: OpsSummaryEvent[]
+  upcoming_count: number
+  overdue_count: number
+  by_month: OpsSummaryMonth[]
+}
+
 export type OpsEventPatch = {
   event_status?: OpsEventSummary['event_status']
   venue_name?: string | null

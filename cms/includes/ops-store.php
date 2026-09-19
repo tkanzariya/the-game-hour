@@ -876,3 +876,302 @@ function cms_ops_update_event_json(string $id, array $patch): array
     }
     return ['ok' => true, 'event' => $event];
 }
+
+/**
+ * @return array{from: string, to: string}
+ */
+function cms_ops_summary_bounds(string $period): array
+{
+    $today = new DateTimeImmutable('today');
+    if ($period === 'all') {
+        return ['from' => '', 'to' => ''];
+    }
+    if ($period === 'week') {
+        return [
+            'from' => $today->format('Y-m-d'),
+            'to' => $today->modify('+6 days')->format('Y-m-d'),
+        ];
+    }
+    if ($period === 'last_month') {
+        $start = $today->modify('first day of last month');
+        return [
+            'from' => $start->format('Y-m-01'),
+            'to' => $start->format('Y-m-t'),
+        ];
+    }
+    if ($period === 'last_6_months') {
+        $from = $today->modify('first day of this month')->modify('-5 months');
+        return [
+            'from' => $from->format('Y-m-01'),
+            'to' => $today->format('Y-m-t'),
+        ];
+    }
+    if ($period === 'last_year') {
+        $year = (int) $today->format('Y') - 1;
+        return [
+            'from' => $year . '-01-01',
+            'to' => $year . '-12-31',
+        ];
+    }
+    if ($period === 'year') {
+        return [
+            'from' => $today->format('Y') . '-01-01',
+            'to' => $today->format('Y') . '-12-31',
+        ];
+    }
+    return [
+        'from' => $today->format('Y-m-01'),
+        'to' => $today->format('Y-m-t'),
+    ];
+}
+
+/**
+ * @return array<string, array{games: int, team: int}>
+ */
+function cms_ops_assignment_counts(): array
+{
+    if (cms_dev_json_enabled()) {
+        $out = [];
+        foreach (cms_ops_json_bundle()['bookings'] as $row) {
+            if (!is_array($row)) {
+                continue;
+            }
+            $games = isset($row['game_ids']) && is_array($row['game_ids']) ? count($row['game_ids']) : 0;
+            $team = isset($row['team_ids']) && is_array($row['team_ids']) ? count($row['team_ids']) : 0;
+            $out[(string) ($row['id'] ?? '')] = ['games' => $games, 'team' => $team];
+        }
+        return $out;
+    }
+    $out = [];
+    try {
+        $games = cms_db()->query('SELECT event_id, COUNT(*) AS c FROM event_games GROUP BY event_id');
+        foreach ($games ? $games->fetchAll() : [] as $row) {
+            $id = (string) ($row['event_id'] ?? '');
+            if ($id === '') {
+                continue;
+            }
+            $out[$id] = ['games' => (int) ($row['c'] ?? 0), 'team' => 0];
+        }
+        $team = cms_db()->query('SELECT event_id, COUNT(*) AS c FROM event_team GROUP BY event_id');
+        foreach ($team ? $team->fetchAll() : [] as $row) {
+            $id = (string) ($row['event_id'] ?? '');
+            if ($id === '') {
+                continue;
+            }
+            if (!isset($out[$id])) {
+                $out[$id] = ['games' => 0, 'team' => 0];
+            }
+            $out[$id]['team'] = (int) ($row['c'] ?? 0);
+        }
+    } catch (Throwable $e) {
+        return $out;
+    }
+    return $out;
+}
+
+/**
+ * @return array<string, mixed>
+ */
+function cms_ops_summary(string $period): array
+{
+    $allowed = ['all', 'week', 'month', 'year', 'last_month', 'last_6_months', 'last_year'];
+    $period = in_array($period, $allowed, true) ? $period : 'all';
+    $bounds = cms_ops_summary_bounds($period);
+    $from = $bounds['from'];
+    $to = $bounds['to'];
+    $today = (new DateTimeImmutable('today'))->format('Y-m-d');
+    $weekEnd = (new DateTimeImmutable('today'))->modify('+6 days')->format('Y-m-d');
+
+    if (cms_dev_json_enabled()) {
+        $rows = [];
+        foreach (cms_ops_json_bundle()['bookings'] as $row) {
+            if (is_array($row)) {
+                $rows[] = $row;
+            }
+        }
+    } else {
+        cms_ops_migrate_if_needed();
+        if (!cms_events_table_exists()) {
+            $rows = [];
+        } else {
+            $stmt = cms_db()->query('SELECT * FROM events');
+            $rows = $stmt ? ($stmt->fetchAll() ?: []) : [];
+        }
+    }
+
+    $pendingNext7 = 0;
+    $pendingInRange = 0;
+    $social = 0;
+    $corporate = 0;
+    $booked = 0.0;
+    $collected = 0.0;
+    $remaining = 0.0;
+    $expenses = 0.0;
+    $monthKeyNow = substr($today, 0, 7);
+    $monthRevenue = 0.0;
+    $monthExpenses = 0.0;
+    $upcomingCount = 0;
+    $overdueCount = 0;
+    $allEvents = 0;
+    $allRevenue = 0.0;
+    $allExpenses = 0.0;
+    $byMonth = [];
+    $upcoming = [];
+    $overdue = [];
+
+    foreach ($rows as $row) {
+        $status = cms_ops_canonical_event_status($row['event_status'] ?? 'pending');
+        $date = cms_ops_event_date_key($row['event_date'] ?? '');
+        $category = (string) ($row['event_category'] ?? '');
+        $inRange = $date !== '';
+        if ($from !== '') {
+            $inRange = $inRange && $date >= $from;
+        }
+        if ($to !== '') {
+            $inRange = $inRange && $date <= $to;
+        }
+        $inWeek = $date !== '' && $date >= $today && $date <= $weekEnd;
+        $active = $status !== 'cancelled';
+        $price = (float) ($row['price'] ?? 0);
+        $advance = (float) ($row['advance_amount'] ?? 0);
+        $full = $row['full_payment_amount'] ?? null;
+        $exp = (float) ($row['event_expenses'] ?? 0);
+        $summaryEvent = [
+            'id' => $row['id'],
+            'display_name' => cms_ops_display_name($row),
+            'event_date' => $date,
+            'event_time' => (string) ($row['event_time'] ?? ''),
+            'venue_name' => $row['venue_name'] ?? null,
+            'event_category' => $category,
+            'event_status' => $status,
+        ];
+
+        if ($status === 'pending' && $inWeek) {
+            $pendingNext7++;
+        }
+        if ($status === 'pending' && $date !== '' && $date >= $today) {
+            $upcomingCount++;
+            $upcoming[] = $summaryEvent;
+        }
+        if ($status === 'pending' && $date !== '' && $date < $today) {
+            $overdueCount++;
+            $overdue[] = $summaryEvent;
+        }
+        if ($active) {
+            $allEvents++;
+            $allRevenue += $price;
+            $allExpenses += $exp;
+        }
+        if ($active && $date !== '' && substr($date, 0, 7) === $monthKeyNow) {
+            $monthRevenue += $price;
+            $monthExpenses += $exp;
+        }
+        if ($status === 'pending' && $inRange) {
+            $pendingInRange++;
+        }
+        if ($active && $inRange) {
+            if ($category === 'corporate') {
+                $corporate++;
+            } else {
+                $social++;
+            }
+            $booked += $price;
+            if ((int) ($row['advance_payment_completed'] ?? 0) === 1) {
+                $collected += $advance;
+            }
+            if ((int) ($row['full_payment_completed'] ?? 0) !== 1) {
+                if ($full !== null && $full !== '') {
+                    $remaining += (float) $full;
+                } else {
+                    $left = $price - $advance;
+                    if ($left > 0) {
+                        $remaining += $left;
+                    }
+                }
+            }
+            $expenses += $exp;
+            $monthKey = substr($date, 0, 7);
+            if (!isset($byMonth[$monthKey])) {
+                $byMonth[$monthKey] = [
+                    'month' => $monthKey,
+                    'price' => 0.0,
+                    'advance' => 0.0,
+                    'final' => 0.0,
+                    'expenses' => 0.0,
+                    'social' => 0,
+                    'corporate' => 0,
+                    'events' => 0,
+                    'finished' => 0,
+                    'upcoming' => 0,
+                    'overdue' => 0,
+                ];
+            }
+            $byMonth[$monthKey]['price'] += $price;
+            $byMonth[$monthKey]['expenses'] += $exp;
+            $byMonth[$monthKey]['events']++;
+            if ($status === 'completed') {
+                $byMonth[$monthKey]['finished']++;
+            } elseif ($status === 'pending' && $date >= $today) {
+                $byMonth[$monthKey]['upcoming']++;
+            } elseif ($status === 'pending' && $date < $today) {
+                $byMonth[$monthKey]['overdue']++;
+            }
+            if ((int) ($row['advance_payment_completed'] ?? 0) === 1) {
+                $byMonth[$monthKey]['advance'] += $advance;
+            }
+            if ((int) ($row['full_payment_completed'] ?? 0) === 1) {
+                $byMonth[$monthKey]['final'] += (float) ($full !== null && $full !== '' ? $full : 0);
+            }
+            if ($category === 'corporate') {
+                $byMonth[$monthKey]['corporate']++;
+            } else {
+                $byMonth[$monthKey]['social']++;
+            }
+        }
+    }
+
+    usort($upcoming, static function (array $a, array $b): int {
+        $d = strcmp((string) $a['event_date'], (string) $b['event_date']);
+        if ($d !== 0) {
+            return $d;
+        }
+        return strcmp((string) $a['event_time'], (string) $b['event_time']);
+    });
+    usort($overdue, static function (array $a, array $b): int {
+        return strcmp((string) $a['event_date'], (string) $b['event_date']);
+    });
+    ksort($byMonth);
+
+    return [
+        'period' => $period,
+        'from' => $from,
+        'to' => $to,
+        'kpis' => [
+            'pending_next_7' => $pendingNext7,
+            'pending_in_range' => $pendingInRange,
+            'social_in_range' => $social,
+            'corporate_in_range' => $corporate,
+            'booked_price' => round($booked, 2),
+            'collected_advance' => round($collected, 2),
+            'remaining' => round($remaining, 2),
+            'expenses' => round($expenses, 2),
+        ],
+        'this_month' => [
+            'month' => $monthKeyNow,
+            'revenue' => round($monthRevenue, 2),
+            'expenses' => round($monthExpenses, 2),
+            'profit' => round($monthRevenue - $monthExpenses, 2),
+        ],
+        'overall' => [
+            'events' => $allEvents,
+            'revenue' => round($allRevenue, 2),
+            'expenses' => round($allExpenses, 2),
+            'profit' => round($allRevenue - $allExpenses, 2),
+        ],
+        'upcoming' => array_slice($upcoming, 0, 8),
+        'overdue' => array_slice($overdue, 0, 8),
+        'upcoming_count' => $upcomingCount,
+        'overdue_count' => $overdueCount,
+        'by_month' => array_values($byMonth),
+    ];
+}

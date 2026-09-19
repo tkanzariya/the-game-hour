@@ -15,8 +15,15 @@ import DesignPreviewPage from '@/pages/DesignPreviewPage'
 import NewUiPreviewPage from '@/pages/NewUiPreviewPage'
 import CoralThemePreviewPage from '@/pages/CoralThemePreviewPage'
 import OpsLoginPage from '@/pages/ops/OpsLoginPage'
+import OpsDashboardPage from '@/pages/ops/OpsDashboardPage'
 import OpsEventsPage from '@/pages/ops/OpsEventsPage'
 import OpsEventDetailPage from '@/pages/ops/OpsEventDetailPage'
+import OpsCalendarPage from '@/pages/ops/OpsCalendarPage'
+import OpsPaymentsPage from '@/pages/ops/OpsPaymentsPage'
+import OpsFinancePage from '@/pages/ops/OpsFinancePage'
+import OpsTeamPage from '@/pages/ops/OpsTeamPage'
+import OpsGamesPage from '@/pages/ops/OpsGamesPage'
+import OpsSettingsPage from '@/pages/ops/OpsSettingsPage'
 
 const isDev = import.meta.env.DEV
 
@@ -67,9 +74,15 @@ export const router = createBrowserRouter([
         path: 'ops',
         element: <OpsLayout />,
         children: [
-          { index: true, element: <Navigate to={ROUTES.opsEvents} replace /> },
+          { index: true, element: <OpsDashboardPage /> },
           { path: 'events', element: <OpsEventsPage /> },
           { path: 'events/:id', element: <OpsEventDetailPage /> },
+          { path: 'calendar', element: <OpsCalendarPage /> },
+          { path: 'payments', element: <OpsPaymentsPage /> },
+          { path: 'finance', element: <OpsFinancePage /> },
+          { path: 'team', element: <OpsTeamPage /> },
+          { path: 'games', element: <OpsGamesPage /> },
+          { path: 'settings', element: <OpsSettingsPage /> },
         ],
       },
     ],

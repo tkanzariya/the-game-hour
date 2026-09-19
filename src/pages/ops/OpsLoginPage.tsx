@@ -35,7 +35,7 @@ export default function OpsLoginPage() {
 
   if (user) {
     const from = (location.state as { from?: string } | null)?.from
-    return <Navigate to={from || ROUTES.opsEvents} replace />
+    return <Navigate to={from || ROUTES.ops} replace />
   }
 
   const onSubmit = async (event: FormEvent) => {
@@ -48,7 +48,7 @@ export default function OpsLoginPage() {
       setError(message)
       return
     }
-    navigate(ROUTES.opsEvents, { replace: true })
+    navigate(ROUTES.ops, { replace: true })
   }
 
   return (

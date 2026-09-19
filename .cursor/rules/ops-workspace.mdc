@@ -6,8 +6,7 @@ alwaysApply: false
 
 # Ops workspace
 
-- Brand in `OpsNav` is the **logo image** (`getLogoUrl('dark')`, alt `The Game Hour` from site info). Do not use the signed-in user's `name` as the logo. `users.name` is `The Game Hour` for the admin account — show **email** when the name matches the site name.
-- Navbar is `bg-neutral text-neutral-content`. Ghost buttons and CMS link must include `text-neutral-content!`. daisyUI `btn-ghost` otherwise uses `base-content` (navy on dark = unreadable). Do not use `dark:` with daisyUI colors.
+- Brand in the ops **sidebar** is the **logo image** (`getLogoUrl('dark')`). Do not use the signed-in user's `name` as the logo. Show **email** when the name matches the site name. Shell is daisyUI `drawer lg:drawer-open`; sidebar uses `bg-neutral text-neutral-content`. Ghosts need `text-neutral-content!`. The **active** item is a light pill (`bg-base-100 text-primary`) — `menu-active` and `bg-primary` both disappear on navy `neutral`. Default after login is **Dashboard** (`/ops`). Dashboard: this-month revenue/expense/profit plus all-time events/expense/profit. Revenue vs expense is a **line** chart. Graphs default to **all** dates. Calendar event chips use a **fixed portal** hover card (not daisyUI `tooltip` — it clips in the month grid). Copy stays short. Do not put screenshot / calendar / assignment / referral / indoor-outdoor / “Needs you” on the dashboard.
 - Default events status filter is **`all`**. Status values are `pending`, `cancelled`, `completed`. Do not bring back `upcoming`; migrate leftover `upcoming` rows to `cancelled`.
 - Logged-out ops users must land on `/ops/login`. Poll `/cms/api/auth/me.php` and treat events API `401`/`419` as session expiry. Do not leave a stale workspace on screen.
 - Events list uses `cms/includes/ops-store.php`. That file must stay PHP 7.4-safe or the UI shows "Could not load events".

@@ -5,6 +5,8 @@ import type {
   OpsEventPatch,
   OpsEventSummary,
   OpsGame,
+  OpsSummary,
+  OpsSummaryPeriod,
   OpsTeamMember,
   OpsUser,
 } from './types'
@@ -15,6 +17,7 @@ const AUTH_LOGOUT = '/cms/api/auth/logout.php'
 const EVENTS_URL = '/cms/api/ops/events.php'
 const GAMES_URL = '/cms/api/ops/games.php'
 const TEAM_URL = '/cms/api/ops/team.php'
+const SUMMARY_URL = '/cms/api/ops/summary.php'
 
 type JsonMap = Record<string, unknown>
 
@@ -190,4 +193,15 @@ export async function fetchTeam(): Promise<OpsTeamMember[]> {
   const data = await readJson(res)
   if (!res.ok || !data.ok) return []
   return (data.team as OpsTeamMember[]) ?? []
+}
+
+export async function fetchSummary(
+  period: OpsSummaryPeriod,
+): Promise<{ ok: true; summary: OpsSummary } | { ok: false; error: string }> {
+  const res = await opsFetch(`${SUMMARY_URL}?period=${encodeURIComponent(period)}`)
+  const data = await readJson(res)
+  if (!res.ok || !data.ok || !data.summary) {
+    return { ok: false, error: String(data.error ?? 'Could not load dashboard.') }
+  }
+  return { ok: true, summary: data.summary as OpsSummary }
 }
