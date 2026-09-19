@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate } from 'react-router-dom'
 import { MainLayout, OpsLayout, OpsRoot } from '@/layouts'
 import { ProductionRedirect } from '@/components/ProductionRedirect'
-import { HOME_SECTIONS, ROUTES } from '@/constants/routes'
+import { HOME_SECTIONS, ROUTES, bookingSearch } from '@/constants/routes'
 import { LegacyServiceRedirect } from '@/components/LegacyServiceRedirect'
 import HomePage from '@/pages/HomePage'
 import AboutPage from '@/pages/AboutPage'
@@ -84,9 +84,17 @@ export const router = createBrowserRouter([
       { path: 'services/:slug', element: <ServiceDetailPage /> },
       { path: ROUTES.gallery.slice(1), element: <GalleryPage /> },
       { path: ROUTES.contact.slice(1), element: <ContactPage /> },
-      { path: 'book', element: <Navigate to={ROUTES.bookSocial} replace /> },
-      { path: 'book/social', element: <BookingPage category="social" /> },
-      { path: 'book/corporate', element: <BookingPage category="corporate" /> },
+      { path: 'book', element: <BookingPage /> },
+      {
+        path: 'book/social',
+        element: <Navigate to={{ pathname: ROUTES.book, search: bookingSearch('social') }} replace />,
+      },
+      {
+        path: 'book/corporate',
+        element: (
+          <Navigate to={{ pathname: ROUTES.book, search: bookingSearch('corporate') }} replace />
+        ),
+      },
       ...(isDev
         ? [{ path: ROUTES.gameLibrary.slice(1), element: <GameLibraryPage /> }]
         : []),

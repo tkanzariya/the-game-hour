@@ -31,10 +31,16 @@ return [
         'name' => 'tgh_cms_dev',
         'lifetime' => 3600 * 8,
     ],
+    'mail' => [
+        'resend_api_key' => '',
+        'resend_template_id' => '',
+        'from' => 'The Game Hour <onboarding@resend.dev>',
+    ],
     'dev' => [
         'json_store' => __DIR__ . '/dev-data/images.json',
         'content_store' => __DIR__ . '/dev-data/content.json',
         // Local bookings without MySQL (npm run cms:dev + Vite proxy)
         'bookings_store' => __DIR__ . '/dev-data/bookings.json',
+        'settings_store' => __DIR__ . '/dev-data/settings.json',
     ],
 ];

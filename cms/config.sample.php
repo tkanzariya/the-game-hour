@@ -32,4 +32,11 @@ return [
         'name' => 'tgh_cms_session',
         'lifetime' => 3600 * 8,
     ],
+    'mail' => [
+        // Free Resend API (https://resend.com) — never commit the live key
+        'resend_api_key' => '',
+        // Optional: published Resend dashboard template id. Same free send quota.
+        'resend_template_id' => '',
+        'from' => 'The Game Hour <onboarding@resend.dev>',
+    ],
 ];

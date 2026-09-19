@@ -2,11 +2,11 @@
   "meta": {
     "source": "The Game Hour booking forms",
     "generated": "2026-05-23",
-    "note": "Same-origin booking forms. Corporate services use urls.corporate."
+    "note": "Same-origin booking at /book. Corporate service CTAs skip the type step with ?category=corporate."
   },
   "urls": {
-    "default": "/book/social",
-    "corporate": "/book/corporate"
+    "default": "/book",
+    "corporate": "/book?category=corporate"
   },
   "corporateServiceSlug": "corporate-games",
   "labels": {

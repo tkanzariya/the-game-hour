@@ -2,6 +2,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/events-migrate.php';
+require_once __DIR__ . '/mail.php';
 
 /**
  * Validate and persist booking submissions (MySQL events table, or JSON in local CMS mode).
@@ -124,6 +125,15 @@ function cms_booking_validate(array $data): array
     return ['ok' => true];
 }
 
+function cms_booking_instagram_handle(array $data): ?string
+{
+    $handle = ltrim(trim((string) ($data['instagram_handle'] ?? '')), '@');
+    if ($handle === '') {
+        return null;
+    }
+    return substr($handle, 0, 80);
+}
+
 /**
  * @param array<string, mixed> $file
  * @return array{ok: true, path: string}|array{ok: false, error: string, code?: string}
@@ -215,6 +225,7 @@ function cms_booking_create(array $data, array $screenshotFile): array
         'venue_type' => (string) $data['venue_type'],
         'payment_mode' => (string) $data['payment_mode'],
         'referral_source' => trim((string) ($data['referral_source'] ?? '')) ?: null,
+        'instagram_handle' => cms_booking_instagram_handle($data),
         'special_requirements' => trim((string) ($data['special_requirements'] ?? '')) ?: null,
         'terms_accepted_at' => date('Y-m-d H:i:s'),
         'advance_payment_date' => date('Y-m-d'),
@@ -236,18 +247,19 @@ function cms_booking_create(array $data, array $screenshotFile): array
             event_category, event_status, email, contact_name, phone, address,
             birthday_person_name, company_name, event_type, participant_count, age_group,
             event_date, event_time, venue_name, venue_type, payment_mode,
-            referral_source, special_requirements, terms_accepted_at,
+            referral_source, instagram_handle, special_requirements, terms_accepted_at,
             advance_payment_date, advance_payment_completed, payment_screenshot_path
         ) VALUES (
             :event_category, :event_status, :email, :contact_name, :phone, :address,
             :birthday_person_name, :company_name, :event_type, :participant_count, :age_group,
             :event_date, :event_time, :venue_name, :venue_type, :payment_mode,
-            :referral_source, :special_requirements, :terms_accepted_at,
+            :referral_source, :instagram_handle, :special_requirements, :terms_accepted_at,
             :advance_payment_date, :advance_payment_completed, :payment_screenshot_path
         )';
         $stmt = cms_db()->prepare($sql);
         $stmt->execute($row);
         $id = (int) cms_db()->lastInsertId();
+        cms_booking_notify_admin($id, $row);
         return ['ok' => true, 'bookingId' => $id];
     } catch (Throwable $e) {
         @unlink(cms_uploads_dir() . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $savedFile['path']));
@@ -272,6 +284,7 @@ function cms_booking_create_json(array $row): array
     $row['created_at'] = date('c');
     $data['bookings'][] = $row;
     file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+    cms_booking_notify_admin($id, $row);
     return ['ok' => true, 'bookingId' => $id];
 }
 

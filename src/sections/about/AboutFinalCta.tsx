@@ -14,7 +14,7 @@ export default function AboutFinalCta() {
     <Section tone="default" padding="sm" id="discuss" profile="marketing">
       <Reveal>
         <CTA headline={cta.headline} description={cta.description} tone="primary">
-          <Button variant="secondary" size="lg" href={getDefaultBookingUrl()} external>
+          <Button variant="secondary" size="lg" href={getDefaultBookingUrl()}>
             {cta.primaryLabel}
           </Button>
           <Button variant="whatsapp" size="lg" href={contact.whatsappUrl} external>

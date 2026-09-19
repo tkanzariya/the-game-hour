@@ -1,5 +1,4 @@
 import { useMemo } from 'react'
-import { Button } from '@/components/Button'
 import {
   DatePickerField,
   SelectField,
@@ -27,6 +26,7 @@ type BookingDetailsFormProps = {
   onChange: (next: BookingDetails) => void
   onErrorsChange: (next: BookingFieldErrors) => void
   onNext: () => void
+  onChangeCategory?: () => void
 }
 
 export function BookingDetailsForm({
@@ -36,6 +36,7 @@ export function BookingDetailsForm({
   onChange,
   onErrorsChange,
   onNext,
+  onChangeCategory,
 }: BookingDetailsFormProps) {
   const content = getBookingFormContent()
   const canNext = useMemo(() => isDetailsValid(details, category), [details, category])
@@ -290,16 +291,21 @@ export function BookingDetailsForm({
                 clearError('payment_mode')
               }}
             />
-            <div className="sm:col-span-2">
-              <SelectField
-                id="referral_source"
-                label="How did you hear about us?"
-                placeholder={content.placeholders.referral}
-                options={content.referralSources}
-                value={details.referral_source}
-                onChange={(e) => set('referral_source')(e.target.value)}
-              />
-            </div>
+            <SelectField
+              id="referral_source"
+              label="How did you hear about us?"
+              placeholder={content.placeholders.referral}
+              options={content.referralSources}
+              value={details.referral_source}
+              onChange={(e) => set('referral_source')(e.target.value)}
+            />
+            <TextField
+              id="instagram_handle"
+              label="Instagram ID"
+              placeholder={content.placeholders.instagram}
+              value={details.instagram_handle}
+              onChange={(e) => set('instagram_handle')(e.target.value)}
+            />
             <div className="sm:col-span-2">
               <TextAreaField
                 id="special_requirements"
@@ -347,15 +353,20 @@ export function BookingDetailsForm({
       </section>
 
       <div className="flex flex-col items-center gap-3">
-        <Button
-          type="submit"
-          variant="primary"
-          size="lg"
-          className="w-full sm:w-auto sm:min-w-56"
-          disabled={!canNext}
-        >
-          Next
-        </Button>
+        <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center">
+          {onChangeCategory ? (
+            <button type="button" className="btn btn-lg sm:min-w-40" onClick={onChangeCategory}>
+              Previous
+            </button>
+          ) : null}
+          <button
+            type="submit"
+            className="btn btn-primary btn-lg sm:min-w-40"
+            disabled={!canNext}
+          >
+            Next
+          </button>
+        </div>
         {!canNext ? (
           <p className="text-center text-xs text-base-content/60">
             Fill all required fields, fix errors, and accept the terms to continue.

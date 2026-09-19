@@ -55,6 +55,14 @@ $content .= '<p class="category-card-stat">Homepage trust numbers</p>';
 $content .= '<a class="btn btn-primary btn-block" href="' . htmlspecialchars(cms_admin_url('statistics.php')) . '">Edit statistics</a>';
 $content .= '</div></article>';
 
+$content .= '<article class="category-card">';
+$content .= '<div class="category-card-media section-card-media"><span class="category-card-icon" aria-hidden="true">✉️</span></div>';
+$content .= '<div class="category-card-body">';
+$content .= '<h3>Booking alerts</h3>';
+$content .= '<p class="category-card-stat">Email when a public booking is submitted</p>';
+$content .= '<a class="btn btn-primary btn-block" href="' . htmlspecialchars(cms_admin_url('settings.php')) . '">Notification email</a>';
+$content .= '</div></article>';
+
 $content .= '</div>';
 
 cms_admin_layout('Dashboard', $content, 'dashboard');

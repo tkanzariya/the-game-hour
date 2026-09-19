@@ -38,4 +38,9 @@ return [
         'name' => 'tgh_cms_session',
         'lifetime' => 3600 * 8,
     ],
+    'mail' => [
+        'resend_api_key' => '',
+        'resend_template_id' => '',
+        'from' => 'The Game Hour <onboarding@resend.dev>',
+    ],
 ];

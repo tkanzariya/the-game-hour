@@ -3,7 +3,7 @@ import { motion } from 'framer-motion'
 import { cn } from '@/utils/cn'
 import { getBookingLabel, getDefaultBookingUrl, isExternalBookingUrl } from '@/lib/content/booking'
 import { getContactInfo } from '@/lib/content/company'
-import { ROUTES } from '@/constants/routes'
+import { isBookingPath } from '@/constants/routes'
 import { FEATURE_FLAGS } from '@/utils/constants'
 
 type FloatingActionsProps = {
@@ -15,8 +15,7 @@ const fabIconClass =
 
 export default function FloatingActions({ preview = false }: FloatingActionsProps) {
   const location = useLocation()
-  const onBookingPage =
-    location.pathname === ROUTES.bookSocial || location.pathname === ROUTES.bookCorporate
+  const onBookingPage = isBookingPath(location.pathname)
 
   if (!preview && onBookingPage) return null
 

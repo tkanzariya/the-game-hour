@@ -41,9 +41,22 @@ spawnSync(process.execPath, [path.join(root, 'scripts', 'copy-cms-to-dist.mjs')]
   stdio: 'inherit',
 })
 
-const child = spawn(
-  php,
-  ['-S', '127.0.0.1:8765', '-t', 'dist', path.join(root, 'scripts', 'dev-router.php')],
-  { cwd: root, stdio: 'inherit', shell: os.platform() === 'win32' && php === 'php' },
-)
+const phpDir = php === 'php' ? '' : path.dirname(php)
+const cacertCandidates = [
+  phpDir ? path.join(phpDir, 'extras', 'ssl', 'cacert.pem') : '',
+  path.join(process.env.LOCALAPPDATA || '', 'Programs', 'php83', 'extras', 'ssl', 'cacert.pem'),
+].filter((p) => p && fs.existsSync(p))
+const cacert = cacertCandidates[0] || ''
+
+const serverArgs = ['-S', '127.0.0.1:8765', '-t', 'dist', path.join(root, 'scripts', 'dev-router.php')]
+if (cacert) {
+  serverArgs.unshift('-d', `openssl.cafile=${cacert}`)
+  serverArgs.unshift('-d', `curl.cainfo=${cacert}`)
+}
+
+const child = spawn(php, serverArgs, {
+  cwd: root,
+  stdio: 'inherit',
+  shell: os.platform() === 'win32' && php === 'php',
+})
 child.on('exit', (code) => process.exit(code ?? 1))

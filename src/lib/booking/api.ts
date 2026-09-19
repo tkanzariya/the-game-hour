@@ -5,10 +5,10 @@ export function getBookingFormContent() {
   return bookingForm
 }
 
-export function getBookingTitle(category: EventCategory): string {
-  return category === 'corporate'
-    ? bookingForm.titles.corporate
-    : bookingForm.titles.social
+export function getBookingTitle(category: EventCategory | null): string {
+  if (category === 'corporate') return bookingForm.titles.corporate
+  if (category === 'social') return bookingForm.titles.social
+  return bookingForm.titles.chooser
 }
 
 export type BookingSubmitResult =

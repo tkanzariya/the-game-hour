@@ -44,7 +44,7 @@ export default function NotFoundPage({ variant = 'default' }: NotFoundPageProps)
           <Button variant="primary" size="lg" href={homeExperiencesPath}>
             Browse experiences
           </Button>
-          <Button variant="tertiary" size="lg" href={getDefaultBookingUrl()} external>
+          <Button variant="tertiary" size="lg" href={getDefaultBookingUrl()}>
             {getBookingLabel('bookYourEvent')}
           </Button>
         </div>

@@ -43,7 +43,7 @@ export function getServiceImagePath(
   return resolveAssetPath(assets.gallery[index], 'webp')
 }
 
-/** Resolve live Bubble booking URL for a service (corporate vs default). */
+/** Booking URL for a service (corporate skips the type chooser). */
 export function resolveServiceCtaHref(service: Service): string {
   return getBookingUrlForService(service.slug)
 }

@@ -32,6 +32,14 @@ export function servicePath(slug: string): string {
   return `/services/${slug}`
 }
 
+export function isBookingPath(pathname: string): boolean {
+  return pathname === ROUTES.book || pathname.startsWith(`${ROUTES.book}/`)
+}
+
+export function bookingSearch(category: 'social' | 'corporate'): string {
+  return `?category=${category}`
+}
+
 /**
  * Legacy per-service URLs → canonical slugs (301-style redirects in SPA).
  * @see services.json `slug` field

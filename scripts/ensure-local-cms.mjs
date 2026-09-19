@@ -37,6 +37,13 @@ export function ensureLocalCms() {
       `${JSON.stringify({ testimonials: [], metrics: {} }, null, 4)}\n`,
     )
   }
+  const settings = path.join(devDir, 'settings.json')
+  if (!fs.existsSync(settings)) {
+    fs.writeFileSync(
+      settings,
+      `${JSON.stringify({ notify_email: 'thegamehourr@gmail.com' }, null, 4)}\n`,
+    )
+  }
 }
 
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) {

@@ -4,8 +4,20 @@
     "note": "Confirm bank account / IFSC with finance if Bubble screenshots disagreed."
   },
   "titles": {
+    "chooser": "Book your Event Now!",
     "social": "Book your Event Now!",
     "corporate": "Book your Corporate Event Now!"
+  },
+  "categoryChooser": {
+    "heading": "What kind of event is this?",
+    "body": "Choose social for birthdays, gatherings, and celebrations. Choose corporate for company offsites, team days, and office events.",
+    "socialTitle": "Social event",
+    "socialBody": "Birthdays, family gatherings, festivals, school events, weddings, and more.",
+    "corporateTitle": "Corporate event",
+    "corporateBody": "Team building, offsites, and facilitator-led games for your company.",
+    "socialCta": "Continue as social",
+    "corporateCta": "Continue as corporate",
+    "changeType": "Change event type"
   },
   "payment": {
     "title": "Complete your advance payment",

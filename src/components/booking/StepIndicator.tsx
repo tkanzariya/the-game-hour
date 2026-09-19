@@ -1,20 +1,29 @@
 type StepIndicatorProps = {
-  step: 1 | 2
-  labels?: [string, string]
+  current: number
+  labels: string[]
 }
 
-export function StepIndicator({
-  step,
-  labels = ['Event details', 'Advance payment'],
-}: StepIndicatorProps) {
+export function StepIndicator({ current, labels }: StepIndicatorProps) {
+  const total = labels.length
   return (
-    <ul className="steps w-full max-w-full min-w-0 text-sm sm:text-base" aria-label={`Step ${step} of 2`}>
-      <li className="step step-primary min-w-0" data-content={step > 1 ? '✓' : '1'}>
-        <span className="px-1">{labels[0]}</span>
-      </li>
-      <li className={`min-w-0 ${step === 2 ? 'step step-primary' : 'step'}`} data-content="2">
-        <span className="px-1">{labels[1]}</span>
-      </li>
+    <ul
+      className="steps w-full max-w-full min-w-0 text-sm sm:text-base"
+      aria-label={`Step ${current} of ${total}`}
+    >
+      {labels.map((label, index) => {
+        const step = index + 1
+        const done = current > step
+        const active = current >= step
+        return (
+          <li
+            key={label}
+            className={`min-w-0 ${active ? 'step step-primary' : 'step'}`}
+            data-content={done ? '✓' : String(step)}
+          >
+            <span className="px-1">{label}</span>
+          </li>
+        )
+      })}
     </ul>
   )
 }

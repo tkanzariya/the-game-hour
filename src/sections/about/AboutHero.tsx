@@ -40,7 +40,7 @@ export default function AboutHero() {
             {hero.subheadline}
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button variant="secondary" size="lg" href={getDefaultBookingUrl()} external>
+            <Button variant="secondary" size="lg" href={getDefaultBookingUrl()}>
               {getBookingLabel('bookYourEvent')}
             </Button>
             <Button

@@ -19,6 +19,10 @@ export default defineConfig({
         target: 'http://127.0.0.1:8765',
         changeOrigin: true,
       },
+      '/admin': {
+        target: 'http://127.0.0.1:8765',
+        changeOrigin: true,
+      },
       '/uploads': {
         target: 'http://127.0.0.1:8765',
         changeOrigin: true,

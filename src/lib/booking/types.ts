@@ -1,5 +1,10 @@
 export type EventCategory = 'social' | 'corporate'
 
+export function parseEventCategory(value: string | null | undefined): EventCategory | null {
+  if (value === 'social' || value === 'corporate') return value
+  return null
+}
+
 export type VenueType = 'indoor' | 'outdoor'
 export type PaymentMode = 'online' | 'online_cash'
 
@@ -20,6 +25,7 @@ export type BookingDetails = {
   venue_type: VenueType | ''
   payment_mode: PaymentMode | ''
   referral_source: string
+  instagram_handle: string
   special_requirements: string
   terms_accepted: boolean
 }
@@ -46,6 +52,7 @@ export function emptyBookingDetails(category: EventCategory): BookingDetails {
     venue_type: '',
     payment_mode: '',
     referral_source: '',
+    instagram_handle: '',
     special_requirements: '',
     terms_accepted: false,
   }

@@ -68,6 +68,9 @@ function cms_flash_messages(): array
         'testimonial_updated' => 'Testimonial saved successfully.',
         'testimonial_deleted' => 'Testimonial deleted.',
         'statistics_saved' => 'Statistics saved successfully.',
+        'notify_email_saved' => 'Notification email saved.',
+        'notify_test_sent' => 'Test email sent. Check the inbox (and spam).',
+        'notify_test_failed' => 'Could not send the test email.',
         'delete_failed' => 'Could not remove the image. Please try again.',
         'not_found' => 'Image slot not found.',
     ];

@@ -52,7 +52,7 @@ export default function HomeHero() {
             <p className="hero-body mt-5 md:mt-6">{hero.subheadline}</p>
 
             <div className="mt-8 flex flex-col gap-3 sm:mt-9 sm:flex-row sm:flex-wrap">
-              <Button variant="secondary" size="lg" href={getDefaultBookingUrl()} external>
+              <Button variant="secondary" size="lg" href={getDefaultBookingUrl()}>
                 {getBookingLabel('bookYourEvent')}
               </Button>
               <Button

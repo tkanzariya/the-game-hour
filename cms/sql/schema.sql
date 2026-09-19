@@ -211,3 +211,14 @@ CREATE TABLE IF NOT EXISTS event_team (
   CONSTRAINT fk_event_team_event FOREIGN KEY (event_id) REFERENCES events(id) ON DELETE CASCADE,
   CONSTRAINT fk_event_team_member FOREIGN KEY (team_member_id) REFERENCES team_members(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS cms_settings (
+  setting_key VARCHAR(80) NOT NULL PRIMARY KEY,
+  setting_value TEXT NOT NULL,
+  updated_at TIMESTAMP NULL DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+INSERT INTO cms_settings (setting_key, setting_value, updated_at)
+VALUES ('notify_email', 'thegamehourr@gmail.com', UTC_TIMESTAMP())
+ON DUPLICATE KEY UPDATE setting_key = setting_key;
+
