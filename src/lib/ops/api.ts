@@ -5,6 +5,8 @@ import type {
   OpsEventPatch,
   OpsEventSummary,
   OpsGame,
+  OpsGameFieldErrors,
+  OpsGameInput,
   OpsSummary,
   OpsSummaryPeriod,
   OpsTeamMember,
@@ -186,6 +188,64 @@ export async function fetchGames(): Promise<OpsGame[]> {
   const data = await readJson(res)
   if (!res.ok || !data.ok) return []
   return (data.games as OpsGame[]) ?? []
+}
+
+export async function loadGames(): Promise<
+  { ok: true; games: OpsGame[] } | { ok: false; error: string }
+> {
+  try {
+    const res = await opsFetch(GAMES_URL)
+    const data = await readJson(res)
+    if (!res.ok || !data.ok) {
+      return { ok: false, error: String(data.error ?? 'Could not load games.') }
+    }
+    return { ok: true, games: (data.games as OpsGame[]) ?? [] }
+  } catch {
+    return { ok: false, error: 'Could not reach the server. Check your connection.' }
+  }
+}
+
+export type GameSaveResult =
+  | { ok: true; game: OpsGame }
+  | { ok: false; error: string; fieldErrors?: OpsGameFieldErrors }
+
+export async function saveGame(
+  id: number | null,
+  input: OpsGameInput,
+  csrf: string,
+): Promise<GameSaveResult> {
+  const res = await opsFetch(id === null ? GAMES_URL : `${GAMES_URL}?id=${id}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+    body: JSON.stringify({
+      ...input,
+      avg_duration_minutes: input.avg_duration_minutes.trim(),
+    }),
+  })
+  const data = await readJson(res)
+  if (!res.ok || !data.ok || !data.game) {
+    return {
+      ok: false,
+      error: String(data.error ?? 'Could not save game.'),
+      fieldErrors: (data.errors as OpsGameFieldErrors | undefined) ?? undefined,
+    }
+  }
+  return { ok: true, game: data.game as OpsGame }
+}
+
+export async function deleteGame(
+  id: number,
+  csrf: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const res = await opsFetch(`${GAMES_URL}?id=${id}`, {
+    method: 'DELETE',
+    headers: { 'X-CSRF-Token': csrf },
+  })
+  const data = await readJson(res)
+  if (!res.ok || !data.ok) {
+    return { ok: false, error: String(data.error ?? 'Could not delete game.') }
+  }
+  return { ok: true }
 }
 
 export async function fetchTeam(): Promise<OpsTeamMember[]> {

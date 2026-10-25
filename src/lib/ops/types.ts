@@ -62,9 +62,31 @@ export type OpsGame = {
   name: string
   description?: string | null
   formation?: string | null
+  avg_duration_minutes?: number | null
+  group_size?: string | null
+  traits?: string[]
+  video_url?: string | null
   venue_indoor?: boolean
   venue_outdoor?: boolean
+  age_groups?: string[]
+  event_types?: string[]
 }
+
+export type OpsGameInput = {
+  name: string
+  formation: string
+  event_types: string[]
+  age_groups: string[]
+  venue_indoor: boolean
+  venue_outdoor: boolean
+  video_url: string
+  avg_duration_minutes: string
+  description: string
+  group_size: string
+  traits: string[]
+}
+
+export type OpsGameFieldErrors = Partial<Record<keyof OpsGameInput, string>>
 
 export type OpsTeamMember = {
   id: number
