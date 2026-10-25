@@ -7,6 +7,10 @@ import type {
   OpsGame,
   OpsGameFieldErrors,
   OpsGameInput,
+  OpsInquiry,
+  OpsInquiryFieldErrors,
+  OpsInquiryInput,
+  PublicInquiry,
   OpsSummary,
   OpsSummaryPeriod,
   OpsTeamMember,
@@ -18,6 +22,9 @@ const AUTH_LOGIN = '/cms/api/auth/login.php'
 const AUTH_LOGOUT = '/cms/api/auth/logout.php'
 const EVENTS_URL = '/cms/api/ops/events.php'
 const GAMES_URL = '/cms/api/ops/games.php'
+const INQUIRIES_URL = '/cms/api/ops/inquiries.php'
+const PUBLIC_INQUIRY_VIEW = '/cms/api/inquiry/view.php'
+const PUBLIC_INQUIRY_SUBMIT = '/cms/api/inquiry/submit.php'
 const TEAM_URL = '/cms/api/ops/team.php'
 const SUMMARY_URL = '/cms/api/ops/summary.php'
 
@@ -264,4 +271,155 @@ export async function fetchSummary(
     return { ok: false, error: String(data.error ?? 'Could not load dashboard.') }
   }
   return { ok: true, summary: data.summary as OpsSummary }
+}
+
+/* ---------------------------------------------------------------- inquiries */
+
+export async function loadInquiries(): Promise<
+  { ok: true; inquiries: OpsInquiry[] } | { ok: false; error: string }
+> {
+  try {
+    const res = await opsFetch(INQUIRIES_URL)
+    const data = await readJson(res)
+    if (!res.ok || !data.ok) {
+      return { ok: false, error: String(data.error ?? 'Could not load inquiries.') }
+    }
+    return { ok: true, inquiries: (data.inquiries as OpsInquiry[]) ?? [] }
+  } catch {
+    return { ok: false, error: 'Could not reach the server. Check your connection.' }
+  }
+}
+
+export async function loadInquiry(
+  id: string,
+): Promise<{ ok: true; inquiry: OpsInquiry } | { ok: false; error: string; notFound?: boolean }> {
+  try {
+    const res = await opsFetch(`${INQUIRIES_URL}?id=${encodeURIComponent(id)}`)
+    const data = await readJson(res)
+    if (!res.ok || !data.ok || !data.inquiry) {
+      return {
+        ok: false,
+        error: String(data.error ?? 'Could not load this inquiry.'),
+        notFound: res.status === 404,
+      }
+    }
+    return { ok: true, inquiry: data.inquiry as OpsInquiry }
+  } catch {
+    return { ok: false, error: 'Could not reach the server. Check your connection.' }
+  }
+}
+
+export type InquirySaveResult =
+  | { ok: true; inquiry: OpsInquiry }
+  | { ok: false; error: string; fieldErrors?: OpsInquiryFieldErrors }
+
+export async function saveInquiry(
+  id: number | null,
+  input: OpsInquiryInput,
+  csrf: string,
+): Promise<InquirySaveResult> {
+  try {
+    const res = await opsFetch(id === null ? INQUIRIES_URL : `${INQUIRIES_URL}?id=${id}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+      body: JSON.stringify(input),
+    })
+    const data = await readJson(res)
+    if (!res.ok || !data.ok || !data.inquiry) {
+      return {
+        ok: false,
+        error: String(data.error ?? 'Could not save the inquiry.'),
+        fieldErrors: (data.errors as OpsInquiryFieldErrors | undefined) ?? undefined,
+      }
+    }
+    return { ok: true, inquiry: data.inquiry as OpsInquiry }
+  } catch {
+    return { ok: false, error: 'Could not reach the server. Check your connection.' }
+  }
+}
+
+export async function inquiryAction(
+  id: number,
+  action: 'expire' | 'extend' | 'reopen',
+  csrf: string,
+  minutes?: number,
+): Promise<{ ok: true; inquiry: OpsInquiry } | { ok: false; error: string }> {
+  try {
+    const res = await opsFetch(`${INQUIRIES_URL}?id=${id}&action=${action}`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+      body: JSON.stringify({ minutes }),
+    })
+    const data = await readJson(res)
+    if (!res.ok || !data.ok || !data.inquiry) {
+      return { ok: false, error: String(data.error ?? 'Could not update the inquiry.') }
+    }
+    return { ok: true, inquiry: data.inquiry as OpsInquiry }
+  } catch {
+    return { ok: false, error: 'Could not reach the server. Check your connection.' }
+  }
+}
+
+export async function deleteInquiry(
+  id: number,
+  csrf: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const res = await opsFetch(`${INQUIRIES_URL}?id=${id}`, {
+      method: 'DELETE',
+      headers: { 'X-CSRF-Token': csrf },
+    })
+    const data = await readJson(res)
+    if (!res.ok || !data.ok) {
+      return { ok: false, error: String(data.error ?? 'Could not delete the inquiry.') }
+    }
+    return { ok: true }
+  } catch {
+    return { ok: false, error: 'Could not reach the server. Check your connection.' }
+  }
+}
+
+/* ----------------------------------------------- customer (public, no login) */
+
+export type PublicInquiryResult =
+  | { ok: true; inquiry: PublicInquiry }
+  | { ok: false; error: string; code?: string }
+
+async function publicInquiryRequest(
+  url: string,
+  init?: RequestInit,
+): Promise<PublicInquiryResult> {
+  try {
+    const res = await fetch(url, init)
+    const data = await readJson(res)
+    if (!res.ok || !data.ok || !data.inquiry) {
+      return {
+        ok: false,
+        error: String(data.error ?? 'Something went wrong. Please try again.'),
+        code: typeof data.code === 'string' ? data.code : undefined,
+      }
+    }
+    return { ok: true, inquiry: data.inquiry as PublicInquiry }
+  } catch {
+    return {
+      ok: false,
+      error: 'We could not reach the server. Check your connection and try again.',
+      code: 'network',
+    }
+  }
+}
+
+export function fetchPublicInquiry(token: string): Promise<PublicInquiryResult> {
+  return publicInquiryRequest(`${PUBLIC_INQUIRY_VIEW}?token=${encodeURIComponent(token)}`)
+}
+
+export function submitPublicInquiry(
+  token: string,
+  gameIds: number[],
+): Promise<PublicInquiryResult> {
+  return publicInquiryRequest(PUBLIC_INQUIRY_SUBMIT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ token, game_ids: gameIds }),
+  })
 }

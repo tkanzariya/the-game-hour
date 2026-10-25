@@ -23,6 +23,10 @@ import OpsPaymentsPage from '@/pages/ops/OpsPaymentsPage'
 import OpsFinancePage from '@/pages/ops/OpsFinancePage'
 import OpsTeamPage from '@/pages/ops/OpsTeamPage'
 import OpsGamesPage from '@/pages/ops/OpsGamesPage'
+import OpsInquiriesPage from '@/pages/ops/OpsInquiriesPage'
+import OpsInquiryDetailPage from '@/pages/ops/OpsInquiryDetailPage'
+import OpsInquiryFormPage from '@/pages/ops/OpsInquiryFormPage'
+import ChooseGamesPage from '@/pages/ChooseGamesPage'
 import OpsSettingsPage from '@/pages/ops/OpsSettingsPage'
 
 const isDev = import.meta.env.DEV
@@ -66,6 +70,7 @@ const previewRoutes = isDev
     ]
 
 export const router = createBrowserRouter([
+  { path: 'choose-games/:token', element: <ChooseGamesPage /> },
   {
     element: <OpsRoot />,
     children: [
@@ -82,6 +87,10 @@ export const router = createBrowserRouter([
           { path: 'finance', element: <OpsFinancePage /> },
           { path: 'team', element: <OpsTeamPage /> },
           { path: 'games', element: <OpsGamesPage /> },
+          { path: 'inquiries', element: <OpsInquiriesPage /> },
+          { path: 'inquiries/new', element: <OpsInquiryFormPage /> },
+          { path: 'inquiries/:id', element: <OpsInquiryDetailPage /> },
+          { path: 'inquiries/:id/edit', element: <OpsInquiryFormPage /> },
           { path: 'settings', element: <OpsSettingsPage /> },
         ],
       },

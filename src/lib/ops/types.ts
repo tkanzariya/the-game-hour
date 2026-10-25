@@ -88,6 +88,71 @@ export type OpsGameInput = {
 
 export type OpsGameFieldErrors = Partial<Record<keyof OpsGameInput, string>>
 
+export type InquiryStatus = 'pending' | 'opened' | 'submitted' | 'expired'
+
+export type OpsInquiry = {
+  id: number
+  token: string
+  customer_name: string
+  customer_phone: string | null
+  event_type: string
+  age_groups: string[]
+  participants: number | null
+  max_games: number | null
+  status: InquiryStatus
+  created_at: string
+  expires_at: string
+  opened_at: string | null
+  submitted_at: string | null
+  game_count: number
+  selected_count: number
+  server_time: string
+  /** Only on the single-inquiry response. */
+  game_ids?: number[]
+  selected_ids?: number[]
+  selected_games?: { id: number; name: string }[]
+}
+
+export type OpsInquiryInput = {
+  customer_name: string
+  customer_phone: string
+  event_type: string
+  age_groups: string[]
+  participants: string
+  max_games: string
+  game_ids: number[]
+  expiry_minutes: number
+}
+
+export type OpsInquiryFieldErrors = Partial<Record<keyof OpsInquiryInput, string>>
+
+export type PublicInquiryGame = {
+  id: number
+  name: string
+  description: string
+  formation: string | null
+  avg_duration_minutes: number | null
+  group_size: string | null
+  traits: string[]
+  video_url: string | null
+  venue_indoor: boolean
+  venue_outdoor: boolean
+}
+
+export type PublicInquiry = {
+  customer_name: string
+  event_type?: string
+  age_groups?: string[]
+  participants?: number | null
+  max_games?: number | null
+  status: InquiryStatus
+  expires_at: string
+  submitted_at?: string | null
+  server_time: string
+  games: PublicInquiryGame[]
+  selected_ids: number[]
+}
+
 export type OpsTeamMember = {
   id: number
   name: string
