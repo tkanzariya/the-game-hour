@@ -49,6 +49,29 @@ export default function OpsEventDetailPage() {
   const [error, setError] = useState<string | null>(null)
   const [editing, setEditing] = useState(searchParams.get('edit') === '1')
   const [deleteOpen, setDeleteOpen] = useState(false)
+  const { notify } = useOpsToast()
+  const [calendarBusy, setCalendarBusy] = useState(false)
+  const [calendarError, setCalendarError] = useState<string | null>(null)
+
+  const syncCalendar = async () => {
+    if (!event) return
+    setCalendarBusy(true)
+    setCalendarError(null)
+    const result = await syncEventToCalendar(String(event.id), csrf)
+    setCalendarBusy(false)
+    if (!result.ok) {
+      setCalendarError(result.error)
+      return
+    }
+    setEvent(result.event)
+    notify(
+      result.action === 'created'
+        ? 'Added to Google Calendar'
+        : result.action === 'deleted'
+          ? 'Removed from Google Calendar'
+          : 'Google Calendar updated',
+    )
+  }
 
   const load = () => {
     if (!id) return
@@ -119,9 +142,32 @@ export default function OpsEventDetailPage() {
             <span className="badge badge-outline">
               {categoryLabel(event.event_category)}
             </span>
+            {event.on_google_calendar ? (
+              <span className="badge badge-outline gap-1">
+                <Icon name="calendar-check" size="sm" className="size-3.5" />
+                On Google Calendar
+              </span>
+            ) : event.added_to_calendar ? (
+              <span className="badge badge-outline">Added to calendar by hand</span>
+            ) : null}
           </div>
         </div>
         <div className="flex flex-wrap gap-2">
+          {!editing && event.calendar_sync_available && event.event_status !== 'cancelled' ? (
+            <button
+              type="button"
+              className="btn gap-2"
+              disabled={calendarBusy}
+              onClick={() => void syncCalendar()}
+            >
+              {calendarBusy ? (
+                <span className="loading loading-spinner loading-sm" />
+              ) : (
+                <Icon name="calendar-check" size="sm" />
+              )}
+              {event.on_google_calendar ? 'Update Calendar' : 'Add to Google Calendar'}
+            </button>
+          ) : null}
           <button
             type="button"
             className="btn"
@@ -142,6 +188,19 @@ export default function OpsEventDetailPage() {
         </div>
       </div>
 
+      {event.calendar_sync_available === false ? (
+        <p className="text-base-content/60 text-sm">
+          Google Calendar is not connected yet.{' '}
+          {event.calendar_setup_issue ??
+            'New bookings will go to Google Calendar once it is set up.'}
+        </p>
+      ) : null}
+      {calendarError ? (
+        <div role="alert" className="alert alert-error">
+          <span>{calendarError}</span>
+        </div>
+      ) : null}
+
       <DeleteEventDialog
         event={event}
         csrf={csrf}
@@ -161,7 +220,7 @@ export default function OpsEventDetailPage() {
           }}
         />
       ) : (
-        <EventReadView event={event} csrf={csrf} onChange={setEvent} />
+        <EventReadView event={event} />
       )}
     </div>
   )
@@ -280,15 +339,7 @@ function DeleteEventDialog({
   )
 }
 
-function EventReadView({
-  event,
-  csrf,
-  onChange,
-}: {
-  event: OpsEventDetail
-  csrf: string
-  onChange: (event: OpsEventDetail) => void
-}) {
+function EventReadView({ event }: { event: OpsEventDetail }) {
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       <article className="card bg-base-100 shadow">
@@ -323,7 +374,6 @@ function EventReadView({
             label="Venue type"
             value={event.venue_type === 'outdoor' ? 'Outdoor' : event.venue_type === 'indoor' ? 'Indoor' : '—'}
           />
-          <CalendarRow event={event} csrf={csrf} onChange={onChange} />
           {event.special_requirements ? (
             <Definition label="Notes" value={event.special_requirements} />
           ) : null}
@@ -382,81 +432,6 @@ function EventReadView({
           )}
         </div>
       </article>
-    </div>
-  )
-}
-
-function CalendarRow({
-  event,
-  csrf,
-  onChange,
-}: {
-  event: OpsEventDetail
-  csrf: string
-  onChange: (event: OpsEventDetail) => void
-}) {
-  const { notify } = useOpsToast()
-  const [busy, setBusy] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-  const linked = Boolean(event.on_google_calendar)
-  const cancelled = event.event_status === 'cancelled'
-
-  const sync = async () => {
-    setBusy(true)
-    setError(null)
-    const result = await syncEventToCalendar(String(event.id), csrf)
-    setBusy(false)
-    if (!result.ok) {
-      setError(result.error)
-      return
-    }
-    onChange(result.event)
-    notify(
-      result.action === 'created'
-        ? 'Added to Google Calendar'
-        : result.action === 'deleted'
-          ? 'Removed from Google Calendar'
-          : 'Google Calendar updated',
-    )
-  }
-
-  return (
-    <div className="border-base-200 border-b py-2.5 last:border-b-0">
-      <dt className="text-base-content/50 text-xs font-semibold tracking-wide uppercase">
-        Google Calendar
-      </dt>
-      <dd className="mt-1 flex flex-wrap items-center gap-3">
-        <span className="text-base font-medium">
-          {linked
-            ? 'On the calendar'
-            : event.added_to_calendar
-              ? 'Marked as added by hand'
-              : 'Not on the calendar'}
-        </span>
-        {event.calendar_sync_available && !cancelled ? (
-          <button
-            type="button"
-            className="btn btn-sm h-10 gap-2"
-            disabled={busy}
-            onClick={() => void sync()}
-          >
-            {busy ? <span className="loading loading-spinner loading-sm" /> : null}
-            {linked ? 'Update Calendar' : 'Add to Google Calendar'}
-          </button>
-        ) : null}
-      </dd>
-      {event.calendar_sync_available === false ? (
-        <p className="text-base-content/60 mt-1 text-sm">
-          Not connected yet.{' '}
-          {event.calendar_setup_issue ??
-            'New bookings will go to Google Calendar once it is set up.'}
-        </p>
-      ) : null}
-      {error ? (
-        <p role="alert" className="text-error mt-1 text-sm">
-          {error}
-        </p>
-      ) : null}
     </div>
   )
 }
