@@ -260,6 +260,8 @@ function cms_booking_create(array $data, array $screenshotFile): array
         $stmt->execute($row);
         $id = (int) cms_db()->lastInsertId();
         cms_booking_notify_admin($id, $row);
+        require_once __DIR__ . '/google-calendar.php';
+        cms_gcal_sync_after_response((string) $id, ['create' => true]);
         return ['ok' => true, 'bookingId' => $id];
     } catch (Throwable $e) {
         @unlink(cms_uploads_dir() . DIRECTORY_SEPARATOR . str_replace('/', DIRECTORY_SEPARATOR, $savedFile['path']));
@@ -285,6 +287,8 @@ function cms_booking_create_json(array $row): array
     $data['bookings'][] = $row;
     file_put_contents($path, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     cms_booking_notify_admin($id, $row);
+    require_once __DIR__ . '/google-calendar.php';
+    cms_gcal_sync_after_response($id, ['create' => true]);
     return ['ok' => true, 'bookingId' => $id];
 }
 

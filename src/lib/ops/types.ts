@@ -55,6 +55,10 @@ export type OpsEventDetail = OpsEventSummary & {
   games: OpsNamedRef[]
   team: OpsNamedRef[]
   screenshot_url: string | null
+  /** True once the event exists on the shared Google Calendar. */
+  on_google_calendar?: boolean
+  /** False when Google Calendar has not been set up on the server. */
+  calendar_sync_available?: boolean
 }
 
 export type OpsGame = {

@@ -43,4 +43,17 @@ return [
         'resend_template_id' => '',
         'from' => 'The Game Hour <onboarding@resend.dev>',
     ],
+    // Adds every new booking to a Google Calendar (see docs/operations/GOOGLE_CALENDAR_SETUP.md).
+    // Leave this whole block out to keep calendar sync switched off.
+    'google_calendar' => [
+        'calendar_id' => 'thegamehourr@gmail.com',
+        // Either point at the downloaded service-account JSON key (keep it OUTSIDE public_html)...
+        'service_account_file' => '',
+        // ...or paste the two values from that JSON file instead:
+        'client_email' => '',
+        'private_key' => '',
+        'timezone' => 'Asia/Kolkata',
+        // Bookings only have a start time, so events are this long (minutes).
+        'default_duration_minutes' => 120,
+    ],
 ];

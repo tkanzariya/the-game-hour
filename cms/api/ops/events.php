@@ -76,6 +76,23 @@ if ($method === 'DELETE') {
     cms_json_response(['ok' => true]);
 }
 
+if ($method === 'POST' && $id !== '' && ($_GET['action'] ?? '') === 'calendar') {
+    cms_ops_verify_json_csrf();
+    require_once __DIR__ . '/../../includes/google-calendar.php';
+    if (!cms_gcal_enabled()) {
+        cms_json_response(['ok' => false, 'error' => 'Google Calendar is not set up on the server yet.'], 422);
+    }
+    $synced = cms_gcal_sync($id, ['force' => true, 'create' => true]);
+    if (!$synced['ok']) {
+        cms_json_response(['ok' => false, 'error' => $synced['error'] ?? 'Could not update Google Calendar.'], 502);
+    }
+    $event = cms_ops_get_event($id);
+    if ($event === null) {
+        cms_json_response(['ok' => false, 'error' => 'Event not found.'], 404);
+    }
+    cms_json_response(['ok' => true, 'event' => $event, 'action' => $synced['action']]);
+}
+
 if ($method === 'PATCH' || $method === 'POST') {
     cms_ops_verify_json_csrf();
     if ($id === '') {

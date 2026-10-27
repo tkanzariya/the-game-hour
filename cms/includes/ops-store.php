@@ -116,6 +116,9 @@ function cms_ops_serialize_event(array $row, array $games = [], array $team = []
         $payload['games'] = $games;
         $payload['team'] = $team;
         $payload['screenshot_url'] = cms_ops_screenshot_from_row($row);
+        require_once __DIR__ . '/google-calendar.php';
+        $payload['on_google_calendar'] = trim((string) ($row['google_event_id'] ?? '')) !== '';
+        $payload['calendar_sync_available'] = cms_gcal_enabled();
     }
     return $payload;
 }
@@ -266,6 +269,18 @@ function cms_ops_event_team(int $eventId): array
  * @param array<string, mixed> $patch
  * @return array{ok: true, event: array<string, mixed>}|array{ok: false, error: string}
  */
+/** Fields that change what shows on the calendar entry. */
+function cms_ops_patch_touches_calendar(array $patch): bool
+{
+    foreach (['event_status', 'event_date', 'event_time', 'venue_name', 'event_type', 'age_group',
+        'participant_count', 'venue_type', 'special_requirements'] as $field) {
+        if (array_key_exists($field, $patch)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 function cms_ops_update_event(string $id, array $patch): array
 {
     if (cms_dev_json_enabled()) {
@@ -340,6 +355,11 @@ function cms_ops_update_event(string $id, array $patch): array
         return ['ok' => false, 'error' => 'Could not save event.'];
     }
 
+    if (cms_ops_patch_touches_calendar($patch)) {
+        require_once __DIR__ . '/google-calendar.php';
+        cms_gcal_sync((string) $eventId);
+    }
+
     $event = cms_ops_get_event((string) $eventId);
     if ($event === null) {
         return ['ok' => false, 'error' => 'Event not found after save.'];
@@ -367,6 +387,9 @@ function cms_ops_delete_event(string $id)
         return ['ok' => false, 'error' => 'Event not found.'];
     }
 
+    require_once __DIR__ . '/google-calendar.php';
+    cms_gcal_remove_before_delete((string) $eventId);
+
     $pdo = cms_db();
     $pdo->beginTransaction();
     try {
@@ -390,6 +413,8 @@ function cms_ops_delete_event(string $id)
  */
 function cms_ops_delete_event_json(string $id)
 {
+    require_once __DIR__ . '/google-calendar.php';
+    cms_gcal_remove_before_delete($id);
     $data = cms_ops_json_bundle();
     $kept = [];
     $found = null;
@@ -870,6 +895,10 @@ function cms_ops_update_event_json(string $id, array $patch): array
         return ['ok' => false, 'error' => 'Event not found.'];
     }
     cms_ops_json_save_bundle($data);
+    if (cms_ops_patch_touches_calendar($patch)) {
+        require_once __DIR__ . '/google-calendar.php';
+        cms_gcal_sync($id);
+    }
     $event = cms_ops_get_event($id);
     if ($event === null) {
         return ['ok' => false, 'error' => 'Event not found after save.'];

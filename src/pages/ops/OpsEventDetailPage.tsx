@@ -10,7 +10,14 @@ import {
 import Icon from '@/components/Icon/Icon'
 import { SearchMultiSelect } from '@/components/ops/SearchMultiSelect'
 import { getBookingFormContent } from '@/lib/booking/api'
-import { deleteEvent, fetchEvent, fetchGames, fetchTeam, updateEvent } from '@/lib/ops/api'
+import {
+  deleteEvent,
+  fetchEvent,
+  fetchGames,
+  fetchTeam,
+  syncEventToCalendar,
+  updateEvent,
+} from '@/lib/ops/api'
 import { useOpsAuth } from '@/lib/ops/auth'
 import { useOpsToast } from '@/lib/ops/toast'
 import {
@@ -154,7 +161,7 @@ export default function OpsEventDetailPage() {
           }}
         />
       ) : (
-        <EventReadView event={event} />
+        <EventReadView event={event} csrf={csrf} onChange={setEvent} />
       )}
     </div>
   )
@@ -273,7 +280,15 @@ function DeleteEventDialog({
   )
 }
 
-function EventReadView({ event }: { event: OpsEventDetail }) {
+function EventReadView({
+  event,
+  csrf,
+  onChange,
+}: {
+  event: OpsEventDetail
+  csrf: string
+  onChange: (event: OpsEventDetail) => void
+}) {
   return (
     <div className="grid gap-4 lg:grid-cols-2">
       <article className="card bg-base-100 shadow">
@@ -308,10 +323,7 @@ function EventReadView({ event }: { event: OpsEventDetail }) {
             label="Venue type"
             value={event.venue_type === 'outdoor' ? 'Outdoor' : event.venue_type === 'indoor' ? 'Indoor' : '—'}
           />
-          <Definition
-            label="On calendar"
-            value={event.added_to_calendar ? 'Yes' : 'No'}
-          />
+          <CalendarRow event={event} csrf={csrf} onChange={onChange} />
           {event.special_requirements ? (
             <Definition label="Notes" value={event.special_requirements} />
           ) : null}
@@ -370,6 +382,79 @@ function EventReadView({ event }: { event: OpsEventDetail }) {
           )}
         </div>
       </article>
+    </div>
+  )
+}
+
+function CalendarRow({
+  event,
+  csrf,
+  onChange,
+}: {
+  event: OpsEventDetail
+  csrf: string
+  onChange: (event: OpsEventDetail) => void
+}) {
+  const { notify } = useOpsToast()
+  const [busy, setBusy] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const linked = Boolean(event.on_google_calendar)
+  const cancelled = event.event_status === 'cancelled'
+
+  const sync = async () => {
+    setBusy(true)
+    setError(null)
+    const result = await syncEventToCalendar(String(event.id), csrf)
+    setBusy(false)
+    if (!result.ok) {
+      setError(result.error)
+      return
+    }
+    onChange(result.event)
+    notify(
+      result.action === 'created'
+        ? 'Added to Google Calendar'
+        : result.action === 'deleted'
+          ? 'Removed from Google Calendar'
+          : 'Google Calendar updated',
+    )
+  }
+
+  return (
+    <div className="border-base-200 border-b py-2.5 last:border-b-0">
+      <dt className="text-base-content/50 text-xs font-semibold tracking-wide uppercase">
+        Google Calendar
+      </dt>
+      <dd className="mt-1 flex flex-wrap items-center gap-3">
+        <span className="text-base font-medium">
+          {linked
+            ? 'On the calendar'
+            : event.added_to_calendar
+              ? 'Marked as added by hand'
+              : 'Not on the calendar'}
+        </span>
+        {event.calendar_sync_available && !cancelled ? (
+          <button
+            type="button"
+            className="btn btn-sm h-10 gap-2"
+            disabled={busy}
+            onClick={() => void sync()}
+          >
+            {busy ? <span className="loading loading-spinner loading-sm" /> : null}
+            {linked ? 'Update Calendar' : 'Add to Google Calendar'}
+          </button>
+        ) : null}
+      </dd>
+      {event.calendar_sync_available === false ? (
+        <p className="text-base-content/60 mt-1 text-sm">
+          Not connected yet. New bookings will go to Google Calendar once it is set up.
+        </p>
+      ) : null}
+      {error ? (
+        <p role="alert" className="text-error mt-1 text-sm">
+          {error}
+        </p>
+      ) : null}
     </div>
   )
 }

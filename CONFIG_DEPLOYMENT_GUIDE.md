@@ -270,6 +270,19 @@ You must create `config.php` **manually on the server** (cPanel File Manager or 
 
 ---
 
+## 9. Google Calendar (optional)
+
+New bookings can be added to a Google Calendar automatically. It uses a **service account** (no sign-in screen, nothing that expires) and is configured with the optional `google_calendar` block in `cms/config.php`. Full steps: [docs/operations/GOOGLE_CALENDAR_SETUP.md](docs/operations/GOOGLE_CALENDAR_SETUP.md).
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `calendar_id` | Yes | The calendar's email address, e.g. `thegamehourr@gmail.com` |
+| `service_account_file` **or** `client_email` + `private_key` | Yes | From the service account's JSON key |
+| `timezone` | No | Default `Asia/Kolkata` |
+| `default_duration_minutes` | No | Default `120` |
+
+The server needs the PHP `openssl` and `curl` extensions (both are normally on in cPanel). Like the rest of `config.php`, this block is server-only and is never deployed by CI.
+
 ## Related documentation
 
 | Document | Purpose |

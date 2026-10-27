@@ -190,6 +190,29 @@ export async function deleteEvent(
   return { ok: true }
 }
 
+export async function syncEventToCalendar(
+  id: string,
+  csrf: string,
+): Promise<{ ok: true; event: OpsEventDetail; action: string } | { ok: false; error: string }> {
+  try {
+    const res = await opsFetch(`${EVENTS_URL}?id=${encodeURIComponent(id)}&action=calendar`, {
+      method: 'POST',
+      headers: { 'X-CSRF-Token': csrf },
+    })
+    const data = await readJson(res)
+    if (!res.ok || !data.ok || !data.event) {
+      return { ok: false, error: String(data.error ?? 'Could not update Google Calendar.') }
+    }
+    return {
+      ok: true,
+      event: data.event as OpsEventDetail,
+      action: String(data.action ?? ''),
+    }
+  } catch {
+    return { ok: false, error: 'Could not reach the server. Check your connection.' }
+  }
+}
+
 export async function fetchGames(): Promise<OpsGame[]> {
   const res = await opsFetch(GAMES_URL)
   const data = await readJson(res)
