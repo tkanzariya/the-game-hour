@@ -119,6 +119,7 @@ function cms_ops_serialize_event(array $row, array $games = [], array $team = []
         require_once __DIR__ . '/google-calendar.php';
         $payload['on_google_calendar'] = trim((string) ($row['google_event_id'] ?? '')) !== '';
         $payload['calendar_sync_available'] = cms_gcal_enabled();
+        $payload['calendar_setup_issue'] = cms_gcal_setup_issue();
     }
     return $payload;
 }

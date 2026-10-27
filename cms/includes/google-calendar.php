@@ -19,44 +19,126 @@ const CMS_GCAL_SCOPE = 'https://www.googleapis.com/auth/calendar.events';
 /* ------------------------------------------------------------------- config */
 
 /**
+ * Check the settings and say what is wrong, in plain words. Never includes secret values.
+ *
+ * @param array<string, mixed> $all the whole CMS config array
+ * @return array{config: array<string, mixed>|null, problem: string|null}
+ */
+function cms_gcal_inspect(array $all, string $configFile = 'config.php'): array
+{
+    $cfg = $all['google_calendar'] ?? null;
+    if (!is_array($cfg)) {
+        foreach ($all as $section => $value) {
+            if (is_array($value) && isset($value['google_calendar']) && is_array($value['google_calendar'])) {
+                return [
+                    'config' => null,
+                    'problem' => 'The google_calendar block is inside the \'' . $section . '\' section of '
+                        . $configFile . '. Move it out so it sits directly inside the main list, just above the final "];".',
+                ];
+            }
+        }
+        return [
+            'config' => null,
+            'problem' => 'No google_calendar block found in ' . $configFile . ' on the server.'
+                . ($configFile !== 'config.php' ? ' (This server is reading ' . $configFile . ' instead of config.php.)' : ''),
+        ];
+    }
+    if (array_key_exists('enabled', $cfg) && !$cfg['enabled']) {
+        return ['config' => null, 'problem' => 'google_calendar is switched off (enabled is false).'];
+    }
+
+    $email = trim((string) ($cfg['client_email'] ?? ''));
+    $key = (string) ($cfg['private_key'] ?? '');
+    $file = trim((string) ($cfg['service_account_file'] ?? ''));
+    if ($file !== '') {
+        if (!is_file($file) || !is_readable($file)) {
+            if ($email === '' || $key === '') {
+                return ['config' => null, 'problem' => 'service_account_file points to a file that cannot be read.'];
+            }
+        } else {
+            $json = json_decode((string) file_get_contents($file), true);
+            if (is_array($json)) {
+                $email = trim((string) ($json['client_email'] ?? $email));
+                $key = (string) ($json['private_key'] ?? $key);
+            }
+        }
+    }
+    $key = str_replace('\\n', "\n", $key);
+    // Forgive a key pasted without its BEGIN/END lines (only the long text in the middle).
+    $body = preg_replace('/\s+/', '', $key) ?? '';
+    if (strpos($key, 'BEGIN') === false && strlen($body) > 800 && preg_match('#^[A-Za-z0-9+/=]+$#', $body) === 1) {
+        $key = "-----BEGIN PRIVATE KEY-----\n" . chunk_split($body, 64, "\n") . "-----END PRIVATE KEY-----\n";
+    }
+    $calendarId = trim((string) ($cfg['calendar_id'] ?? ''));
+
+    if ($calendarId === '') {
+        return ['config' => null, 'problem' => 'calendar_id is empty.'];
+    }
+    if ($email === '') {
+        return ['config' => null, 'problem' => 'client_email is empty.'];
+    }
+    if (stripos($email, 'paste') !== false || strpos($email, '@') === false) {
+        return ['config' => null, 'problem' => 'client_email still has the placeholder text or is not an email address.'];
+    }
+    if (trim($key) === '') {
+        return ['config' => null, 'problem' => 'private_key is empty.'];
+    }
+    if (stripos($key, 'paste') !== false && strpos($key, 'PRIVATE KEY') === false) {
+        return ['config' => null, 'problem' => 'private_key still has the placeholder text.'];
+    }
+    if (strpos($key, 'BEGIN PRIVATE KEY') === false || strpos($key, 'END PRIVATE KEY') === false) {
+        return [
+            'config' => null,
+            'problem' => 'private_key is incomplete. It must start with -----BEGIN PRIVATE KEY----- and end with -----END PRIVATE KEY-----.',
+        ];
+    }
+
+    $duration = (int) ($cfg['default_duration_minutes'] ?? 120);
+    return [
+        'config' => [
+            'calendar_id' => $calendarId,
+            'client_email' => $email,
+            'private_key' => $key,
+            'timezone' => trim((string) ($cfg['timezone'] ?? '')) ?: 'Asia/Kolkata',
+            'duration' => $duration >= 15 && $duration <= 1440 ? $duration : 120,
+            // Overridable so the flow can be tested against a local stand-in for Google.
+            'token_url' => trim((string) ($cfg['token_url'] ?? '')) ?: 'https://oauth2.googleapis.com/token',
+            'api_base' => rtrim(trim((string) ($cfg['api_base'] ?? '')) ?: 'https://www.googleapis.com/calendar/v3', '/'),
+        ],
+        'problem' => null,
+    ];
+}
+
+/** Which config file the CMS is reading (a config.local.php next to it takes over). */
+function cms_gcal_config_file_name(): string
+{
+    return is_file(__DIR__ . '/../config.local.php') ? 'config.local.php' : 'config.php';
+}
+
+/** @return array{config: array<string, mixed>|null, problem: string|null} */
+function cms_gcal_state(): array
+{
+    static $state = null;
+    if ($state === null) {
+        $state = cms_gcal_inspect(cms_config(), cms_gcal_config_file_name());
+    }
+    return $state;
+}
+
+/**
  * Normalized settings, or null when calendar sync is switched off or incomplete.
  *
  * @return array<string, mixed>|null
  */
 function cms_gcal_config()
 {
-    $cfg = cms_config()['google_calendar'] ?? null;
-    if (!is_array($cfg) || (array_key_exists('enabled', $cfg) && !$cfg['enabled'])) {
-        return null;
-    }
+    return cms_gcal_state()['config'];
+}
 
-    $email = trim((string) ($cfg['client_email'] ?? ''));
-    $key = (string) ($cfg['private_key'] ?? '');
-    $file = trim((string) ($cfg['service_account_file'] ?? ''));
-    if ($file !== '' && is_file($file) && is_readable($file)) {
-        $json = json_decode((string) file_get_contents($file), true);
-        if (is_array($json)) {
-            $email = trim((string) ($json['client_email'] ?? $email));
-            $key = (string) ($json['private_key'] ?? $key);
-        }
-    }
-    $key = str_replace('\\n', "\n", $key);
-    $calendarId = trim((string) ($cfg['calendar_id'] ?? ''));
-    if ($email === '' || strpos($key, 'PRIVATE KEY') === false || $calendarId === '') {
-        return null;
-    }
-
-    $duration = (int) ($cfg['default_duration_minutes'] ?? 120);
-    return [
-        'calendar_id' => $calendarId,
-        'client_email' => $email,
-        'private_key' => $key,
-        'timezone' => trim((string) ($cfg['timezone'] ?? '')) ?: 'Asia/Kolkata',
-        'duration' => $duration >= 15 && $duration <= 1440 ? $duration : 120,
-        // Overridable so the flow can be tested against a local stand-in for Google.
-        'token_url' => trim((string) ($cfg['token_url'] ?? '')) ?: 'https://oauth2.googleapis.com/token',
-        'api_base' => rtrim(trim((string) ($cfg['api_base'] ?? '')) ?: 'https://www.googleapis.com/calendar/v3', '/'),
-    ];
+/** Plain-words reason the sync is not running, or null when it is ready. */
+function cms_gcal_setup_issue(): ?string
+{
+    return cms_gcal_state()['problem'];
 }
 
 function cms_gcal_enabled(): bool

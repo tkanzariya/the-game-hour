@@ -447,7 +447,9 @@ function CalendarRow({
       </dd>
       {event.calendar_sync_available === false ? (
         <p className="text-base-content/60 mt-1 text-sm">
-          Not connected yet. New bookings will go to Google Calendar once it is set up.
+          Not connected yet.{' '}
+          {event.calendar_setup_issue ??
+            'New bookings will go to Google Calendar once it is set up.'}
         </p>
       ) : null}
       {error ? (

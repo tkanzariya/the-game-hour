@@ -59,6 +59,8 @@ export type OpsEventDetail = OpsEventSummary & {
   on_google_calendar?: boolean
   /** False when Google Calendar has not been set up on the server. */
   calendar_sync_available?: boolean
+  /** Plain-words reason Google Calendar is not running yet, if any. */
+  calendar_setup_issue?: string | null
 }
 
 export type OpsGame = {

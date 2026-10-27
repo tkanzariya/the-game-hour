@@ -80,7 +80,7 @@ if ($method === 'POST' && $id !== '' && ($_GET['action'] ?? '') === 'calendar') 
     cms_ops_verify_json_csrf();
     require_once __DIR__ . '/../../includes/google-calendar.php';
     if (!cms_gcal_enabled()) {
-        cms_json_response(['ok' => false, 'error' => 'Google Calendar is not set up on the server yet.'], 422);
+        cms_json_response(['ok' => false, 'error' => 'Google Calendar is not set up on the server yet. ' . (cms_gcal_setup_issue() ?? '')], 422);
     }
     $synced = cms_gcal_sync($id, ['force' => true, 'create' => true]);
     if (!$synced['ok']) {
