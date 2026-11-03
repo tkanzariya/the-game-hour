@@ -17,6 +17,7 @@ const NAV = [
   { to: ROUTES.opsTeam, label: 'Team', end: true, icon: 'users' },
   { to: ROUTES.opsInquiries, label: 'Inquiries', end: false, icon: 'comments' },
   { to: ROUTES.opsGames, label: 'Games', end: true, icon: 'puzzle-piece' },
+  { to: ROUTES.opsInventory, label: 'Inventory', end: false, icon: 'box-open' },
   { to: ROUTES.opsSettings, label: 'Settings', end: true, icon: 'cogs' },
 ] as const
 

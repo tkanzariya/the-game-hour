@@ -6,6 +6,13 @@ import type {
   OpsEventSummary,
   OpsGame,
   OpsGameFieldErrors,
+  InventoryFieldErrors,
+  InventoryItem,
+  InventoryItemDetail,
+  InventoryItemInput,
+  InventoryAdjustmentInput,
+  InventoryPurchaseInput,
+  InventoryTotals,
   OpsGameInput,
   OpsInquiry,
   OpsInquiryFieldErrors,
@@ -25,6 +32,7 @@ const GAMES_URL = '/cms/api/ops/games.php'
 const INQUIRIES_URL = '/cms/api/ops/inquiries.php'
 const PUBLIC_INQUIRY_VIEW = '/cms/api/inquiry/view.php'
 const PUBLIC_INQUIRY_SUBMIT = '/cms/api/inquiry/submit.php'
+const INVENTORY_URL = '/cms/api/ops/inventory.php'
 const TEAM_URL = '/cms/api/ops/team.php'
 const SUMMARY_URL = '/cms/api/ops/summary.php'
 
@@ -445,4 +453,153 @@ export function submitPublicInquiry(
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ token, game_ids: gameIds }),
   })
+}
+
+/* ---------------------------------------------------------------- inventory */
+
+export type InventoryResult =
+  | { ok: true; item: InventoryItemDetail }
+  | { ok: false; error: string; fieldErrors?: InventoryFieldErrors }
+
+const NETWORK_ERROR = 'Could not reach the server. Check your connection.'
+
+async function inventoryItemRequest(url: string, init: RequestInit): Promise<InventoryResult> {
+  try {
+    const res = await opsFetch(url, init)
+    const data = await readJson(res)
+    if (!res.ok || !data.ok || !data.item) {
+      return {
+        ok: false,
+        error: String(data.error ?? 'Could not save that.'),
+        fieldErrors: (data.errors as InventoryFieldErrors | undefined) ?? undefined,
+      }
+    }
+    return { ok: true, item: data.item as InventoryItemDetail }
+  } catch {
+    return { ok: false, error: NETWORK_ERROR }
+  }
+}
+
+export async function loadInventory(): Promise<
+  { ok: true; items: InventoryItem[]; totals: InventoryTotals } | { ok: false; error: string }
+> {
+  try {
+    const res = await opsFetch(INVENTORY_URL)
+    const data = await readJson(res)
+    if (!res.ok || !data.ok) {
+      return { ok: false, error: String(data.error ?? 'Could not load inventory.') }
+    }
+    return {
+      ok: true,
+      items: (data.items as InventoryItem[]) ?? [],
+      totals: data.totals as InventoryTotals,
+    }
+  } catch {
+    return { ok: false, error: NETWORK_ERROR }
+  }
+}
+
+export async function loadInventoryItem(
+  id: number,
+): Promise<{ ok: true; item: InventoryItemDetail } | { ok: false; error: string; notFound?: boolean }> {
+  try {
+    const res = await opsFetch(`${INVENTORY_URL}?id=${id}`)
+    const data = await readJson(res)
+    if (!res.ok || !data.ok || !data.item) {
+      return {
+        ok: false,
+        error: String(data.error ?? 'Could not load this item.'),
+        notFound: res.status === 404,
+      }
+    }
+    return { ok: true, item: data.item as InventoryItemDetail }
+  } catch {
+    return { ok: false, error: NETWORK_ERROR }
+  }
+}
+
+export function saveInventoryItem(
+  id: number | null,
+  input: InventoryItemInput,
+  csrf: string,
+): Promise<InventoryResult> {
+  return inventoryItemRequest(id === null ? INVENTORY_URL : `${INVENTORY_URL}?id=${id}`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+    body: JSON.stringify(input),
+  })
+}
+
+export async function deleteInventoryItem(
+  id: number,
+  csrf: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  try {
+    const res = await opsFetch(`${INVENTORY_URL}?resource=item&id=${id}`, {
+      method: 'DELETE',
+      headers: { 'X-CSRF-Token': csrf },
+    })
+    const data = await readJson(res)
+    if (!res.ok || !data.ok) {
+      return { ok: false, error: String(data.error ?? 'Could not delete the item.') }
+    }
+    return { ok: true }
+  } catch {
+    return { ok: false, error: NETWORK_ERROR }
+  }
+}
+
+/** Create (purchaseId null) or edit a purchase. Sent as a form so an invoice file can ride along. */
+export function saveInventoryPurchase(
+  itemId: number,
+  purchaseId: number | null,
+  input: InventoryPurchaseInput,
+  csrf: string,
+): Promise<InventoryResult> {
+  const form = new FormData()
+  form.append('item_id', String(itemId))
+  form.append('purchased_on', input.purchased_on)
+  form.append('quantity', input.quantity.trim())
+  form.append('price_mode', input.price_mode)
+  form.append('price', input.price.trim())
+  form.append('vendor', input.vendor)
+  form.append('notes', input.notes)
+  if (input.invoice) form.append('invoice', input.invoice)
+  else if (input.remove_invoice) form.append('remove_invoice', '1')
+  const query = purchaseId === null ? '?resource=purchase' : `?resource=purchase&id=${purchaseId}`
+  return inventoryItemRequest(`${INVENTORY_URL}${query}`, {
+    method: 'POST',
+    headers: { 'X-CSRF-Token': csrf },
+    body: form,
+  })
+}
+
+export function deleteInventoryPurchase(id: number, csrf: string): Promise<InventoryResult> {
+  return inventoryItemRequest(`${INVENTORY_URL}?resource=purchase&id=${id}`, {
+    method: 'DELETE',
+    headers: { 'X-CSRF-Token': csrf },
+  })
+}
+
+export function saveInventoryAdjustment(
+  itemId: number,
+  input: InventoryAdjustmentInput,
+  csrf: string,
+): Promise<InventoryResult> {
+  return inventoryItemRequest(`${INVENTORY_URL}?resource=adjustment`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': csrf },
+    body: JSON.stringify({ ...input, item_id: itemId }),
+  })
+}
+
+export function deleteInventoryAdjustment(id: number, csrf: string): Promise<InventoryResult> {
+  return inventoryItemRequest(`${INVENTORY_URL}?resource=adjustment&id=${id}`, {
+    method: 'DELETE',
+    headers: { 'X-CSRF-Token': csrf },
+  })
+}
+
+export function inventoryInvoiceUrl(purchaseId: number, download = false): string {
+  return `${INVENTORY_URL}?resource=invoice&id=${purchaseId}${download ? '&download=1' : ''}`
 }

@@ -10,6 +10,7 @@ type FileDropzoneProps = {
   file: File | null
   onChange: (file: File | null) => void
   accept?: string
+  hint?: string
 }
 
 export function FileDropzone({
@@ -20,6 +21,7 @@ export function FileDropzone({
   file,
   onChange,
   accept = 'image/jpeg,image/png,image/webp',
+  hint = 'JPG, PNG, or WEBP. Tap Choose file or drop an image here.',
 }: FileDropzoneProps) {
   const autoId = useId()
   const id = idProp ?? autoId
@@ -68,7 +70,7 @@ export function FileDropzone({
         <p className="mt-2 text-sm leading-snug break-words text-base-content/70">
           {file
             ? `${file.name} · ${(file.size / 1024).toFixed(0)} KB`
-            : 'JPG, PNG, or WEBP. Tap Choose file or drop an image here.'}
+            : hint}
         </p>
       </div>
       {file ? (

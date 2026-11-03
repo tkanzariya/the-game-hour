@@ -24,6 +24,8 @@ import OpsFinancePage from '@/pages/ops/OpsFinancePage'
 import OpsTeamPage from '@/pages/ops/OpsTeamPage'
 import OpsGamesPage from '@/pages/ops/OpsGamesPage'
 import OpsInquiriesPage from '@/pages/ops/OpsInquiriesPage'
+import OpsInventoryPage from '@/pages/ops/OpsInventoryPage'
+import OpsInventoryItemPage from '@/pages/ops/OpsInventoryItemPage'
 import OpsInquiryDetailPage from '@/pages/ops/OpsInquiryDetailPage'
 import OpsInquiryFormPage from '@/pages/ops/OpsInquiryFormPage'
 import ChooseGamesPage from '@/pages/ChooseGamesPage'
@@ -87,6 +89,8 @@ export const router = createBrowserRouter([
           { path: 'finance', element: <OpsFinancePage /> },
           { path: 'team', element: <OpsTeamPage /> },
           { path: 'games', element: <OpsGamesPage /> },
+          { path: 'inventory', element: <OpsInventoryPage /> },
+          { path: 'inventory/:id', element: <OpsInventoryItemPage /> },
           { path: 'inquiries', element: <OpsInquiriesPage /> },
           { path: 'inquiries/new', element: <OpsInquiryFormPage /> },
           { path: 'inquiries/:id', element: <OpsInquiryDetailPage /> },

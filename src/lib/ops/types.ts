@@ -159,6 +159,86 @@ export type PublicInquiry = {
   selected_ids: number[]
 }
 
+export type InventoryItem = {
+  id: number
+  name: string
+  category: string | null
+  unit: string
+  min_stock: number
+  notes: string | null
+  stock: number
+  total_purchased: number
+  total_spent: number
+  avg_cost: number
+  value: number
+  last_purchased_on: string | null
+  purchase_count: number
+  out_of_stock: boolean
+  low_stock: boolean
+}
+
+export type InventoryPurchase = {
+  id: number
+  purchased_on: string
+  quantity: number
+  unit_price: number
+  total: number
+  vendor: string | null
+  notes: string | null
+  has_invoice: boolean
+  invoice_name: string | null
+}
+
+export type InventoryAdjustment = {
+  id: number
+  adjusted_on: string
+  delta: number
+  reason: string
+  notes: string | null
+}
+
+export type InventoryItemDetail = InventoryItem & {
+  purchases: InventoryPurchase[]
+  adjustments: InventoryAdjustment[]
+}
+
+export type InventoryTotals = {
+  item_count: number
+  units: number
+  value: number
+  spent: number
+  low: number
+  out: number
+}
+
+export type InventoryItemInput = {
+  name: string
+  category: string
+  min_stock: string
+  notes: string
+}
+
+export type InventoryPurchaseInput = {
+  purchased_on: string
+  quantity: string
+  /** Whether `price` is what one cost or the total paid. */
+  price_mode: 'each' | 'total'
+  price: string
+  vendor: string
+  notes: string
+  invoice: File | null
+  remove_invoice: boolean
+}
+
+export type InventoryAdjustmentInput = {
+  adjusted_on: string
+  reason: string
+  quantity: string
+  notes: string
+}
+
+export type InventoryFieldErrors = Record<string, string>
+
 export type OpsTeamMember = {
   id: number
   name: string

@@ -39,7 +39,7 @@ export function FieldShell({
           {error}
         </p>
       ) : hint ? (
-        <p className="label">{hint}</p>
+        <p className="label whitespace-normal">{hint}</p>
       ) : null}
     </fieldset>
   )

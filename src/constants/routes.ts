@@ -20,6 +20,7 @@ export const ROUTES = {
   opsTeam: '/ops/team',
   opsGames: '/ops/games',
   opsInquiries: '/ops/inquiries',
+  opsInventory: '/ops/inventory',
   opsInquiryNew: '/ops/inquiries/new',
   chooseGames: '/choose-games',
   opsSettings: '/ops/settings',
