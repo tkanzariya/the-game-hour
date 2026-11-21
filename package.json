@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && node scripts/generate-favicons.mjs && vite build && node scripts/copy-cms-to-dist.mjs",
+    "build": "tsc -b && node scripts/generate-favicons.mjs && vite build && node scripts/prerender.mjs && node scripts/copy-cms-to-dist.mjs",
+    "prerender": "node scripts/prerender.mjs",
     "cms:sync": "node scripts/copy-cms-to-dist.mjs",
     "cms:audit": "node scripts/audit-image-mappings.mjs",
     "cms:verify": "node --experimental-strip-types scripts/verify-cms-mapping.mjs",

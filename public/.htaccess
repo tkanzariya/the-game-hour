@@ -1,16 +1,53 @@
-# SPA fallback for Apache/cPanel (React Router client-side routes)
+# Apache/cPanel routing for The Game Hour.
+# Public pages are prerendered at build time (scripts/prerender.mjs); /ops, /book and
+# /choose-games are rendered in the browser from app.html. scripts/dev-router.php mirrors
+# these rules for local testing, so change both together.
 <IfModule mod_rewrite.c>
   RewriteEngine On
   RewriteBase /
 
-  # Image CMS — PHP routes (must come before SPA fallback)
+  # One address: https://thegamehour.com (live domain only)
+  RewriteCond %{HTTP_HOST} ^www\.thegamehour\.com$ [NC]
+  RewriteRule ^ https://thegamehour.com%{REQUEST_URI} [R=301,L]
+
+  RewriteCond %{HTTP_HOST} ^thegamehour\.com$ [NC]
+  RewriteCond %{HTTPS} !=on
+  RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+  RewriteRule ^ https://thegamehour.com%{REQUEST_URI} [R=301,L]
+
+  # Image CMS — PHP routes
   RewriteRule ^cms/ - [L]
   RewriteRule ^uploads/ - [L]
   RewriteRule ^admin/?$ /admin/login.php [R=301,L]
   RewriteRule ^admin/(.*)$ cms/admin/$1 [L]
 
-  RewriteRule ^index\.html$ - [L]
-  RewriteCond %{REQUEST_FILENAME} !-f
+  # Pages that moved
+  RewriteRule ^services/school-and-collage-event/?$ /services/school-and-college-events [R=301,L]
+  RewriteRule ^school-and-collage-event\.html$ /services/school-and-college-events [R=301,L]
+  RewriteRule ^(birthday-games|corporate-games|social-gathering-games|game-festival|wedding-or-haldi-games|traditional-games|bollywood-games)\.html$ /services/$1 [R=301,L]
+  RewriteRule ^corporate-events/?$ /services/corporate-games [R=301,L]
+  RewriteRule ^birthday-events/?$ /services/birthday-games [R=301,L]
+  RewriteRule ^school-events/?$ /services/school-and-college-events [R=301,L]
+  RewriteRule ^wedding-events/?$ /services/wedding-or-haldi-games [R=301,L]
+  RewriteRule ^social-gathering/?$ /services/social-gathering-games [R=301,L]
+  RewriteRule ^bollywood/?$ /services/bollywood-games [R=301,L]
+  RewriteRule ^(traditional-games|game-festival)/?$ /services/$1 [R=301,L]
+  RewriteRule ^(services|game-library)/?$ / [R=301,L]
+
+  # No trailing slash on page addresses
   RewriteCond %{REQUEST_FILENAME} !-d
-  RewriteRule . /index.html [L]
+  RewriteRule ^(.+)/$ /$1 [R=301,L]
+
+  # Real files (assets, images, prerendered pages) are served as they are
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # Prerendered public pages (the list is filled in at build time)
+  # @prerender-routes
+
+  # Parts of the app rendered in the browser
+  RewriteRule ^(ops|book|choose-games)(/.*)?$ /app.html [L]
 </IfModule>
+
+# Anything else does not exist
+ErrorDocument 404 /404.html

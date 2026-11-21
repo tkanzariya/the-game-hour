@@ -10,11 +10,10 @@ import { ROUTES } from '@/constants/routes'
 import { SITE } from '@/utils/constants'
 import { buildSeo } from '@/utils/seo'
 import { getGalleryOgImageUrl } from '@/lib/seo/og-images'
+import { GALLERY_META } from '@/lib/seo/page-meta'
 
 const gallerySeo = buildSeo({
-  title: 'Event Gallery | The Game Hour',
-  description:
-    'Browse real photos from birthday, corporate, wedding, school, and festival game events across Gujarat. See the laughter, energy, and connection The Game Hour brings.',
+  ...GALLERY_META,
   canonical: `${SITE.url}${ROUTES.gallery}`,
   ogImage: getGalleryOgImageUrl(),
 })

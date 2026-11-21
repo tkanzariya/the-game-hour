@@ -1,6 +1,5 @@
 import { Container } from '@/components/Container'
 import { LightboxImage } from '@/components/ImageLightbox'
-import { Reveal } from '@/components/motion'
 import { getImageByKey } from '@/lib/assets'
 import { getGalleryHero } from '@/lib/gallery-page'
 
@@ -27,7 +26,7 @@ export default function GalleryHero() {
       />
       <Container width="wide" className="relative z-10">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <Reveal>
+          <div>
             <p className="mb-3 inline-block rounded-full bg-white/10 px-4 py-1.5 font-heading text-xs font-bold tracking-wide text-secondary uppercase backdrop-blur-sm">
               {hero.eyebrow}
             </p>
@@ -43,8 +42,8 @@ export default function GalleryHero() {
             <p className="mt-6 text-sm text-white/70">
               Real people · Real participation · Screen-free play across Gujarat
             </p>
-          </Reveal>
-          <Reveal>
+          </div>
+          <div>
             <div className="image-frame">
               <LightboxImage
                 src={heroImage}
@@ -57,7 +56,7 @@ export default function GalleryHero() {
                 decoding="async"
               />
             </div>
-          </Reveal>
+          </div>
         </div>
       </Container>
     </header>

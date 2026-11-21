@@ -66,15 +66,69 @@ if (preg_match('#^/cms/(.*)$#', $uri, $m)) {
 }
 
 $docRoot = is_dir($root . '/dist') ? $root . '/dist' : $root . '/public';
-$static = $docRoot . $uri;
-if ($uri !== '/' && is_file($static)) {
-    return false;
+
+// --- Mirrors public/.htaccess (change both together) ---
+
+$redirect = static function (string $to): bool {
+    header('Location: ' . $to, true, 301);
+    return true;
+};
+
+$sendHtml = static function (string $file, int $status = 200): bool {
+    http_response_code($status);
+    header('Content-Type: text/html; charset=UTF-8');
+    readfile($file);
+    return true;
+};
+
+// Pages that moved
+$moved = [
+    '#^/services/school-and-collage-event/?$#' => '/services/school-and-college-events',
+    '#^/school-and-collage-event\.html$#' => '/services/school-and-college-events',
+    '#^/(birthday-games|corporate-games|social-gathering-games|game-festival|wedding-or-haldi-games|traditional-games|bollywood-games)\.html$#' => '/services/$1',
+    '#^/corporate-events/?$#' => '/services/corporate-games',
+    '#^/birthday-events/?$#' => '/services/birthday-games',
+    '#^/school-events/?$#' => '/services/school-and-college-events',
+    '#^/wedding-events/?$#' => '/services/wedding-or-haldi-games',
+    '#^/social-gathering/?$#' => '/services/social-gathering-games',
+    '#^/bollywood/?$#' => '/services/bollywood-games',
+    '#^/(traditional-games|game-festival)/?$#' => '/services/$1',
+    '#^/(services|game-library)/?$#' => '/',
+];
+foreach ($moved as $pattern => $target) {
+    if (preg_match($pattern, $uri)) {
+        return $redirect(preg_replace($pattern, $target, $uri));
+    }
 }
 
+// No trailing slash on page addresses
+if ($uri !== '/' && substr($uri, -1) === '/' && !is_dir($docRoot . $uri)) {
+    return $redirect(rtrim($uri, '/'));
+}
+
+// Real files are served as they are
+if ($uri !== '/' && is_file($docRoot . $uri)) {
+    return false;
+}
 if ($uri === '/' && is_file($docRoot . '/index.html')) {
     return false;
 }
 
+// Prerendered public pages
+$prerendered = $docRoot . '/prerender' . $uri . '.html';
+if (strpos($uri, '..') === false && is_file($prerendered)) {
+    return $sendHtml($prerendered);
+}
+
+// Parts of the app rendered in the browser
+if (preg_match('#^/(ops|book|choose-games)(/.*)?$#', $uri) && is_file($docRoot . '/app.html')) {
+    return $sendHtml($docRoot . '/app.html');
+}
+
+// Anything else does not exist
+if (is_file($docRoot . '/404.html')) {
+    return $sendHtml($docRoot . '/404.html', 404);
+}
 http_response_code(404);
 echo 'Not found';
 return true;

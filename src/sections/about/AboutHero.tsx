@@ -1,7 +1,6 @@
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { CmsImageFrame } from '@/components/CmsImages/CmsImageFrame'
-import { Reveal } from '@/components/motion'
 import { homeExperiencesPath } from '@/constants/routes'
 import { useCmsImage } from '@/hooks/useCmsImage'
 import { getAboutHero } from '@/lib/about-page'
@@ -26,7 +25,7 @@ export default function AboutHero() {
       />
 
       <Container width="wide" className="relative z-10 pb-8 md:pb-10">
-        <Reveal className="mx-auto max-w-3xl text-center">
+        <div className="mx-auto max-w-3xl text-center">
           <p className="mb-4 inline-block rounded-full bg-white/10 px-4 py-1.5 font-heading text-xs font-bold tracking-wide text-secondary uppercase backdrop-blur-sm">
             {hero.eyebrow}
           </p>
@@ -53,11 +52,11 @@ export default function AboutHero() {
             </Button>
           </div>
           <p className="mt-5 text-sm text-white/70">{hero.trustLine}</p>
-        </Reveal>
+        </div>
       </Container>
 
       <Container width="wide" className="relative z-10 pb-12 md:pb-16">
-        <Reveal>
+        <div>
           <CmsImageFrame
             ready={heroImage.ready}
             src={heroImage.src}
@@ -68,7 +67,7 @@ export default function AboutHero() {
             fetchPriority="high"
             decoding="async"
           />
-        </Reveal>
+        </div>
       </Container>
     </header>
   )

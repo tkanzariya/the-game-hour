@@ -2,7 +2,6 @@ import { Link } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { CmsImageFrame } from '@/components/CmsImages/CmsImageFrame'
-import { Reveal } from '@/components/motion'
 import { homeExperiencesPath } from '@/constants/routes'
 import { ASSET_MAP } from '@/data/asset-map'
 import { useCmsAssetUrl } from '@/hooks/useCmsImage'
@@ -41,7 +40,7 @@ export default function HomeHero() {
 
       <Container width="wide" className="relative z-10 pb-10 pt-4 md:pb-14 md:pt-6 lg:pb-16 lg:pt-8">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <Reveal className="max-w-2xl">
+          <div className="max-w-2xl">
             <p className="hero-eyebrow">{site.tagline}</p>
 
             <h1 id="home-hero-heading" className="mt-4 md:mt-5">
@@ -74,9 +73,9 @@ export default function HomeHero() {
                 {hero.trustLinkLabel}
               </Link>
             </p>
-          </Reveal>
+          </div>
 
-          <Reveal className="relative lg:mt-2">
+          <div className="relative lg:mt-2">
             <div className="image-frame lg:p-3">
               <CmsImageFrame
                 ready={heroImage.ready}
@@ -98,7 +97,7 @@ export default function HomeHero() {
                 {eventsHosted?.label ?? 'Events Hosted'}
               </p>
             </div>
-          </Reveal>
+          </div>
         </div>
       </Container>
     </section>

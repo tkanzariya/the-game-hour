@@ -4,18 +4,17 @@ import { PageHero } from '@/components/PageHero'
 import { Section } from '@/components/Section'
 import { SocialChannels } from '@/components/SocialChannels'
 import { getBookingLabel, getDefaultBookingUrl, isExternalBookingUrl } from '@/lib/content/booking'
-import { getContactInfo, getContactLocationDisplay, getSiteInfo } from '@/lib/content/company'
+import { getContactInfo, getContactLocationDisplay } from '@/lib/content/company'
 import { SITE } from '@/utils/constants'
 import { buildSeo } from '@/utils/seo'
+import { CONTACT_META } from '@/lib/seo/page-meta'
 
 export default function ContactPage() {
   const contact = getContactInfo()
-  const site = getSiteInfo()
   const bookingUrl = getDefaultBookingUrl()
 
   const seo = buildSeo({
-    title: 'Contact',
-    description: `Reach ${site.name} at our Bodakdev, Ahmedabad office. Call, email, or WhatsApp to plan facilitator-led games for your next event.`,
+    ...CONTACT_META,
     canonical: `${SITE.url}/contact`,
   })
 

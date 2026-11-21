@@ -21,7 +21,7 @@
       { "label": "Corporate Games", "to": "/services/corporate-games" },
       { "label": "Social Gatherings", "to": "/services/social-gathering-games" },
       { "label": "Game Festivals", "to": "/services/game-festival" },
-      { "label": "School & College", "to": "/services/school-and-collage-event" },
+      { "label": "School & College", "to": "/services/school-and-college-events" },
       { "label": "Wedding & Haldi", "to": "/services/wedding-or-haldi-games" },
       { "label": "Traditional Games", "to": "/services/traditional-games" },
       { "label": "Bollywood Games", "to": "/services/bollywood-games" }

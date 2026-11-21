@@ -16,6 +16,15 @@
       rel="stylesheet"
     />
     <title>The Game Hour</title>
+    <!-- Sections fade in with JavaScript; without it, show them straight away -->
+    <noscript>
+      <style>
+        [style*='opacity:0'] {
+          opacity: 1 !important;
+          transform: none !important;
+        }
+      </style>
+    </noscript>
   </head>
   <body>
     <div id="root"></div>

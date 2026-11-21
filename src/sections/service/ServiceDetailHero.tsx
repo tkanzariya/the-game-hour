@@ -1,7 +1,6 @@
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { LightboxImage } from '@/components/ImageLightbox'
-import { Reveal } from '@/components/motion'
 import type { ServiceSlug } from '@/data/asset-map'
 import { getServiceAssetUrl } from '@/lib/assets'
 import { resolveServiceCtaHref } from '@/lib/services'
@@ -41,7 +40,7 @@ export default function ServiceDetailHero({ service }: ServiceDetailHeroProps) {
       />
       <Container width="wide" className="relative z-10">
         <div className="grid items-center gap-10 lg:grid-cols-2 lg:gap-14">
-          <Reveal>
+          <div>
             <p className="mb-3 inline-block rounded-full bg-white/10 px-4 py-1.5 font-heading text-xs font-bold tracking-wide text-secondary uppercase backdrop-blur-sm">
               {eyebrow}
             </p>
@@ -65,8 +64,8 @@ export default function ServiceDetailHero({ service }: ServiceDetailHeroProps) {
               </Button>
             </div>
             <p className="mt-4 text-sm text-white/70">{trustLine}</p>
-          </Reveal>
-          <Reveal>
+          </div>
+          <div>
             <div className="image-frame">
               <LightboxImage
                 src={heroImage}
@@ -79,7 +78,7 @@ export default function ServiceDetailHero({ service }: ServiceDetailHeroProps) {
                 decoding="async"
               />
             </div>
-          </Reveal>
+          </div>
         </div>
       </Container>
     </header>

@@ -53,6 +53,11 @@ jobs:
         run: |
           set -euo pipefail
           test -f dist/index.html
+          test -f dist/app.html
+          test -f dist/404.html
+          test -f dist/prerender/about.html
+          test -f dist/sitemap.xml
+          grep -q 'prerender/\$1.html' dist/.htaccess
           test -d dist/assets
           test -d dist/cms
           test -f dist/cms/config.sample.php

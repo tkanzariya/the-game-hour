@@ -37,9 +37,32 @@ export const HOME_SECTIONS = {
 
 export const homeExperiencesPath = `${ROUTES.home}#${HOME_SECTIONS.experiences}` as const
 
+/**
+ * Public URL slugs that differ from the service slug. The service slug is also the
+ * CMS image key prefix and asset folder, so it stays as it is and only the URL changes.
+ */
+const SERVICE_URL_SLUGS: Record<string, string> = {
+  'school-and-collage-event': 'school-and-college-events',
+}
+
+/** Service slug → the slug shown in the URL */
+export function serviceUrlSlug(slug: string): string {
+  return SERVICE_URL_SLUGS[slug] ?? slug
+}
+
+/** URL slug → service slug (accepts either form) */
+export function serviceSlugFromUrl(urlSlug: string | undefined): string | undefined {
+  if (!urlSlug) return undefined
+  const match = Object.keys(SERVICE_URL_SLUGS).find((slug) => SERVICE_URL_SLUGS[slug] === urlSlug)
+  return match ?? urlSlug
+}
+
+/** Old URL slugs that now live at a new address: old → new */
+export const RENAMED_SERVICE_URL_SLUGS: Readonly<Record<string, string>> = SERVICE_URL_SLUGS
+
 /** Build path for a service detail page */
 export function servicePath(slug: string): string {
-  return `/services/${slug}`
+  return `/services/${serviceUrlSlug(slug)}`
 }
 
 export function isBookingPath(pathname: string): boolean {

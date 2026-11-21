@@ -11,11 +11,10 @@ import { ROUTES } from '@/constants/routes'
 import { SITE } from '@/utils/constants'
 import { buildSeo } from '@/utils/seo'
 import { getSocialPreviewOgImageUrl } from '@/lib/seo/og-images'
+import { ABOUT_META } from '@/lib/seo/page-meta'
 
 const aboutSeo = buildSeo({
-  title: 'Our Story | The Game Hour',
-  description:
-    'Discover why The Game Hour exists: facilitator-led, screen-free games for birthdays, weddings, corporates, schools, and festivals across Gujarat. Real play. Real connection.',
+  ...ABOUT_META,
   canonical: `${SITE.url}${ROUTES.about}`,
   ogImage: getSocialPreviewOgImageUrl(),
 })
