@@ -16,6 +16,7 @@ if (!function_exists('str_starts_with')) {
 }
 
 require_once __DIR__ . '/dev-json-store.php';
+require_once __DIR__ . '/image-optimize.php';
 require_once __DIR__ . '/../data/flash-messages.php';
 require_once __DIR__ . '/ops-migrate.php';
 
@@ -408,6 +409,8 @@ function cms_image_public_payload(array $row): array
     ];
     if (!empty($row['file_path'])) {
         $payload['url'] = cms_cache_bust_url($row['file_path'], $row['updated_at']);
+        // Resized WebP for the public site (null when this server cannot make one)
+        $payload['web_url'] = cms_web_image_url((string) $row['image_key'], $row['file_path'], $row['updated_at']);
     }
     return $payload;
 }

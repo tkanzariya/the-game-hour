@@ -1,7 +1,9 @@
+import { useEffect, useRef, useState } from 'react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/Button'
 import { Container } from '@/components/Container'
 import { CmsImageFrame } from '@/components/CmsImages/CmsImageFrame'
+import LightboxImage from '@/components/ImageLightbox/LightboxImage'
 import { homeExperiencesPath } from '@/constants/routes'
 import { ASSET_MAP } from '@/data/asset-map'
 import { useCmsAssetUrl } from '@/hooks/useCmsImage'
@@ -10,10 +12,28 @@ import { getBookingLabel, getDefaultBookingUrl } from '@/lib/content/booking'
 import { getSiteInfo } from '@/lib/content/company'
 import { getHomeHeroContent } from '@/lib/content/home'
 
+/**
+ * Fixed address of the hero photo's web copy (cms/api/img.php). It is written into the page HTML,
+ * so the browser starts fetching it straight away instead of after the scripts and the image list load.
+ */
+const HERO_WEB_SRC = '/media/homepage-hero-1600.webp'
+
 export default function HomeHero() {
+  // When no hero has been uploaded, or the copy cannot be served, fall back to the CMS/bundled image.
+  const [webCopyFailed, setWebCopyFailed] = useState(false)
+  const frameRef = useRef<HTMLDivElement>(null)
+
+  // The photo can fail before React attaches onError to server-rendered HTML; decode() catches that too.
+  useEffect(() => {
+    frameRef.current
+      ?.querySelector('img')
+      ?.decode()
+      .catch(() => setWebCopyFailed(true))
+  }, [])
   const site = getSiteInfo()
   const hero = getHomeHeroContent()
   const heroImage = useCmsAssetUrl(ASSET_MAP.homepage.hero)
+  const heroAlt = ASSET_MAP.homepage.hero.alt ?? 'Guests laughing during a Game Hour event'
   const eventsHosted = getSiteMetric('events-hosted')
 
   return (
@@ -76,17 +96,29 @@ export default function HomeHero() {
           </div>
 
           <div className="relative lg:mt-2">
-            <div className="image-frame lg:p-3">
-              <CmsImageFrame
-                ready={heroImage.ready}
-                src={heroImage.src}
-                alt={ASSET_MAP.homepage.hero.alt ?? 'Guests laughing during a Game Hour event'}
-                className="aspect-4/3 w-full object-cover lg:aspect-[5/4]"
-                wrapperClassName="w-full rounded-[inherit]"
-                skeletonClassName="aspect-4/3 w-full rounded-2xl lg:aspect-[5/4]"
-                fetchPriority="high"
-                decoding="async"
-              />
+            <div ref={frameRef} className="image-frame lg:p-3">
+              {webCopyFailed ? (
+                <CmsImageFrame
+                  ready={heroImage.ready}
+                  src={heroImage.src}
+                  alt={heroAlt}
+                  className="aspect-4/3 w-full object-cover lg:aspect-[5/4]"
+                  wrapperClassName="w-full rounded-[inherit]"
+                  skeletonClassName="aspect-4/3 w-full rounded-2xl lg:aspect-[5/4]"
+                  fetchPriority="high"
+                  decoding="async"
+                />
+              ) : (
+                <LightboxImage
+                  src={HERO_WEB_SRC}
+                  alt={heroAlt}
+                  className="aspect-4/3 w-full object-cover lg:aspect-[5/4]"
+                  wrapperClassName="w-full rounded-[inherit]"
+                  fetchPriority="high"
+                  decoding="async"
+                  onError={() => setWebCopyFailed(true)}
+                />
+              )}
             </div>
             <div
               className="absolute -bottom-4 -left-2 hidden rounded-2xl surface-accent px-5 py-3.5 shadow-glow-accent sm:block md:-left-4"

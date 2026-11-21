@@ -64,10 +64,11 @@ No owner input needed.
 - [x] 1.5 Fix the `school-and-collage-event` slug (new slug + 301 from the old one)
 - [x] 1.6 Hero text visible without JavaScript (no fade-in above the fold)
 - [x] 1.7 Sitemap generated at build time from the route list
-- [ ] 1.8 Deploy and verify on live (status codes, redirects, WhatsApp link preview)
-- [ ] 1.9 Image pipeline: resize and convert uploads to WebP on the server (`docs/IMAGE_UPLOAD_OPTIMIZATION_PLAN.md`),
-      plus a one-time pass over existing uploads. Fixes the 2.6 MB hero.
-- [ ] 1.10 Hero image in the first HTML response (image manifest baked in or preloaded) so it does not wait for the API
+- [x] 1.8 Deploy and verify on live (status codes, redirects, WhatsApp link preview)
+- [x] 1.9 Web-sized WebP copies of every CMS photo, made on first request (`/media/{key}-{width}.webp`, see
+      `cms/includes/image-optimize.php` and `cms/api/img.php`). Covers existing uploads too, no re-upload needed.
+      Originals are never changed.
+- [x] 1.10 Home hero image is in the first HTML (`/media/homepage-hero-1600.webp`), so it downloads alongside the scripts
 - [ ] 1.11 Owner: verify the site in Google Search Console and submit `sitemap.xml`
 - [ ] 1.12 Owner: create or claim the Google Business Profile, add photos, ask past clients for reviews
 
@@ -156,6 +157,24 @@ Competitors seen for these searches: VenueLook and PartyOne (directories), Kreed
 
 ---
 
+## Image copies (for whoever maintains it)
+
+- `images.php` now returns `web_url` next to `url` for JPG, PNG and WEBP uploads. The site prefers `web_url`
+  (`src/lib/cms-images.ts`); `url` (the original) stays for the admin screens.
+- Widths allowed: 480, 800, 1200, 1600 (hero images 1600, everything else 1200). Copies are stored in `uploads/_web/`
+  and rebuilt when the original is replaced. Quality 82, never enlarged, phone-photo rotation (EXIF) respected.
+- If the server has no GD/WebP support, or an image is too big for PHP's memory limit, `web_url` is left out or
+  `/media/...` redirects to the original, so pictures never break (they are just not smaller).
+- The home hero uses a fixed address with no `?v=` so it can sit in the HTML. Browsers re-check it hourly,
+  so a newly uploaded hero can take up to an hour to appear for returning visitors.
+- Local test: `php -c <ini with extension=gd> -S 127.0.0.1:8765 -t dist scripts/dev-router.php`.
+
 ## Log
 
-- 2026-11-17: Audit done. Plan written. Phase 1 items 1.1 to 1.7 implemented locally (not yet pushed).
+- 2026-11-17: Audit done. Plan written. Phase 1 items 1.1 to 1.7 implemented locally.
+- 2026-11-21: Pushed as commit 1e6cd04 and verified on live: http and www redirect to https://thegamehour.com,
+  trailing slash and old URLs 301, unknown URLs return 404, /ops, /book, /choose-games, /admin and /cms still work,
+  sitemap lists 12 URLs, share-preview tags and page text are in the first HTML response.
+  Next: 1.9 and 1.10 (hero image), then the owner tasks 1.11 and 1.12.
+- 2026-11-21: Image copies and hero in first HTML built (1.9, 1.10). Tested locally: 1600 px WebP made from a 2400 px
+  source, rotation correct, 304 on repeat requests, redirect to original without GD, bundled hero shown when no CMS hero.

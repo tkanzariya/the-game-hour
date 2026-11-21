@@ -13,6 +13,8 @@ import { getBundledImageUrl, PLACEHOLDER_SVG } from '@/lib/assets-internal'
 export type CmsImageEntry = {
   key: string
   url: string
+  /** Resized WebP for visitors (cms/api/img.php); absent when the server cannot make one. */
+  web_url?: string | null
   title?: string
   category?: string
   updated_at?: string | null
@@ -76,14 +78,19 @@ function bundledFallbackForKey(key: string): string {
   return getBundledImageUrl(meta.fallback)
 }
 
+/** The smaller web copy when there is one, otherwise the original upload. */
+function entryUrl(entry: CmsImageEntry | undefined): string | undefined {
+  return entry?.web_url || entry?.url || undefined
+}
+
 function manifestUrlForKey(key: string): string | undefined {
   const canonical = resolveCanonicalCmsKey(key)
-  const direct = manifest[canonical]?.url
+  const direct = entryUrl(manifest[canonical])
   if (direct) return direct
   for (const [manifestKey, entry] of Object.entries(manifest)) {
-    if (!entry?.url) continue
+    if (!entryUrl(entry)) continue
     if (resolveCanonicalCmsKey(manifestKey) === canonical) {
-      return entry.url
+      return entryUrl(entry)
     }
   }
   return undefined
