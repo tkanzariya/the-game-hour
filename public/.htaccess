@@ -21,8 +21,10 @@
   RewriteRule ^admin/?$ /admin/login.php [R=301,L]
   RewriteRule ^admin/(.*)$ cms/admin/$1 [L]
 
-  # Web-sized WebP copies of CMS photos (made on first request, see cms/includes/image-optimize.php)
-  RewriteRule ^media/([a-z0-9_-]+)-(480|800|1200|1600)\.webp$ /cms/api/img.php?key=$1&w=$2 [L,QSA]
+  # Web-sized WebP copies of CMS photos (made on first request, see cms/includes/image-optimize.php).
+  # The ".webp" is optional: the server in front forces a 60-day cache on .webp files, and the front page
+  # hero (no ?v= in its address) must be re-checked hourly, so it uses the address without an extension.
+  RewriteRule ^media/([a-z0-9_-]+)-(480|800|1200|1600)(\.webp)?$ /cms/api/img.php?key=$1&w=$2 [L,QSA]
 
   # Pages that moved
   RewriteRule ^services/school-and-collage-event/?$ /services/school-and-college-events [R=301,L]

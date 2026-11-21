@@ -15,8 +15,9 @@ import { getHomeHeroContent } from '@/lib/content/home'
 /**
  * Fixed address of the hero photo's web copy (cms/api/img.php). It is written into the page HTML,
  * so the browser starts fetching it straight away instead of after the scripts and the image list load.
+ * No ".webp" on purpose: the live server forces a 60-day cache on .webp files, and a replaced hero must show within an hour.
  */
-const HERO_WEB_SRC = '/media/homepage-hero-1600.webp'
+const HERO_WEB_SRC = '/media/homepage-hero-1600'
 
 export default function HomeHero() {
   // When no hero has been uploaded, or the copy cannot be served, fall back to the CMS/bundled image.

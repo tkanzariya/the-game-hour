@@ -68,7 +68,7 @@ No owner input needed.
 - [x] 1.9 Web-sized WebP copies of every CMS photo, made on first request (`/media/{key}-{width}.webp`, see
       `cms/includes/image-optimize.php` and `cms/api/img.php`). Covers existing uploads too, no re-upload needed.
       Originals are never changed.
-- [x] 1.10 Home hero image is in the first HTML (`/media/homepage-hero-1600.webp`), so it downloads alongside the scripts
+- [x] 1.10 Home hero image is in the first HTML (`/media/homepage-hero-1600`, no extension so the live nginx cache rules do not apply), so it downloads alongside the scripts
 - [ ] 1.11 Owner: verify the site in Google Search Console and submit `sitemap.xml`
 - [ ] 1.12 Owner: create or claim the Google Business Profile, add photos, ask past clients for reviews
 

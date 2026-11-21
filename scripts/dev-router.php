@@ -58,7 +58,7 @@ if (preg_match('#^/admin/(.*)$#', $uri, $m)) {
 }
 
 // Web-sized WebP copies of CMS photos (mirrors the /media/ rule in public/.htaccess)
-if (preg_match('#^/media/([a-z0-9_-]+)-(480|800|1200|1600)\.webp$#', $uri, $m)) {
+if (preg_match('#^/media/([a-z0-9_-]+)-(480|800|1200|1600)(\.webp)?$#', $uri, $m)) {
     $_GET['key'] = $m[1];
     $_GET['w'] = $m[2];
     require $cmsRoot . '/api/img.php';
