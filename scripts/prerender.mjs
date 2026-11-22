@@ -6,7 +6,7 @@
  *   index.html              home, prerendered
  *   prerender/<path>.html   the other public pages (mapped to clean URLs by .htaccess)
  *   404.html                not-found page, served with status 404
- *   app.html                the empty app shell for /ops, /book and /choose-games
+ *   app.html                the empty app shell for /admin, /book and /choose-games
  *   sitemap.xml             from the same page list
  *   .htaccess               the "# @prerender-routes" line becomes the clean-URL rule
  */

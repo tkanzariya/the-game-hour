@@ -1,4 +1,4 @@
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate, redirect } from 'react-router-dom'
 import { OpsLayout, OpsRoot } from '@/layouts'
 import { publicRoutes } from '@/public-routes'
 import OpsLoginPage from '@/pages/ops/OpsLoginPage'
@@ -18,17 +18,27 @@ import OpsInquiryFormPage from '@/pages/ops/OpsInquiryFormPage'
 import ChooseGamesPage from '@/pages/ChooseGamesPage'
 import OpsSettingsPage from '@/pages/ops/OpsSettingsPage'
 
+import {
+  AdminPhotos,
+  AdminStatistics,
+  AdminTestimonials,
+} from '@/pages/ops/AdminWebsitePages'
+
 export const router = createBrowserRouter([
   { path: 'choose-games/:token', element: <ChooseGamesPage /> },
   {
     element: <OpsRoot />,
     children: [
-      { path: 'ops/login', element: <OpsLoginPage /> },
+      { path: 'admin/login', element: <OpsLoginPage /> },
       {
-        path: 'ops',
+        path: 'admin',
         element: <OpsLayout />,
         children: [
-          { index: true, element: <OpsDashboardPage /> },
+          { index: true, element: <Navigate to="/admin/dashboard" replace /> },
+          { path: 'dashboard', element: <OpsDashboardPage /> },
+          { path: 'photos', element: <AdminPhotos /> },
+          { path: 'testimonials', element: <AdminTestimonials /> },
+          { path: 'statistics', element: <AdminStatistics /> },
           { path: 'events', element: <OpsEventsPage /> },
           { path: 'events/:id', element: <OpsEventDetailPage /> },
           { path: 'calendar', element: <OpsCalendarPage /> },
@@ -46,6 +56,16 @@ export const router = createBrowserRouter([
         ],
       },
     ],
+  },
+  {
+    path: 'ops/*',
+    loader: ({ request }) => {
+      const url = new URL(request.url)
+      const path = url.pathname.replace(/^\/ops(?=\/|$)/i, '/admin')
+      return redirect(
+        (path.replace(/\/$/, '') === '/admin' ? '/admin/dashboard' : path) + url.search,
+      )
+    },
   },
   ...publicRoutes,
 ])

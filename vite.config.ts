@@ -19,7 +19,7 @@ export default defineConfig({
         target: 'http://127.0.0.1:8765',
         changeOrigin: true,
       },
-      '/admin': {
+      '^/admin/.+\\.php(?:\\?|$)': {
         target: 'http://127.0.0.1:8765',
         changeOrigin: true,
       },

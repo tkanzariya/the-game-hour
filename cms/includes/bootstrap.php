@@ -219,7 +219,7 @@ function cms_require_admin(): void
 {
     cms_require_login();
     if (!cms_is_admin()) {
-        header('Location: /ops');
+        header('Location: /admin/dashboard');
         exit;
     }
 }
@@ -430,15 +430,8 @@ function cms_save_upload(string $imageKey, array $file, ?string $title = null, ?
     }
     $existing = cms_get_image_by_key($imageKey);
     $ext = $validation['ext'];
-    $relativePath = $imageKey . '.' . $ext;
+    $relativePath = $imageKey . '-' . bin2hex(random_bytes(8)) . '.' . $ext;
     $dest = cms_uploads_dir() . DIRECTORY_SEPARATOR . $relativePath;
-
-    if ($existing && !empty($existing['file_path']) && $existing['file_path'] !== $relativePath) {
-        $old = cms_uploads_dir() . DIRECTORY_SEPARATOR . $existing['file_path'];
-        if (is_file($old)) {
-            @unlink($old);
-        }
-    }
 
     if (is_uploaded_file($file['tmp_name'])) {
         $saved = move_uploaded_file($file['tmp_name'], $dest);
@@ -472,6 +465,13 @@ function cms_save_upload(string $imageKey, array $file, ?string $title = null, ?
             'category' => $category,
             'path' => $relativePath,
         ]);
+    }
+
+    if ($existing && !empty($existing['file_path']) && $existing['file_path'] !== $relativePath) {
+        $old = cms_uploads_dir() . DIRECTORY_SEPARATOR . $existing['file_path'];
+        if (is_file($old)) {
+            @unlink($old);
+        }
     }
 
     $row = cms_get_image_by_key($imageKey);

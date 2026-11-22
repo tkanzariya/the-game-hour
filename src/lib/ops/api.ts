@@ -52,7 +52,7 @@ function notifySessionExpired(res: Response): void {
   }
 }
 
-async function opsFetch(input: string, init?: RequestInit): Promise<Response> {
+export async function opsFetch(input: string, init?: RequestInit): Promise<Response> {
   const res = await fetch(input, { credentials: 'include', ...init })
   notifySessionExpired(res)
   return res

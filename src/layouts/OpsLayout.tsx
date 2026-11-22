@@ -1,5 +1,12 @@
 import { useId } from 'react'
-import { Link, NavLink, Navigate, Outlet, useLocation, useNavigate } from 'react-router-dom'
+import {
+  Link,
+  NavLink,
+  Navigate,
+  Outlet,
+  useLocation,
+  useNavigate,
+} from 'react-router-dom'
 import Icon from '@/components/Icon/Icon'
 import { Seo } from '@/components/Seo'
 import { getLogoUrl } from '@/lib/assets'
@@ -8,27 +15,68 @@ import { useOpsAuth } from '@/lib/ops/auth'
 import { ROUTES } from '@/constants/routes'
 import { buildSeo } from '@/utils/seo'
 
-const NAV = [
-  { to: ROUTES.ops, label: 'Dashboard', end: true, icon: 'chart' },
-  { to: ROUTES.opsEvents, label: 'Events', end: false, icon: 'list-check' },
-  { to: ROUTES.opsCalendar, label: 'Calendar', end: true, icon: 'calendar-check' },
-  { to: ROUTES.opsPayments, label: 'Payments', end: true, icon: 'handshake' },
-  { to: ROUTES.opsFinance, label: 'Finance', end: true, icon: 'chart-bar' },
-  { to: ROUTES.opsTeam, label: 'Team', end: true, icon: 'users' },
-  { to: ROUTES.opsInquiries, label: 'Inquiries', end: false, icon: 'comments' },
-  { to: ROUTES.opsGames, label: 'Games', end: true, icon: 'puzzle-piece' },
-  { to: ROUTES.opsInventory, label: 'Inventory', end: false, icon: 'box-open' },
-  { to: ROUTES.opsSettings, label: 'Settings', end: true, icon: 'cogs' },
-] as const
+type NavItem = { to: string; label: string; end: boolean; icon: string }
+
+const dashboard: NavItem = {
+  to: ROUTES.ops,
+  label: 'Dashboard',
+  end: true,
+  icon: 'chart',
+}
+
+const navGroups: { label: string; icon: string; items: NavItem[] }[] = [
+  {
+    label: 'Events',
+    icon: 'calendar-check',
+    items: [
+      { to: ROUTES.opsEvents, label: 'Events', end: false, icon: 'list-check' },
+      { to: ROUTES.opsCalendar, label: 'Calendar', end: true, icon: 'calendar-check' },
+      { to: ROUTES.opsInquiries, label: 'Inquiries', end: false, icon: 'comments' },
+    ],
+  },
+  {
+    label: 'Finances',
+    icon: 'chart-bar',
+    items: [
+      { to: ROUTES.opsPayments, label: 'Payments', end: true, icon: 'handshake' },
+      { to: ROUTES.opsFinance, label: 'Finance', end: true, icon: 'chart-bar' },
+    ],
+  },
+  {
+    label: 'Resources',
+    icon: 'box-open',
+    items: [
+      { to: ROUTES.opsTeam, label: 'Team', end: true, icon: 'users' },
+      { to: ROUTES.opsGames, label: 'Games', end: true, icon: 'puzzle-piece' },
+      { to: ROUTES.opsInventory, label: 'Inventory', end: false, icon: 'box-open' },
+    ],
+  },
+  {
+    label: 'Website & settings',
+    icon: 'cogs',
+    items: [
+      { to: ROUTES.adminPhotos, label: 'Photos', end: true, icon: 'camera' },
+      {
+        to: ROUTES.adminTestimonials,
+        label: 'Testimonials',
+        end: true,
+        icon: 'comments',
+      },
+      { to: ROUTES.adminStatistics, label: 'Statistics', end: true, icon: 'chart' },
+      { to: ROUTES.opsSettings, label: 'Settings', end: true, icon: 'cogs' },
+    ],
+  },
+]
+
+const navItems = [dashboard, ...navGroups.flatMap((group) => group.items)]
+
+function matchesPage(item: NavItem, pathname: string) {
+  return pathname === item.to || (!item.end && pathname.startsWith(item.to + '/'))
+}
 
 function pageTitle(pathname: string): string {
   if (pathname.startsWith(`${ROUTES.opsEvents}/`)) return 'Event'
-  if (pathname === ROUTES.opsEvents || pathname.startsWith(`${ROUTES.opsEvents}?`)) {
-    return 'Events'
-  }
-  const hit = NAV.find((item) =>
-    item.end ? pathname === item.to : pathname === item.to || pathname.startsWith(`${item.to}/`),
-  )
+  const hit = navItems.find((item) => matchesPage(item, pathname))
   return hit?.label ?? 'Operations'
 }
 
@@ -55,7 +103,13 @@ export default function OpsLayout() {
   }
 
   if (!user) {
-    return <Navigate to={ROUTES.opsLogin} replace state={{ from: location.pathname }} />
+    return (
+      <Navigate
+        to={ROUTES.opsLogin}
+        replace
+        state={{ from: location.pathname + location.search + location.hash }}
+      />
+    )
   }
 
   const onLogout = async () => {
@@ -72,7 +126,11 @@ export default function OpsLayout() {
             <OpsBrand />
           </div>
           <div className="navbar-end">
-            <button type="button" className="btn btn-sm btn-secondary" onClick={onLogout}>
+            <button
+              type="button"
+              className="btn btn-sm btn-secondary"
+              onClick={onLogout}
+            >
               Log out
             </button>
           </div>
@@ -82,8 +140,8 @@ export default function OpsLayout() {
             <div className="card-body">
               <h1 className="card-title">Coach workspace coming soon</h1>
               <p>
-                You are signed in as a coach. Event tools are limited to admins for now. We will
-                add your event list in a later phase.
+                You are signed in as a coach. Event tools are limited to admins for now.
+                We will add your event list in a later phase.
               </p>
             </div>
           </div>
@@ -109,7 +167,15 @@ export default function OpsLayout() {
               className="btn btn-ghost btn-square drawer-button lg:hidden"
               aria-label="Open menu"
             >
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="size-5" aria-hidden>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className="size-5"
+                aria-hidden
+              >
                 <path d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </label>
@@ -133,41 +199,70 @@ export default function OpsLayout() {
           <div className="px-3 pt-4">
             <OpsBrand />
           </div>
-          <ul className="menu menu-lg w-full grow gap-1 px-2 py-4">
-            {NAV.map((item) => (
-              <li key={item.to}>
-                <NavLink
-                  to={item.to}
-                  end={item.end}
-                  className={({ isActive }) =>
-                    isActive
-                      ? 'bg-base-100 text-primary font-semibold shadow'
-                      : 'text-neutral-content/80 hover:bg-neutral-content/10 hover:text-neutral-content'
-                  }
-                  onClick={closeDrawer}
-                >
-                  <Icon name={item.icon} size="sm" />
-                  {item.label}
-                </NavLink>
-              </li>
-            ))}
-          </ul>
+          <nav className="grow px-2 py-4" aria-label="Admin navigation">
+            <ul className="menu w-full gap-1 p-0 text-base">
+              <SidebarLink item={dashboard} onClick={closeDrawer} />
+              {navGroups.map((group) => {
+                const active = group.items.some((item) =>
+                  matchesPage(item, location.pathname),
+                )
+                return (
+                  <li key={group.label}>
+                    <details key={active ? location.pathname : 'closed'} open={active}>
+                      <summary
+                        className={active ? 'font-semibold' : 'text-neutral-content/80'}
+                      >
+                        <Icon name={group.icon} size="sm" />
+                        {group.label}
+                      </summary>
+                      <ul className="my-1 gap-1">
+                        {group.items.map((item) => (
+                          <SidebarLink
+                            key={item.to}
+                            item={item}
+                            onClick={closeDrawer}
+                          />
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                )
+              })}
+            </ul>
+          </nav>
           <div className="flex flex-col gap-2 border-t border-neutral-content/15 p-4">
-            <a
-              href="/admin/dashboard.php"
-              data-ops-cms
-              className="btn btn-ghost btn-sm justify-start text-neutral-content!"
-            >
-              Website CMS
-            </a>
             <OpsAccount name={user.name} email={user.email} />
-            <button type="button" className="btn btn-sm btn-secondary" onClick={onLogout}>
+            <button
+              type="button"
+              className="btn btn-sm btn-secondary"
+              onClick={onLogout}
+            >
               Log out
             </button>
           </div>
         </aside>
       </div>
     </div>
+  )
+}
+
+function SidebarLink({ item, onClick }: { item: NavItem; onClick: () => void }) {
+  return (
+    <li>
+      <NavLink
+        to={item.to}
+        end={item.end}
+        className={({ isActive }) =>
+          isActive
+            ? 'bg-base-100 text-primary font-semibold shadow'
+            : 'text-neutral-content/80 hover:bg-neutral-content/10 hover:text-neutral-content'
+        }
+        onClick={onClick}
+      >
+        <Icon name={item.icon} size="sm" />
+        {item.label}
+      </NavLink>
+    </li>
   )
 }
 

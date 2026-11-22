@@ -356,7 +356,7 @@ function cms_gcal_event_body(array $row, array $cfg)
     $add('Address', $row['address'] ?? '');
     $add('Notes', $row['special_requirements'] ?? '');
     $lines[] = '';
-    $lines[] = 'Open in Ops: ' . cms_public_origin() . '/ops/events/' . $row['id'];
+    $lines[] = 'Open in Ops: ' . cms_public_origin() . '/admin/events/' . $row['id'];
 
     $location = trim((string) ($row['venue_name'] ?? ''));
     if ($location === '') {

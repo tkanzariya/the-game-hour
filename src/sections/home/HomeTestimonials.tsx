@@ -42,6 +42,7 @@ function StarRating({ rating }: { rating: number }) {
 export default function HomeTestimonials() {
   const section = getTestimonialsSection('home')
   const testimonials = getHomeTestimonials()
+  if (testimonials.length === 0) return null
 
   return (
     <Section tone="muted" id="testimonials" profile="marketing">

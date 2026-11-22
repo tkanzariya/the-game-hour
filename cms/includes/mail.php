@@ -90,7 +90,7 @@ function cms_booking_alert_vars($bookingId, array $row): array
         'CLIENT_NAME' => trim((string) ($row['contact_name'] ?? '')),
         'CLIENT_PHONE' => trim((string) ($row['phone'] ?? '')),
         'CLIENT_EMAIL' => trim((string) ($row['email'] ?? '')),
-        'OPS_URL' => cms_public_origin() . '/ops/events/' . rawurlencode((string) $bookingId),
+        'OPS_URL' => cms_public_origin() . '/admin/events/' . rawurlencode((string) $bookingId),
     ];
 }
 

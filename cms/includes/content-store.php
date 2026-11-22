@@ -22,29 +22,9 @@ function cms_content_testimonial_count(): int
     return (int) $stmt->fetchColumn();
 }
 
-function cms_content_seed_if_empty(): void
+function cms_content_text_length(string $value): int
 {
-    if (!cms_content_db_ready()) {
-        return;
-    }
-    if (cms_content_testimonial_count() === 0) {
-        $rows = cms_content_seed_testimonials_from_json();
-        if ($rows !== []) {
-            cms_content_insert_seed_testimonials($rows);
-        }
-    }
-
-    $metrics = cms_content_get_metric_values();
-    $needsMetrics = false;
-    foreach (cms_content_metric_keys() as $key) {
-        if (!isset($metrics[$key]) || $metrics[$key] === '') {
-            $needsMetrics = true;
-            break;
-        }
-    }
-    if ($needsMetrics) {
-        cms_content_save_metric_values(cms_content_default_metrics());
-    }
+    return function_exists('mb_strlen') ? mb_strlen($value, 'UTF-8') : (preg_match_all('/./us', $value) ?: strlen($value));
 }
 
 /** @param list<array<string, mixed>> $rows */
@@ -144,10 +124,13 @@ function cms_content_validate_testimonial_input(array $input, bool $isUpdate): a
     if ($name === '') {
         return ['ok' => false, 'error' => 'Name is required.', 'code' => 'validation'];
     }
+    if (cms_content_text_length($name) > 255 || cms_content_text_length($role) > 255) {
+        return ['ok' => false, 'error' => 'Name and role must be 255 characters or fewer.', 'code' => 'validation'];
+    }
     if ($review === '') {
         return ['ok' => false, 'error' => 'Review is required.', 'code' => 'validation'];
     }
-    if (strlen($review) > 2000) {
+    if (cms_content_text_length($review) > 2000) {
         return ['ok' => false, 'error' => 'Review is too long (max 2000 characters).', 'code' => 'validation'];
     }
     if ($rating < 1 || $rating > 5) {
@@ -156,20 +139,16 @@ function cms_content_validate_testimonial_input(array $input, bool $isUpdate): a
     if (!in_array($placement, ['home', 'service'], true)) {
         $placement = 'home';
     }
-    if ($placement === 'service' && $serviceSlug === '') {
+    if ($placement === 'service' && !in_array($serviceSlug, array_column(cms_content_service_options(), 'id'), true)) {
         return ['ok' => false, 'error' => 'Choose a service page for service testimonials.', 'code' => 'validation'];
     }
     if ($placement === 'home') {
         $serviceSlug = null;
     }
 
-    $slug = cms_sanitize_key((string) ($input['slug'] ?? ''));
-    if (!$isUpdate || $slug === '') {
-        $slug = cms_sanitize_key($name . '-' . ($input['id'] ?? bin2hex(random_bytes(4))));
-    }
-    if ($slug === '') {
-        $slug = 'testimonial-' . time();
-    }
+    $slug = $isUpdate && !empty($input['slug'])
+        ? (string) $input['slug']
+        : 'testimonial-' . bin2hex(random_bytes(12));
 
     return [
         'ok' => true,
@@ -194,6 +173,13 @@ function cms_content_save_testimonial(array $input): array
         return ['ok' => false, 'error' => 'Content database is not set up yet. Import migrate-content-phase1.sql in phpMyAdmin.', 'code' => 'db_setup'];
     }
     $id = (int) ($input['id'] ?? 0);
+    if ($id > 0) {
+        $current = cms_content_get_testimonial($id);
+        if ($current === null) {
+            return ['ok' => false, 'error' => 'Testimonial not found.', 'code' => 'not_found'];
+        }
+        $input['slug'] = $current['slug'];
+    }
     $validated = cms_content_validate_testimonial_input($input, $id > 0);
     if (!$validated['ok']) {
         return $validated;

@@ -16,7 +16,6 @@ if ($_SERVER['REQUEST_METHOD'] !== 'GET') {
 
 try {
     cms_load_content_store();
-    cms_content_seed_if_empty();
     cms_json_response(cms_content_public_payload());
 } catch (Throwable $e) {
     cms_json_response(['error' => 'CMS content unavailable'], 503);

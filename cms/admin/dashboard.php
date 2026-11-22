@@ -8,7 +8,6 @@ require_once __DIR__ . '/../data/admin-ui.php';
 cms_require_admin();
 cms_admin_bootstrap();
 cms_load_content_store();
-cms_content_seed_if_empty();
 
 $rowsByKey = cms_index_rows_by_key(cms_get_all_images());
 $allRows = array_values($rowsByKey);
@@ -26,7 +25,7 @@ $visibleTestimonials = count(array_filter(
 $content = cms_content_setup_notice_html();
 $content .= '<div class="page-header">';
 $content .= '<h1>Dashboard</h1>';
-$content .= '<p>Manage photos, testimonials, and homepage statistics for your website. Event bookings live in <a href="/ops/events">Operations</a>.</p>';
+$content .= '<p>Manage photos, testimonials, and homepage statistics for your website. Event bookings live in <a href="/admin/events">Operations</a>.</p>';
 $content .= '</div>';
 
 $content .= '<div class="category-grid dashboard-sections">';

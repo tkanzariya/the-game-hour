@@ -59,12 +59,7 @@ function cms_web_image_url(string $key, ?string $filePath, ?string $updatedAt): 
         return null;
     }
     $url = '/media/' . $key . '-' . cms_web_image_width_for_key($key) . '.webp';
-    if ($updatedAt) {
-        $v = strtotime($updatedAt);
-        if ($v !== false) {
-            $url .= '?v=' . $v;
-        }
-    }
+    $url .= '?v=' . substr(hash('sha256', $filePath . '|' . ($updatedAt ?? '')), 0, 16);
     return $url;
 }
 

@@ -77,15 +77,8 @@ function cms_dev_json_save_upload(string $imageKey, array $file, ?string $title,
 
     $existing = cms_dev_json_get_image_by_key($imageKey);
     $ext = $validation['ext'];
-    $relativePath = $imageKey . '.' . $ext;
+    $relativePath = $imageKey . '-' . bin2hex(random_bytes(8)) . '.' . $ext;
     $dest = cms_uploads_dir() . DIRECTORY_SEPARATOR . $relativePath;
-
-    if ($existing && !empty($existing['file_path']) && $existing['file_path'] !== $relativePath) {
-        $old = cms_uploads_dir() . DIRECTORY_SEPARATOR . $existing['file_path'];
-        if (is_file($old)) {
-            @unlink($old);
-        }
-    }
 
     if (is_uploaded_file($file['tmp_name'])) {
         $saved = move_uploaded_file($file['tmp_name'], $dest);
@@ -120,6 +113,13 @@ function cms_dev_json_save_upload(string $imageKey, array $file, ?string $title,
         ];
     }
     cms_dev_json_save($data);
+    if ($existing && !empty($existing['file_path']) && $existing['file_path'] !== $relativePath) {
+        $old = cms_uploads_dir() . DIRECTORY_SEPARATOR . $existing['file_path'];
+        if (is_file($old)) {
+            @unlink($old);
+        }
+    }
+
     $row = cms_dev_json_get_image_by_key($imageKey);
     return ['ok' => true, 'image' => cms_image_public_payload($row)];
 }

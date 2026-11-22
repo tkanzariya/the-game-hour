@@ -34,5 +34,5 @@ INSERT INTO site_metrics (metric_key, value) VALUES
 ('cities-served', '6')
 ON DUPLICATE KEY UPDATE metric_key = metric_key;
 
--- Testimonials are seeded on first admin login via cms_content_seed_if_empty()
+-- Add testimonials through the admin workspace.
 -- (imports from bundled JSON when the table is empty).

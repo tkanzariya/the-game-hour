@@ -500,7 +500,7 @@ function cms_inq_notify_admin(array $rec): void
                 $names[] = (string) $byId[$gameId]['name'];
             }
         }
-        $link = cms_public_origin() . '/ops/inquiries/' . $rec['id'];
+        $link = cms_public_origin() . '/admin/inquiries/' . $rec['id'];
         $who = (string) $rec['customer_name'];
         $lines = [
             $who . ' has chosen their games.',

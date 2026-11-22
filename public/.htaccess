@@ -18,8 +18,18 @@
   # Image CMS — PHP routes
   RewriteRule ^cms/ - [L]
   RewriteRule ^uploads/ - [L]
-  RewriteRule ^admin/?$ /admin/login.php [R=301,L]
-  RewriteRule ^admin/(.*)$ cms/admin/$1 [L]
+  RewriteRule ^admin/?$ /admin/dashboard [R=302,L]
+  RewriteRule ^ops/?$ /admin/dashboard [R=302,L]
+  RewriteRule ^ops/(.+)$ /admin/$1 [R=302,L]
+  RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$
+  RewriteRule ^admin/index\.php$ /admin/dashboard [R=302,L]
+  RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$
+  RewriteRule ^admin/(dashboard|login|statistics|settings)\.php$ /admin/$1 [R=302,L]
+  RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$
+  RewriteRule ^admin/(photos(?:/index)?|category|library|upload)\.php$ /admin/photos [R=302,L]
+  RewriteCond %{REQUEST_METHOD} ^(?:GET|HEAD)$
+  RewriteRule ^admin/testimonials/(?:index|edit)\.php$ /admin/testimonials [R=302,L]
+  RewriteRule ^admin/(assets/[^/]+|[a-z-]+\.php|(?:photos|testimonials)/[a-z-]+\.php)$ cms/admin/$1 [L]
 
   # Web-sized WebP copies of CMS photos (made on first request, see cms/includes/image-optimize.php).
   # The ".webp" is optional: the server in front forces a 60-day cache on .webp files, and the front page
@@ -51,7 +61,7 @@
   # @prerender-routes
 
   # Parts of the app rendered in the browser
-  RewriteRule ^(ops|book|choose-games)(/.*)?$ /app.html [L]
+  RewriteRule ^(admin|book|choose-games)(/.*)?$ /app.html [L]
 </IfModule>
 
 # Anything else does not exist

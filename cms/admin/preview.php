@@ -39,7 +39,7 @@ $mime ??= 'application/octet-stream';
 
 header('Content-Type: ' . $mime);
 header('Content-Length: ' . (string) filesize($path));
-header('Cache-Control: private, max-age=3600');
+header('Cache-Control: private, no-store');
 if ($resolved['source'] === 'default') {
     header('X-CMS-Image-Source: default');
 }

@@ -33,10 +33,9 @@ export default function OpsLoginPage() {
     )
   }
 
-  if (user) {
-    const from = (location.state as { from?: string } | null)?.from
-    return <Navigate to={from || ROUTES.ops} replace />
-  }
+  const from = (location.state as { from?: string } | null)?.from
+  const destination = from?.startsWith('/admin/') && !from.startsWith('/admin/login') ? from : ROUTES.ops
+  if (user) return <Navigate to={destination} replace />
 
   const onSubmit = async (event: FormEvent) => {
     event.preventDefault()
@@ -48,7 +47,7 @@ export default function OpsLoginPage() {
       setError(message)
       return
     }
-    navigate(ROUTES.ops, { replace: true })
+    navigate(destination, { replace: true })
   }
 
   return (
@@ -57,7 +56,7 @@ export default function OpsLoginPage() {
       <div className="card w-full max-w-md bg-base-100 shadow">
         <form className="card-body" onSubmit={onSubmit}>
           <h1 className="card-title">Operations</h1>
-          <p>Sign in to manage events. Website photos stay in the CMS.</p>
+          <p>Sign in to manage events and website content.</p>
           {error ? (
             <div role="alert" className="alert alert-error">
               <span>{error}</span>

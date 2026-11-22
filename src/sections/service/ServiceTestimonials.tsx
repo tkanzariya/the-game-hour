@@ -51,6 +51,7 @@ function StarRating({ rating }: { rating: number }) {
 export default function ServiceTestimonials({ service }: ServiceTestimonialsProps) {
   const section = getTestimonialsSection('service')
   const testimonials = getServicePageTestimonials(service)
+  if (testimonials.length === 0) return null
 
   return (
     <Section id="testimonials" profile="marketing">

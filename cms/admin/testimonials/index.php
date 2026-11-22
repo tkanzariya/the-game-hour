@@ -5,7 +5,6 @@ require_once __DIR__ . '/../../includes/bootstrap.php';
 
 cms_require_admin();
 cms_load_content_store();
-cms_content_seed_if_empty();
 
 $message = isset($_GET['msg']) ? cms_flash_message((string) $_GET['msg']) : '';
 $rows = cms_content_get_all_testimonials(true);

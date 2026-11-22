@@ -46,14 +46,14 @@ export function getServiceTestimonialsSubtitle(serviceName: string): string {
 
 export function getAllTestimonials(): Testimonial[] {
   if (isCmsContentReachable()) return cmsTestimonials()
-  return testimonialsData.items
+  return []
 }
 
 export function getHomeTestimonials(): Testimonial[] {
   if (isCmsContentReachable()) {
     return cmsTestimonials().filter((t) => t.context === 'home')
   }
-  return testimonialsData.items.filter((t) => t.context === 'home')
+  return []
 }
 
 export function getTestimonialsByService(slug: string): Testimonial[] {
@@ -62,9 +62,7 @@ export function getTestimonialsByService(slug: string): Testimonial[] {
       (t) => t.context === 'service' && t.serviceSlug === slug,
     )
   }
-  return testimonialsData.items.filter(
-    (t) => t.context === 'service' && t.serviceSlug === slug,
-  )
+  return []
 }
 
 export function getServicePageTestimonials(service: Service): Testimonial[] {

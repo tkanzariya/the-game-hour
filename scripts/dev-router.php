@@ -15,22 +15,39 @@ if (is_file($root . '/cms/config.local.php')) {
     $cmsRoot = is_dir($root . '/dist/cms') ? $root . '/dist/cms' : $root . '/cms';
 }
 
-if (preg_match('#^/uploads/(.*)$#', $uri, $m)) {
+if (preg_match('#^/uploads/([a-zA-Z0-9_-]+\.(?:jpe?g|png|webp))$#i', $uri, $m)) {
     $uploadFile = $cmsRoot . '/uploads/' . $m[1];
     if (is_file($uploadFile)) {
-        $mime = mime_content_type($uploadFile) ?: 'application/octet-stream';
+        $mime = getimagesize($uploadFile)['mime'] ?? 'application/octet-stream';
         header('Content-Type: ' . $mime);
         readfile($uploadFile);
         return true;
     }
 }
 
-if ($uri === '/admin' || $uri === '/admin/') {
-    header('Location: /admin/login.php', true, 302);
+$query = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_QUERY);
+$adminRedirect = static function (string $target) use ($query): bool {
+    header('Location: ' . $target . ($query ? '?' . $query : ''), true, 302);
     return true;
+};
+if (in_array($uri, ['/admin', '/admin/', '/ops', '/ops/'], true)) {
+    return $adminRedirect('/admin/dashboard');
 }
-
-if (preg_match('#^/admin/(.*)$#', $uri, $m)) {
+if (preg_match('#^/ops(?:/(.*))?$#', $uri, $legacy)) {
+    return $adminRedirect('/admin/' . ($legacy[1] ?? ''));
+}
+if (in_array($_SERVER['REQUEST_METHOD'], ['GET', 'HEAD'], true)) {
+    if (preg_match('#^/admin/(dashboard|index|login|statistics|settings)\.php$#', $uri, $legacy)) {
+        return $adminRedirect('/admin/' . ($legacy[1] === 'index' ? 'dashboard' : $legacy[1]));
+    }
+    if (preg_match('#^/admin/(photos(?:/index)?|category|library|upload)\.php$#', $uri)) {
+        return $adminRedirect('/admin/photos');
+    }
+    if (preg_match('#^/admin/testimonials/(?:index|edit)\.php$#', $uri)) {
+        return $adminRedirect('/admin/testimonials');
+    }
+}
+if (preg_match('#^/admin/(assets/[^/]+|[a-z-]+\.php|(?:photos|testimonials)/[a-z-]+\.php)$#', $uri, $m)) {
     $file = $cmsRoot . '/admin/' . $m[1];
     if (is_file($file)) {
         $ext = strtolower(pathinfo($file, PATHINFO_EXTENSION));
@@ -129,7 +146,7 @@ if (strpos($uri, '..') === false && is_file($prerendered)) {
 }
 
 // Parts of the app rendered in the browser
-if (preg_match('#^/(ops|book|choose-games)(/.*)?$#', $uri) && is_file($docRoot . '/app.html')) {
+if (preg_match('#^/(admin|book|choose-games)(/.*)?$#', $uri) && is_file($docRoot . '/app.html')) {
     return $sendHtml($docRoot . '/app.html');
 }
 
