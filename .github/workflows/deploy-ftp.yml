@@ -6,6 +6,9 @@
 #
 # Uploads: dist/ → public_html/
 # Never overwrites/deletes: cms/config.php, uploads/**, cms/uploads/**
+# Also never deletes what other sites keep inside public_html (mirror --delete would remove them, as on 2026-11-25):
+#   the subdomain folders homehisab.thegamehour.com/, email.thegamehour.com/, meowl.thegamehour.com/,
+#   app-ads.txt (AdMob) and .well-known/ (HTTPS certificate checks). This host keeps subdomain folders inside public_html.
 
 name: Deploy FTP
 
@@ -93,7 +96,7 @@ jobs:
 
           echo "Deploying: dist/ → ${SITE_DIR}/"
           echo "Mode: explicit FTPS (port 21), passive, verify-cert=no"
-          echo "Protected on server: cms/config.php, uploads/**, cms/uploads/**"
+          echo "Protected on server: cms/config.php, uploads/**, cms/uploads/**, subdomain folders, app-ads.txt, .well-known/"
 
           lftp -e "
           set ftp:passive-mode true;
@@ -111,7 +114,12 @@ jobs:
             --exclude-glob 'cms/uploads/**' \
             --exclude-glob '.env' \
             --exclude-glob '.env.*' \
-            --exclude-glob 'logs/**';
+            --exclude-glob 'logs/**' \
+            --exclude-glob 'homehisab.thegamehour.com/**' \
+            --exclude-glob 'email.thegamehour.com/**' \
+            --exclude-glob 'meowl.thegamehour.com/**' \
+            --exclude-glob 'app-ads.txt' \
+            --exclude-glob '.well-known/**';
           bye
           "
 
