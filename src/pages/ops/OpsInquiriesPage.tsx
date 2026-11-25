@@ -5,8 +5,8 @@ import { Countdown } from '@/components/ops/inquiries/Countdown'
 import { InquiryStatusBadge } from '@/components/ops/inquiries/InquiryStatusBadge'
 import { ROUTES } from '@/constants/routes'
 import { loadInquiries } from '@/lib/ops/api'
-import { gameAgeGroupLabel, gameEventTypeLabel } from '@/lib/ops/gameOptions'
-import { INQUIRY_STATUS, formatDateTime } from '@/lib/ops/inquiry'
+import { gameAgeGroupLabel } from '@/lib/ops/gameOptions'
+import { INQUIRY_STATUS, eventTypesLabel, formatDateTime } from '@/lib/ops/inquiry'
 import type { InquiryStatus, OpsInquiry } from '@/lib/ops/types'
 import { cn } from '@/utils/cn'
 
@@ -219,7 +219,7 @@ export default function OpsInquiriesPage() {
                         {inquiry.customer_name}
                       </Link>
                     </td>
-                    <td>{gameEventTypeLabel(inquiry.event_type)}</td>
+                    <td>{eventTypesLabel(inquiry.event_types)}</td>
                     <td>{inquiry.age_groups.map(gameAgeGroupLabel).join(', ')}</td>
                     <td className="whitespace-nowrap">
                       {inquiry.status === 'submitted'
@@ -252,7 +252,7 @@ export default function OpsInquiriesPage() {
                     <InquiryStatusBadge status={inquiry.status} />
                   </span>
                   <span className="text-base-content/70 text-sm">
-                    {gameEventTypeLabel(inquiry.event_type)} ·{' '}
+                    {eventTypesLabel(inquiry.event_types)} ·{' '}
                     {inquiry.age_groups.map(gameAgeGroupLabel).join(', ')}
                   </span>
                   <span className="text-base-content/60 text-xs">

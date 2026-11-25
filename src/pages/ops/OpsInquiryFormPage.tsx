@@ -15,7 +15,7 @@ import type { OpsGame, OpsInquiryFieldErrors, OpsInquiryInput } from '@/lib/ops/
 const EMPTY: OpsInquiryInput = {
   customer_name: '',
   customer_phone: '',
-  event_type: '',
+  event_types: [],
   age_groups: [],
   participants: '',
   max_games: '',
@@ -30,7 +30,9 @@ function validate(form: OpsInquiryInput): OpsInquiryFieldErrors {
   if (form.customer_phone.trim() && (digits.length < 8 || digits.length > 15)) {
     errors.customer_phone = 'Enter a valid phone number.'
   }
-  if (!form.event_type) errors.event_type = 'Choose an event type.'
+  if (form.event_types.length === 0) {
+    errors.event_types = 'Choose at least one event type.'
+  }
   if (form.age_groups.length === 0) errors.age_groups = 'Choose at least one age group.'
   const wholeBetween = (value: string, min: number, max: number) => {
     const n = Number(value)
@@ -89,7 +91,7 @@ export default function OpsInquiryFormPage() {
         setForm({
           customer_name: q.customer_name,
           customer_phone: q.customer_phone ?? '',
-          event_type: q.event_type,
+          event_types: q.event_types,
           age_groups: q.age_groups,
           participants: q.participants != null ? String(q.participants) : '',
           max_games: q.max_games != null ? String(q.max_games) : '',
@@ -227,17 +229,17 @@ export default function OpsInquiryFormPage() {
       <section className="card card-border bg-base-100">
         <div className="card-body gap-5 p-4 sm:p-6">
           <h2 className="font-heading text-lg font-semibold">Event</h2>
+          <ChoiceChips
+            id="inq-event-types"
+            label="Event Type"
+            required
+            hint="Choose every type that fits. Games for any of them are suggested."
+            options={GAME_EVENT_TYPES}
+            value={form.event_types}
+            error={errors.event_types}
+            onChange={(value) => patch('event_types', value)}
+          />
           <div className="grid gap-5 sm:grid-cols-2">
-            <SelectField
-              id="inq-event-type"
-              label="Event Type"
-              required
-              placeholder="Choose event type"
-              options={GAME_EVENT_TYPES}
-              value={form.event_type}
-              error={errors.event_type}
-              onChange={(e) => patch('event_type', e.target.value)}
-            />
             <TextField
               id="inq-participants"
               label="Number of Participants"
@@ -269,7 +271,7 @@ export default function OpsInquiryFormPage() {
           <GamePicker
             id="inq-games"
             games={games}
-            eventType={form.event_type}
+            eventTypes={form.event_types}
             ageGroups={form.age_groups}
             value={form.game_ids}
             error={errors.game_ids}

@@ -8,8 +8,8 @@ import { Seo } from '@/components/Seo'
 import { getLogoUrl } from '@/lib/assets'
 import { getContactInfo } from '@/lib/content/company'
 import { fetchPublicInquiry, submitPublicInquiry } from '@/lib/ops/api'
-import { gameAgeGroupLabel, gameEventTypeLabel } from '@/lib/ops/gameOptions'
-import { formatCountdown } from '@/lib/ops/inquiry'
+import { gameAgeGroupLabel } from '@/lib/ops/gameOptions'
+import { eventTypesPhrase, formatCountdown } from '@/lib/ops/inquiry'
 import { useMsLeft } from '@/lib/ops/useMsLeft'
 import type { PublicInquiry } from '@/lib/ops/types'
 import { buildSeo } from '@/utils/seo'
@@ -244,7 +244,7 @@ function Ready({
   }
 
   const details = [
-    inquiry.event_type ? gameEventTypeLabel(inquiry.event_type).toLowerCase() : null,
+    eventTypesPhrase(inquiry.event_types) || null,
     (inquiry.age_groups ?? []).length > 0
       ? `ages ${(inquiry.age_groups ?? []).map(gameAgeGroupLabel).join(', ')}`
       : null,

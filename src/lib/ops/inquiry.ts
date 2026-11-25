@@ -74,9 +74,21 @@ export function formatDateTime(iso: string | null | undefined): string {
   })
 }
 
+/** "Birthday, Kitty Party" */
+export function eventTypesLabel(types: string[] | undefined): string {
+  return (types ?? []).map(gameEventTypeLabel).join(', ')
+}
+
+/** "birthday and kitty party", for use inside a sentence. */
+export function eventTypesPhrase(types: string[] | undefined): string {
+  const labels = (types ?? []).map((type) => gameEventTypeLabel(type).toLowerCase())
+  if (labels.length <= 1) return labels[0] ?? ''
+  return `${labels.slice(0, -1).join(', ')} and ${labels[labels.length - 1]}`
+}
+
 export function whatsappShareUrl(inquiry: OpsInquiry): string {
   const first = inquiry.customer_name.trim().split(/\s+/)[0] || 'there'
-  const event = gameEventTypeLabel(inquiry.event_type).toLowerCase()
+  const event = eventTypesPhrase(inquiry.event_types) || 'event'
   const until = new Date(inquiry.expires_at).toLocaleString('en-IN', {
     weekday: 'short',
     day: 'numeric',
@@ -99,13 +111,15 @@ export function whatsappShareUrl(inquiry: OpsInquiry): string {
   return `${base}?text=${encodeURIComponent(message)}`
 }
 
-/** Event type and age group steer the game list, but never lock it: any game can still be added. */
+/** Event types and age groups steer the game list, but never lock it: any game can still be added. */
 export function matchesFilters(
   game: OpsGame,
-  eventType: string,
+  eventTypes: string[],
   ageGroups: string[],
 ): boolean {
-  const eventOk = !eventType || (game.event_types ?? []).includes(eventType)
+  const eventOk =
+    eventTypes.length === 0 ||
+    (game.event_types ?? []).some((type) => eventTypes.includes(type))
   const ageOk =
     ageGroups.length === 0 ||
     (game.age_groups ?? []).some((age) => ageGroups.includes(age))

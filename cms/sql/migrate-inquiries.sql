@@ -5,7 +5,8 @@ CREATE TABLE IF NOT EXISTS inquiries (
   token CHAR(32) NOT NULL,
   customer_name VARCHAR(160) NOT NULL,
   customer_phone VARCHAR(20) DEFAULT NULL,
-  event_type VARCHAR(80) NOT NULL,
+  -- JSON list of event type codes
+  event_type TEXT NOT NULL,
   age_groups TEXT DEFAULT NULL,
   participants INT UNSIGNED DEFAULT NULL,
   max_games INT UNSIGNED DEFAULT NULL,

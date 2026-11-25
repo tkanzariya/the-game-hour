@@ -40,6 +40,23 @@ function cms_inq_iso(?string $utc): ?string
 }
 
 /**
+ * Event types of a record. The `event_type` column holds a JSON list; rows saved before an
+ * inquiry could have several types hold one plain code, which is read as a list of one.
+ *
+ * @param array<string, mixed> $row
+ * @return list<string>
+ */
+function cms_inq_event_types(array $row): array
+{
+    $raw = $row['event_types'] ?? ($row['event_type'] ?? []);
+    if (is_string($raw)) {
+        $decoded = json_decode($raw, true);
+        $raw = is_array($decoded) ? $decoded : [$raw];
+    }
+    return cms_ops_game_code_list($raw);
+}
+
+/**
  * Normalize a stored record.
  *
  * @param array<string, mixed> $row
@@ -57,7 +74,7 @@ function cms_inq_normalize(array $row): array
         'token' => (string) $row['token'],
         'customer_name' => (string) $row['customer_name'],
         'customer_phone' => isset($row['customer_phone']) && $row['customer_phone'] !== '' ? (string) $row['customer_phone'] : null,
-        'event_type' => (string) ($row['event_type'] ?? ''),
+        'event_types' => cms_inq_event_types($row),
         'age_groups' => cms_ops_game_code_list($ages),
         'participants' => isset($row['participants']) && $row['participants'] !== '' && $row['participants'] !== null ? (int) $row['participants'] : null,
         'max_games' => isset($row['max_games']) && $row['max_games'] !== '' && $row['max_games'] !== null ? (int) $row['max_games'] : null,
@@ -101,6 +118,11 @@ function cms_inq_migrate_if_needed(): void
     $pdo = cms_db();
     foreach (cms_events_split_sql_statements((string) file_get_contents($path)) as $statement) {
         $pdo->exec($statement);
+    }
+    // An inquiry can have several event types, stored as a JSON list: widen the old one-code column.
+    $column = $pdo->query("SHOW COLUMNS FROM inquiries LIKE 'event_type'")->fetch();
+    if ($column && stripos((string) $column['Type'], 'varchar') === 0) {
+        $pdo->exec('ALTER TABLE inquiries MODIFY event_type TEXT NOT NULL');
     }
 }
 
@@ -209,7 +231,7 @@ function cms_inq_put(array $rec): array
         'token' => $rec['token'],
         'name' => $rec['customer_name'],
         'phone' => $rec['customer_phone'],
-        'event_type' => $rec['event_type'],
+        'event_type' => json_encode(array_values($rec['event_types']), JSON_UNESCAPED_UNICODE),
         'ages' => json_encode(array_values($rec['age_groups']), JSON_UNESCAPED_UNICODE),
         'participants' => $rec['participants'],
         'max_games' => $rec['max_games'],
@@ -313,11 +335,10 @@ function cms_inq_validate(array $body, bool $requireExpiry): array
         }
     }
 
-    $eventType = trim((string) ($body['event_type'] ?? ''));
-    if ($eventType === '') {
-        $errors['event_type'] = 'Choose an event type.';
-    } elseif (cms_ops_game_code_list([$eventType]) === []) {
-        $errors['event_type'] = 'Choose an event type from the list.';
+    // `event_type` (one code) is still accepted from pages opened before the change.
+    $eventTypes = cms_inq_event_types($body);
+    if ($eventTypes === []) {
+        $errors['event_types'] = 'Choose at least one event type.';
     }
 
     $ages = cms_ops_game_code_list($body['age_groups'] ?? []);
@@ -382,7 +403,7 @@ function cms_inq_validate(array $body, bool $requireExpiry): array
         'data' => [
             'customer_name' => $name,
             'customer_phone' => $phone !== '' ? $phone : null,
-            'event_type' => $eventType,
+            'event_types' => $eventTypes,
             'age_groups' => $ages,
             'participants' => $participantsValue,
             'max_games' => $maxGamesValue,
@@ -406,7 +427,7 @@ function cms_inq_admin_view(array $rec, array $gamesById, bool $detail): array
         'token' => $rec['token'],
         'customer_name' => $rec['customer_name'],
         'customer_phone' => $rec['customer_phone'],
-        'event_type' => $rec['event_type'],
+        'event_types' => $rec['event_types'],
         'age_groups' => $rec['age_groups'],
         'participants' => $rec['participants'],
         'max_games' => $rec['max_games'],
@@ -472,7 +493,7 @@ function cms_inq_customer_view(array $rec): array
     }
     return [
         'customer_name' => $rec['customer_name'],
-        'event_type' => $rec['event_type'],
+        'event_types' => $rec['event_types'],
         'age_groups' => $rec['age_groups'],
         'participants' => $rec['participants'],
         'max_games' => $rec['max_games'],
@@ -505,7 +526,7 @@ function cms_inq_notify_admin(array $rec): void
         $lines = [
             $who . ' has chosen their games.',
             '',
-            'Event type: ' . $rec['event_type'],
+            'Event type: ' . implode(', ', $rec['event_types']),
             'Age groups: ' . implode(', ', $rec['age_groups']),
         ];
         if ($rec['participants'] !== null) {
@@ -526,7 +547,7 @@ function cms_inq_notify_admin(array $rec): void
         }
         $html = '<div style="font-family:Arial,sans-serif;color:#032a5d;max-width:560px">'
             . '<h2 style="margin:0 0 8px">' . htmlspecialchars($who, ENT_QUOTES, 'UTF-8') . ' chose their games</h2>'
-            . '<p style="margin:0 0 12px">' . htmlspecialchars((string) $rec['event_type'], ENT_QUOTES, 'UTF-8')
+            . '<p style="margin:0 0 12px">' . htmlspecialchars(implode(', ', $rec['event_types']), ENT_QUOTES, 'UTF-8')
             . ' &middot; ' . htmlspecialchars(implode(', ', $rec['age_groups']), ENT_QUOTES, 'UTF-8')
             . ($rec['participants'] !== null ? ' &middot; ' . (int) $rec['participants'] . ' participants' : '')
             . '</p>'

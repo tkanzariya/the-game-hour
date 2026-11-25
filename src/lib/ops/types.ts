@@ -101,7 +101,7 @@ export type OpsInquiry = {
   token: string
   customer_name: string
   customer_phone: string | null
-  event_type: string
+  event_types: string[]
   age_groups: string[]
   participants: number | null
   max_games: number | null
@@ -122,7 +122,7 @@ export type OpsInquiry = {
 export type OpsInquiryInput = {
   customer_name: string
   customer_phone: string
-  event_type: string
+  event_types: string[]
   age_groups: string[]
   participants: string
   max_games: string
@@ -147,7 +147,7 @@ export type PublicInquiryGame = {
 
 export type PublicInquiry = {
   customer_name: string
-  event_type?: string
+  event_types?: string[]
   age_groups?: string[]
   participants?: number | null
   max_games?: number | null

@@ -97,7 +97,7 @@ try {
             cms_json_response(['ok' => false, 'error' => 'Inquiry not found.'], 404);
         }
     }
-    foreach (['customer_name', 'customer_phone', 'event_type', 'age_groups', 'participants', 'max_games', 'game_ids'] as $field) {
+    foreach (['customer_name', 'customer_phone', 'event_types', 'age_groups', 'participants', 'max_games', 'game_ids'] as $field) {
         $rec[$field] = $data[$field];
     }
 

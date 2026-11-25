@@ -10,8 +10,13 @@ import { InquiryStatusBadge } from '@/components/ops/inquiries/InquiryStatusBadg
 import { ROUTES } from '@/constants/routes'
 import { loadGames, loadInquiry } from '@/lib/ops/api'
 import { useOpsAuth } from '@/lib/ops/auth'
-import { gameAgeGroupLabel, gameEventTypeLabel } from '@/lib/ops/gameOptions'
-import { formatDateTime, inquiryLink, whatsappShareUrl } from '@/lib/ops/inquiry'
+import { gameAgeGroupLabel } from '@/lib/ops/gameOptions'
+import {
+  eventTypesLabel,
+  formatDateTime,
+  inquiryLink,
+  whatsappShareUrl,
+} from '@/lib/ops/inquiry'
 import { useOpsToast } from '@/lib/ops/toast'
 import { useMsLeft } from '@/lib/ops/useMsLeft'
 import type { OpsGame, OpsInquiry } from '@/lib/ops/types'
@@ -113,7 +118,7 @@ export default function OpsInquiryDetailPage() {
           <InquiryStatusBadge status={inquiry.status} />
         </div>
         <p className="text-base-content/70 text-sm">
-          {gameEventTypeLabel(inquiry.event_type)} ·{' '}
+          {eventTypesLabel(inquiry.event_types)} ·{' '}
           {inquiry.age_groups.map(gameAgeGroupLabel).join(', ')}
           {inquiry.participants ? ` · ${inquiry.participants} participants` : ''}
         </p>

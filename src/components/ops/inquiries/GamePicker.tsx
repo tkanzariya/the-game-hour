@@ -9,7 +9,7 @@ import { cn } from '@/utils/cn'
 type GamePickerProps = {
   id: string
   games: OpsGame[]
-  eventType: string
+  eventTypes: string[]
   ageGroups: string[]
   value: number[]
   onChange: (ids: number[]) => void
@@ -19,7 +19,7 @@ type GamePickerProps = {
 export function GamePicker({
   id,
   games,
-  eventType,
+  eventTypes,
   ageGroups,
   value,
   onChange,
@@ -28,9 +28,9 @@ export function GamePicker({
   const [query, setQuery] = useState('')
   const [showAll, setShowAll] = useState(false)
 
-  const hasFilters = Boolean(eventType) || ageGroups.length > 0
+  const hasFilters = eventTypes.length > 0 || ageGroups.length > 0
   const filterText = [
-    eventType ? gameEventTypeLabel(eventType) : '',
+    eventTypes.map(gameEventTypeLabel).join(', '),
     ageGroups.map(gameAgeGroupLabel).join(', '),
   ]
     .filter(Boolean)
@@ -38,8 +38,8 @@ export function GamePicker({
 
   const byId = useMemo(() => new Map(games.map((game) => [game.id, game])), [games])
   const matching = useMemo(
-    () => games.filter((game) => matchesFilters(game, eventType, ageGroups)),
-    [games, eventType, ageGroups],
+    () => games.filter((game) => matchesFilters(game, eventTypes, ageGroups)),
+    [games, eventTypes, ageGroups],
   )
   const matchIds = useMemo(() => new Set(matching.map((game) => game.id)), [matching])
 
